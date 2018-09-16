@@ -1,0 +1,22 @@
+#graph {
+  height: 100%;
+}
+
+.node {
+  fill: lightcoral;
+}
+
+.label {
+  stroke: black;
+  text-anchor: middle;
+  alignment-baseline: middle;
+}
+
+.edge {
+  stroke: lightcoral;
+  stroke-width: 2;
+}
+
+.marker {
+  fill: lightcoral;
+}

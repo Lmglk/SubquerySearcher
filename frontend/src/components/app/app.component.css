@@ -1,0 +1,10 @@
+.page {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  height: 100vh;
+}
+
+.sidebar {
+  background-color: #F5F5F5;
+  padding: 2em;
+}
