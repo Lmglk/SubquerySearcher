@@ -17,8 +17,6 @@ export class GraphComponent implements AfterViewInit {
   private height;
 
   ngAfterViewInit(): void {
-    console.log(this.data);
-
     const svg = d3.select("#graph")
       .append("svg")
       .attr("id", "chart")
@@ -30,28 +28,11 @@ export class GraphComponent implements AfterViewInit {
     const nodes = svg.append("g").attr("class", "nodes");
 
     const chart = document.getElementById("chart");
-
     this.width = chart.clientWidth;
     this.height = chart.clientHeight;
 
     const linearX = d3.scaleLinear().domain([0, 100]).range([this.offset, this.width - this.offset]);
     const linearY = d3.scaleLinear().domain([0, 100]).range([this.offset, this.height - this.offset]);
-
-    const line = d3.line()
-      .x(d => d.x)
-      .y(d => d.y);
-
-    defs.selectAll("marker").data(["arrow"]).enter()
-      .append("marker")
-      .attr("id", d => d)
-      .attr("class", "marker")
-      .attr("viewBox", "0 -5 10 10")
-      .attr("refX", this.nodeSize + 5)
-      .attr("markerWidth",  6)
-      .attr("markerHeight", 6)
-      .attr("orient", "auto")
-      .append("svg:path")
-      .attr("d", "M0,-5L10,0L0,5");
 
     this.data.nodes = this.data.nodes.map(node => ({
       ...node,
@@ -59,9 +40,66 @@ export class GraphComponent implements AfterViewInit {
       y: linearY(node.y)
     }));
 
+    this.data.edges = this.data.edges.map(edges => ({
+      ...edges,
+      coordinates: [
+        this.getCoordinates(edges.source),
+        this.getCoordinates(edges.target)
+      ]
+    }));
+
+    this.renderMarkers(defs);
+    this.renderNodes(nodes);
+    this.renderEdges(edges);
+  }
+
+  private getCoordinates(nodeLabel: string) {
+    const node = this.data.nodes.find(node => node.label === nodeLabel);
+    return {
+      x: node.x,
+      y: node.y
+    }
+  }
+
+  private dragged(d) {
+    const {x, y} = d3.event;
+    d3.select(this).select("circle")
+      .attr("cx", d.x = x)
+      .attr("cy", d.y = y);
+
+    d3.select(this).select("text")
+      .attr("x", d.x = x)
+      .attr("y", d.y = y);
+
+    d3.selectAll(`line[source="${d.label}"]`)
+      .attr("x1", d.x = x)
+      .attr("y1", d.y = y);
+
+    d3.selectAll(`line[target="${d.label}"]`)
+      .attr("x2", d.x = x)
+      .attr("y2", d.y = y);
+  }
+
+  private clickHandler(d) {
+    const node = d3.select(this);
+    const isActive = node.classed("active");
+    if (!isActive) {
+      d3.selectAll("g.node").classed("active", false);
+      GraphComponent.markAllActive();
+      node.classed("active", true);
+      GraphComponent.markInactive(d.label);
+    } else {
+      node.classed("active", false);
+      GraphComponent.markAllActive();
+    }
+  }
+
+  private renderNodes(nodes) {
     nodes.selectAll("g").data(this.data.nodes).enter()
       .append("g")
       .attr("class", "node")
+      .call(d3.drag().on('drag', this.dragged))
+      .on('click', this.clickHandler)
       .append("circle")
       .attr("cx", d => d.x)
       .attr("cy", d => d.y)
@@ -73,27 +111,50 @@ export class GraphComponent implements AfterViewInit {
       .attr("x", d => d.x)
       .attr("y", d => d.y)
       .text(d => d.label);
-
-    this.data.edges = this.data.edges.map(edges => ({
-      ...edges,
-      coordinates: [
-        this.getCoordinates(edges.source),
-        this.getCoordinates(edges.target)
-      ]
-    }));
-
-    edges.selectAll("g").data(this.data.edges).enter()
-      .append("path")
-      .attr("class", "edge")
-      .attr("d", d => line(d.coordinates))
-      .attr("marker-end", "url(#arrow)");
   }
 
-  private getCoordinates(nodeLabel: string) {
-    const node = this.data.nodes.find(node => node.label === nodeLabel);
-    return {
-      x: node.x,
-      y: node.y
-    }
+  private renderEdges(edges) {
+    edges.selectAll("g").data(this.data.edges).enter()
+      .append("line")
+      .attr("class", "edge")
+      .attr("source", d => d.source)
+      .attr("target", d => d.target)
+      .attr("x1", d => d.coordinates[0].x)
+      .attr("y1", d => d.coordinates[0].y)
+      .attr("x2", d => d.coordinates[1].x)
+      .attr("y2", d => d.coordinates[1].y)
+      .attr("marker-end", "url(#arrow_active)");
+  }
+
+  private renderMarkers(defs) {
+    defs.selectAll("marker").data(["arrow_active", "arrow_inactive"]).enter()
+      .append("marker")
+      .attr("id", d => d)
+      .attr("class", "marker")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", this.nodeSize + 5)
+      .attr("markerWidth",  6)
+      .attr("markerHeight", 6)
+      .attr("orient", "auto")
+      .append("svg:path")
+      .attr("d", "M0,-5L10,0L0,5");
+  }
+
+  private static markAllActive() {
+    d3.selectAll("g.node")
+      .style("fill", "lightcoral");
+
+    d3.selectAll("line")
+      .style("stroke", "lightcoral")
+      .attr("marker-end", "url(#arrow_active)");
+  }
+
+  private static markInactive(label: string) {
+    d3.selectAll("g.node:not(.active)")
+      .style("fill", "lightgray");
+
+    d3.selectAll(`line:not([source="${label}"]):not([target="${label}"])`)
+      .style("stroke", "gray")
+      .attr("marker-end", "url(#arrow_inactive)");
   }
 }

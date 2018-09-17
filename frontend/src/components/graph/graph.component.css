@@ -4,6 +4,7 @@
 
 .node {
   fill: lightcoral;
+  cursor: -webkit-grab;
 }
 
 .label {
@@ -17,6 +18,10 @@
   stroke-width: 2;
 }
 
-.marker {
+.marker#arrow_active{
   fill: lightcoral;
+}
+
+.marker#arrow_inactive{
+  fill: lightgray;
 }
