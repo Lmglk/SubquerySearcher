@@ -13,6 +13,7 @@ export class SidebarComponent {
   @Output() graphData: EventEmitter<IGraph> = new EventEmitter();
 
   private file: File;
+  private graph: IGraph;
 
   constructor(private httpService: HttpService) {}
 
@@ -24,19 +25,20 @@ export class SidebarComponent {
   public uploadFile() {
     this.httpService.uploadFile(this.file)
       .then((data: IGraph) => {
-        let graph = data;
-        graph.nodes = graph.nodes.map(node => ({
+        this.graph = data;
+        this.graph.nodes = this.graph.nodes.map(node => ({
           ...node,
           x: Math.round(Math.random() * 100),
           y: Math.round(Math.random() * 100),
           size: 1
         }));
-        graph.edges = graph.edges.map(edge => ({
-          ...edge,
-          size: 1,
-        }));
-        this.graphData.emit(graph);
+        this.graphData.emit(this.graph);
       })
       .catch(() => console.error('Uploading file - FAIL'))
+  }
+
+  public optimizeGraph() {
+    this.httpService.getSchedule(this.graph.edges)
+      .then((data) => console.log(data));
   }
 }

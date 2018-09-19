@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 import {IGraph} from "../../types/graph";
 import * as d3 from "d3";
 
@@ -8,15 +8,20 @@ import * as d3 from "d3";
   styleUrls: ['graph.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class GraphComponent implements AfterViewInit {
-  @Input() data: IGraph;
-
+export class GraphComponent {
   private readonly offset = 50;
   private readonly nodeSize = 15;
   private width;
   private height;
+  private data: IGraph;
 
-  ngAfterViewInit(): void {
+  @Input() set graphData(data: IGraph) {
+    this.data = {...data};
+    this.destroyGraph();
+    this.renderGraph();
+  }
+
+  private renderGraph() {
     const svg = d3.select("#graph")
       .append("svg")
       .attr("id", "chart")
@@ -103,7 +108,7 @@ export class GraphComponent implements AfterViewInit {
       .append("circle")
       .attr("cx", d => d.x)
       .attr("cy", d => d.y)
-      .attr("r", d => d.size * this.nodeSize);
+      .attr("r", this.nodeSize);
 
     nodes.selectAll("g.node").data(this.data.nodes)
       .append("text")
@@ -142,19 +147,23 @@ export class GraphComponent implements AfterViewInit {
 
   private static markAllActive() {
     d3.selectAll("g.node")
-      .style("fill", "lightcoral");
+      .classed("inactive", false);
 
     d3.selectAll("line")
-      .style("stroke", "lightcoral")
+      .classed("inactive", false)
       .attr("marker-end", "url(#arrow_active)");
   }
 
   private static markInactive(label: string) {
     d3.selectAll("g.node:not(.active)")
-      .style("fill", "lightgray");
+      .classed("inactive", true);
 
     d3.selectAll(`line:not([source="${label}"]):not([target="${label}"])`)
-      .style("stroke", "gray")
+      .classed("inactive", true)
       .attr("marker-end", "url(#arrow_inactive)");
+  }
+
+  private destroyGraph() {
+    d3.select("#chart").remove();
   }
 }

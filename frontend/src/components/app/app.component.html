@@ -3,6 +3,6 @@
     <sidebar (graphData)="getGraphData($event)"></sidebar>
   </div>
   <div class="graph-container">
-    <graph [data]="graphData" *ngIf="graphData"></graph>
+    <graph [graphData]="graphData" *ngIf="graphData"></graph>
   </div>
 </div>

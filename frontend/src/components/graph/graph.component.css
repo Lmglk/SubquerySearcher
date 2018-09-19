@@ -25,3 +25,11 @@
 .marker#arrow_inactive{
   fill: lightgray;
 }
+
+.edge.inactive {
+  stroke: lightgray;
+}
+
+.node.inactive {
+  fill: lightgray;
+}
