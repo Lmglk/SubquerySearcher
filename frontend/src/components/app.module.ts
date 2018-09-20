@@ -6,12 +6,14 @@ import { GraphComponent } from './graph/graph.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpService} from "../services/http.service";
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GraphComponent,
-    SidebarComponent
+    SidebarComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,

@@ -11,6 +11,7 @@ export class SidebarComponent {
   @ViewChild('fileUpload') inputFile: ElementRef;
 
   @Output() graphData: EventEmitter<IGraph> = new EventEmitter();
+  @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
   private file: File;
   private graph: IGraph;
@@ -39,6 +40,6 @@ export class SidebarComponent {
 
   public optimizeGraph() {
     this.httpService.getSchedule(this.graph.edges)
-      .then((data) => console.log(data));
+      .then((data: string[][]) => this.schedule.emit(data));
   }
 }

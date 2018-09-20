@@ -1,8 +1,9 @@
 <div class="page">
-  <div class="sidebar">
-    <sidebar (graphData)="getGraphData($event)"></sidebar>
-  </div>
-  <div class="graph-container">
-    <graph [graphData]="graphData" *ngIf="graphData"></graph>
-  </div>
+    <div class="sidebar">
+        <sidebar (graphData)="getGraphData($event)" (schedule)="getSchedule($event)"></sidebar>
+    </div>
+    <div class="body">
+        <graph [graphData]="graphData" *ngIf="graphData"></graph>
+        <schedule [data]="schedule" *ngIf="schedule"></schedule>
+    </div>
 </div>

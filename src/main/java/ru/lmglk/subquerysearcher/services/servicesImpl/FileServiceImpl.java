@@ -46,16 +46,13 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public ArrayList<HashSet<String>> generateSchedule(ArrayList<Edge> edgeList) {
-        HashSet<String> group = new HashSet<>();
-        HashSet<String> targetNodes = new HashSet<>();
         ArrayList<HashSet<String>> schedule = new ArrayList<>();
-
         HashSet<String> remainder = new HashSet<>();
         HashSet<String> oldRemainder;
 
         while (edgeList.size() > 0) {
-            group.clear();
-            targetNodes.clear();
+            HashSet<String> group = new HashSet<>();
+            HashSet<String> targetNodes = new HashSet<>();
             edgeList.forEach(item -> {
                 group.add(item.getSource());
                 targetNodes.add(item.getTarget());
@@ -71,13 +68,13 @@ public class FileServiceImpl implements FileService {
 
             if (oldRemainder.size() != 0)
                 group.addAll(oldRemainder);
-            schedule.add(new HashSet<>(group));
+            schedule.add(group);
             edgeList = edgeList.stream()
                     .filter(e -> !group.contains(e.getSource()))
                     .collect(Collectors.toCollection(ArrayList::new));
-        }
-        if (group.size() != 0) {
-            schedule.add(new HashSet<>(targetNodes));
+            if (edgeList.size() <= 0 && group.size() != 0) {
+                schedule.add(targetNodes);
+            }
         }
 
         return schedule;
