@@ -1,4 +1,4 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {IGraph} from "../../types/graph";
 import * as d3 from "d3";
 
@@ -8,7 +8,7 @@ import * as d3 from "d3";
   styleUrls: ['graph.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class GraphComponent {
+export class GraphComponent implements OnInit, OnDestroy {
   public data: IGraph;
 
   private readonly offset = 50;
@@ -20,17 +20,24 @@ export class GraphComponent {
   @Input() set graphData(data: IGraph) {
     this.data = {...data};
     this.schedule = null;
-    this.destroyGraph();
-    this.renderGraph();
+    this.redraw()
   }
 
   @Input() set scheduleData(schedule: string[][]) {
     if (schedule) {
       this.schedule = schedule;
-      this.destroyGraph();
-      this.renderGraph();
+      this.redraw()
     }
   }
+
+  ngOnInit(): void {
+    window.addEventListener('resize', this.redraw);
+  }
+
+  private redraw = () => {
+    this.destroyGraph();
+    this.renderGraph();
+  };
 
   private renderGraph() {
     const svg = d3.select("#graph")
@@ -63,12 +70,11 @@ export class GraphComponent {
   }
 
   private interpolation() {
-    const linearX = d3.scaleLinear().domain([0, 100]).range([this.offset, this.width - this.offset]);
-    const linearY = d3.scaleLinear().domain([0, 100]).range([this.offset, this.height - this.offset]);
-    this.data.nodes = this.data.nodes.map(node => ({
+    const r = (this.height / 2) - this.offset;
+    this.data.nodes = this.data.nodes.map((node, index) => ({
       ...node,
-      x: linearX(Math.round(Math.random() * 100)),
-      y: linearY(Math.round(Math.random() * 100))
+      x: r * Math.cos((2 * Math.PI * index / this.data.nodes.length - Math.PI / 2) + Math.PI) + (this.width / 2),
+      y: r * Math.sin((2 * Math.PI * index / this.data.nodes.length - Math.PI / 2) + Math.PI) + (this.height / 2)
     }));
   }
 
@@ -112,6 +118,21 @@ export class GraphComponent {
       .attr("y2", d.y = y);
   }
 
+  private draggedForParallelForm(d) {
+    const { y } = d3.event;
+    d3.select(this).select("circle")
+      .attr("cy", d.y = y);
+
+    d3.select(this).select("text")
+      .attr("y", d.y = y);
+
+    d3.selectAll(`line[source="${d.label}"]`)
+      .attr("y1", d.y = y);
+
+    d3.selectAll(`line[target="${d.label}"]`)
+      .attr("y2", d.y = y);
+  }
+
   private clickHandler(d) {
     const node = d3.select(this);
     const isActive = node.classed("active");
@@ -130,7 +151,7 @@ export class GraphComponent {
     nodes.selectAll("g").data(this.data.nodes).enter()
       .append("g")
       .attr("class", "node")
-      .call(d3.drag().on('drag', this.dragged))
+      .call(d3.drag().on('drag', this.schedule ? this.draggedForParallelForm : this.dragged))
       .on('click', this.clickHandler)
       .append("circle")
       .attr("cx", d => d.x)
@@ -192,5 +213,9 @@ export class GraphComponent {
 
   private destroyGraph() {
     d3.select("#chart").remove();
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.redraw);
   }
 }

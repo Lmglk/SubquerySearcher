@@ -7,6 +7,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import {HttpClientModule} from "@angular/common/http";
 import {HttpService} from "../services/http.service";
 import { ScheduleComponent } from './schedule/schedule.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatCardModule, MatDividerModule} from "@angular/material";
 
 @NgModule({
   declarations: [
@@ -17,7 +19,10 @@ import { ScheduleComponent } from './schedule/schedule.component';
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatDividerModule
   ],
   providers: [HttpService],
   bootstrap: [AppComponent]

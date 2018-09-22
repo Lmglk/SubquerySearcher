@@ -1,9 +1,10 @@
-<div class="body">
-    <table>
-        <tbody>
-        <tr *ngFor="let row of rows">
-            <td *ngFor="let node of row">{{node}}</td>
-        </tr>
-        </tbody>
-    </table>
+<table *ngIf="schedule">
+    <tbody>
+    <tr *ngFor="let row of rows">
+        <td *ngFor="let node of row">{{node}}</td>
+    </tr>
+    </tbody>
+</table>
+<div *ngIf="!schedule">
+    Schedule is empty
 </div>
