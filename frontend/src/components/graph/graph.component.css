@@ -5,6 +5,7 @@
 .node {
   fill: lightcoral;
   cursor: -webkit-grab;
+  transition: fill .5s ease;
 }
 
 .label {
@@ -16,6 +17,11 @@
 .edge {
   stroke: lightcoral;
   stroke-width: 2;
+  transition: stroke .5s ease;
+}
+
+.marker {
+  transition: fill .5s ease;
 }
 
 .marker#arrow_active{

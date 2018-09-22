@@ -3,7 +3,7 @@
         <sidebar (graphData)="getGraphData($event)" (schedule)="getSchedule($event)"></sidebar>
     </div>
     <div class="body">
-        <graph [graphData]="graphData" *ngIf="graphData"></graph>
+        <graph [graphData]="graphData" [scheduleData]="schedule" *ngIf="graphData"></graph>
         <schedule [data]="schedule" *ngIf="schedule"></schedule>
     </div>
 </div>

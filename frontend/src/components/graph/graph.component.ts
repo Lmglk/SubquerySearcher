@@ -9,16 +9,27 @@ import * as d3 from "d3";
   encapsulation: ViewEncapsulation.None
 })
 export class GraphComponent {
+  public data: IGraph;
+
   private readonly offset = 50;
   private readonly nodeSize = 15;
   private width;
   private height;
-  private data: IGraph;
+  private schedule: string[][];
 
   @Input() set graphData(data: IGraph) {
     this.data = {...data};
+    this.schedule = null;
     this.destroyGraph();
     this.renderGraph();
+  }
+
+  @Input() set scheduleData(schedule: string[][]) {
+    if (schedule) {
+      this.schedule = schedule;
+      this.destroyGraph();
+      this.renderGraph();
+    }
   }
 
   private renderGraph() {
@@ -36,14 +47,7 @@ export class GraphComponent {
     this.width = chart.clientWidth;
     this.height = chart.clientHeight;
 
-    const linearX = d3.scaleLinear().domain([0, 100]).range([this.offset, this.width - this.offset]);
-    const linearY = d3.scaleLinear().domain([0, 100]).range([this.offset, this.height - this.offset]);
-
-    this.data.nodes = this.data.nodes.map(node => ({
-      ...node,
-      x: linearX(node.x),
-      y: linearY(node.y)
-    }));
+    this.schedule ? this.interpolationForParallelForm() : this.interpolation();
 
     this.data.edges = this.data.edges.map(edges => ({
       ...edges,
@@ -56,6 +60,29 @@ export class GraphComponent {
     this.renderMarkers(defs);
     this.renderNodes(nodes);
     this.renderEdges(edges);
+  }
+
+  private interpolation() {
+    const linearX = d3.scaleLinear().domain([0, 100]).range([this.offset, this.width - this.offset]);
+    const linearY = d3.scaleLinear().domain([0, 100]).range([this.offset, this.height - this.offset]);
+    this.data.nodes = this.data.nodes.map(node => ({
+      ...node,
+      x: linearX(Math.round(Math.random() * 100)),
+      y: linearY(Math.round(Math.random() * 100))
+    }));
+  }
+
+  private interpolationForParallelForm() {
+    const maxValue = Math.max(...this.schedule.map(group => group.length));
+    const linearX = d3.scaleLinear().domain([0, this.schedule.length - 1]).range([this.offset, this.width - this.offset]);
+    const linearY = d3.scaleLinear().domain([0, maxValue - 1]).range([this.offset, this.height - this.offset]);
+    this.schedule.forEach((group, groupIndex) => {
+      group.forEach((nodeId, nodeIndex) => {
+        const currentNode = this.data.nodes.find(node => node.id === nodeId);
+        currentNode.x = linearX(groupIndex);
+        currentNode.y = linearY(maxValue - nodeIndex - 1);
+      })
+    });
   }
 
   private getCoordinates(nodeLabel: string) {

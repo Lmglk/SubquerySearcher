@@ -6,10 +6,8 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent implements OnInit {
-
   public rows = [];
-
-  private schedule: string[][];
+  public schedule: string[][];
 
   @Input() set data(schedule) {
     this.schedule = schedule;
@@ -24,8 +22,6 @@ export class ScheduleComponent implements OnInit {
       ]
     }
     this.rows.reverse();
-
-    console.log(this.rows);
   }
 
 }

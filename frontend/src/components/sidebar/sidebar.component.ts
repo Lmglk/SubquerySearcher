@@ -27,13 +27,8 @@ export class SidebarComponent {
     this.httpService.uploadFile(this.file)
       .then((data: IGraph) => {
         this.graph = data;
-        this.graph.nodes = this.graph.nodes.map(node => ({
-          ...node,
-          x: Math.round(Math.random() * 100),
-          y: Math.round(Math.random() * 100),
-          size: 1
-        }));
         this.graphData.emit(this.graph);
+        this.schedule.emit(null);
       })
       .catch(() => console.error('Uploading file - FAIL'))
   }
