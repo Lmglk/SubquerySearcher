@@ -1,4 +1,27 @@
-<input type="file" #fileUpload (change)="changeFile()">
-<button (click)="uploadFile()">Upload file</button>
+<div class="wrapper">
+    <div>
+        <input type="file" #fileUpload (change)="changeFile()">
+        <button (click)="uploadFile()">Upload file</button>
 
-<button (click)="optimizeGraph()">Optimize graph</button>
+        <button (click)="optimizeGraph()">Optimize graph</button>
+    </div>
+
+    <div>
+        <table *ngIf="separatedNodeList">
+            <thead>
+            <tr>
+                <td>Node</td>
+                <td>Count</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let node of separatedNodeList">
+                <td>{{node.label}}</td>
+                <td>
+                    <input type="number" [(ngModel)]="node.count">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

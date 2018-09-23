@@ -13,10 +13,15 @@ export class SidebarComponent {
   @Output() graphData: EventEmitter<IGraph> = new EventEmitter();
   @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
-  private file: File;
-  private graph: IGraph;
+  public graph: IGraph;
+  public separatedNodeList: any;
 
-  constructor(private httpService: HttpService) {}
+  private file: File;
+  private modifiedGraph: IGraph;
+
+  constructor(private httpService: HttpService) {
+    this.separatedNodeList = null;
+  }
 
   public changeFile() {
     const fileBrowser = this.inputFile.nativeElement;
@@ -29,12 +34,67 @@ export class SidebarComponent {
         this.graph = data;
         this.graphData.emit(this.graph);
         this.schedule.emit(null);
+        this.separatedNodeList = this.graph.nodes.map(node => ({
+          id: node.id,
+          label: node.label,
+          count: 1
+        }));
       })
       .catch(() => console.error('Uploading file - FAIL'))
   }
 
   public optimizeGraph() {
-    this.httpService.getSchedule(this.graph.edges)
-      .then((data: string[][]) => this.schedule.emit(data));
+    this.schedule.emit(null);
+    this.modifiedGraph = {...this.graph};
+    this.separatedNodeList.filter(item => item.count > 1).forEach(item => this.separateNodes(item));
+    console.log(this.modifiedGraph);
+    this.httpService.getSchedule(this.modifiedGraph.edges)
+      .then((data: string[][]) => {
+        console.log("res", data);
+        this.graphData.emit(this.modifiedGraph);
+        this.schedule.emit(data);
+      });
+  }
+
+  private separateNodes(item) {
+    const targets = this.modifiedGraph.edges
+      .filter(edge => edge.source === item.id)
+      .map(edge => edge.target);
+
+    const sources = this.modifiedGraph.edges
+      .filter(edge => edge.target === item.id)
+      .map(edge => edge.source);
+
+    let currentEdgeId = Math.max(...this.modifiedGraph.edges.map(edge => edge.id));
+    this.modifiedGraph.nodes = this.modifiedGraph.nodes.filter(node => node.id != item.id);
+    this.modifiedGraph.edges = this.modifiedGraph.edges.filter(edge => edge.source != item.id && edge.target != item.id);
+
+    for (let i = 1; i <= item.count; i++) {
+      this.modifiedGraph.nodes = [
+        ...this.modifiedGraph.nodes,
+        {
+          id: `${item.id}.${i}`,
+          label: `${item.id}.${i}`,
+        }
+      ];
+
+      this.modifiedGraph.edges = [
+        ...this.modifiedGraph.edges,
+        ...targets.map(targetNode => ({
+          id: ++currentEdgeId,
+          source: `${item.id}.${i}`,
+          target: targetNode
+        }))
+      ];
+
+      this.modifiedGraph.edges = [
+        ...this.modifiedGraph.edges,
+        ...sources.map(sourceNode => ({
+          id: ++currentEdgeId,
+          source: sourceNode,
+          target: `${item.id}.${i}`
+        }))
+      ];
+    }
   }
 }

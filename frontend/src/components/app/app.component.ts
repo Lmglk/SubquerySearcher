@@ -12,7 +12,7 @@ export class AppComponent {
   public schedule: string[][];
 
   getGraphData(graph: IGraph) {
-    this.graphData = graph;
+    this.graphData = {...graph};
   }
 
   getSchedule(schedule: string[][]) {

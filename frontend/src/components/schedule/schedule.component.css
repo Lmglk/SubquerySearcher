@@ -8,3 +8,12 @@ table, th, td {
   border-collapse: collapse;
   padding: .5em;
 }
+
+.empty-block {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  height: 100%;
+  font-size: 2em;
+  color: #757575;
+}

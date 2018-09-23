@@ -82,6 +82,7 @@ export class GraphComponent implements OnInit, OnDestroy {
     const maxValue = Math.max(...this.schedule.map(group => group.length));
     const linearX = d3.scaleLinear().domain([0, this.schedule.length - 1]).range([this.offset, this.width - this.offset]);
     const linearY = d3.scaleLinear().domain([0, maxValue - 1]).range([this.offset, this.height - this.offset]);
+
     this.schedule.forEach((group, groupIndex) => {
       group.forEach((nodeId, nodeIndex) => {
         const currentNode = this.data.nodes.find(node => node.id === nodeId);
