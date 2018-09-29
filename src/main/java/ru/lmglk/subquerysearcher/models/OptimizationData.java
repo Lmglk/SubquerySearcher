@@ -6,14 +6,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Graph {
+public class OptimizationData {
 
-    ArrayList<Node> nodes;
+    Graph graph;
 
-    ArrayList<Edge> edges;
+    ArrayList<HashSet<String>> schedule;
 }

@@ -4,6 +4,10 @@
         <button (click)="uploadFile()">Upload file</button>
 
         <button (click)="optimizeGraph()">Optimize graph</button>
+        <div class="toggle-btn">
+            <div>To optimize graph</div>
+            <mat-slide-toggle [(ngModel)]="optimizeGraphToogle"></mat-slide-toggle>
+        </div>
     </div>
 
     <div>

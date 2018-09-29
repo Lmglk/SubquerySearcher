@@ -13,6 +13,8 @@ export class SidebarComponent {
   @Output() graphData: EventEmitter<IGraph> = new EventEmitter();
   @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
+  optimizeGraphToogle: boolean;
+
   public graph: IGraph;
   public separatedNodeList: any;
 
@@ -21,6 +23,7 @@ export class SidebarComponent {
 
   constructor(private httpService: HttpService) {
     this.separatedNodeList = null;
+    this.optimizeGraphToogle = false;
   }
 
   public changeFile() {
@@ -47,12 +50,22 @@ export class SidebarComponent {
     this.schedule.emit(null);
     this.modifiedGraph = {...this.graph};
     this.separatedNodeList.filter(item => item.count > 1).forEach(item => this.separateNodes(item));
-    console.log(this.modifiedGraph);
     this.httpService.getSchedule(this.modifiedGraph.edges)
       .then((data: string[][]) => {
-        console.log("res", data);
-        this.graphData.emit(this.modifiedGraph);
-        this.schedule.emit(data);
+        if (this.optimizeGraphToogle) {
+          const optimizationData = {
+            graph: this.modifiedGraph,
+            schedule: data
+          };
+          this.httpService.optimizeSchedule(optimizationData)
+            .then((data: string[][]) => {
+              this.graphData.emit(this.modifiedGraph);
+              this.schedule.emit(data);
+            });
+        } else {
+          this.graphData.emit(this.modifiedGraph);
+          this.schedule.emit(data);
+        }
       });
   }
 

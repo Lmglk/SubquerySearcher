@@ -5,7 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.Edge;
 import ru.lmglk.subquerysearcher.models.Graph;
 import ru.lmglk.subquerysearcher.models.Node;
-import ru.lmglk.subquerysearcher.services.FileService;
+import ru.lmglk.subquerysearcher.models.OptimizationData;
+import ru.lmglk.subquerysearcher.services.GraphService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Service
-public class FileServiceImpl implements FileService {
+public class GraphServiceImpl implements GraphService {
 
     @Override
     public Graph readFile(MultipartFile file) {
@@ -78,5 +79,43 @@ public class FileServiceImpl implements FileService {
         }
 
         return schedule;
+    }
+
+    public ArrayList<HashSet<String>> optimizeSchedule(OptimizationData data) {
+        int maxGroupSize = (int) Math.ceil((double) data.getGraph().getNodes().size() / data.getSchedule().size());
+        ArrayList<HashSet<String>> schedule = data.getSchedule();
+
+        for (int i = schedule.size() - 1; i > 0; i--) {
+            ArrayList<String> group = new ArrayList<>(schedule.get(i));
+            if (maxGroupSize - group.size() > 0) {
+                ArrayList<String> previousGroup = new ArrayList<>(schedule.get(i - 1));
+
+                int sourceNodeIndex = 0;
+                while (sourceNodeIndex < previousGroup.size() && group.size() < maxGroupSize) {
+                    String sourceNode = previousGroup.get(sourceNodeIndex);
+                    if (!isExistEdge(sourceNode, group, data.getGraph().getEdges())) {
+                        group.add(sourceNode);
+                        previousGroup.remove(sourceNode);
+                    } else {
+                        sourceNodeIndex++;
+                    }
+                }
+
+                schedule.set(i, new HashSet<>(group));
+                schedule.set(i - 1, new HashSet<>(previousGroup));
+            }
+        }
+
+        return schedule;
+    }
+
+    private boolean isExistEdge(String sourceNode, ArrayList<String> group, ArrayList<Edge> edges) {
+        boolean isExistEdge = false;
+        for (int targetNodeIndex = 0; targetNodeIndex < group.size() && !isExistEdge; targetNodeIndex++) {
+            String targetNode = group.get(targetNodeIndex);
+            isExistEdge = edges.stream()
+                    .anyMatch(edge -> edge.getSource().equals(sourceNode) && edge.getTarget().equals(targetNode));
+        }
+        return isExistEdge;
     }
 }

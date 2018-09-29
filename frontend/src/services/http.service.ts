@@ -16,4 +16,8 @@ export class HttpService {
   getSchedule(edgeList: IEdge[]) {
     return this.http.post('http://localhost:8080/api/graph/getSchedule', edgeList).toPromise();
   }
+
+  optimizeSchedule(optimizationData: any) {
+    return this.http.post('http://localhost:8080/api/graph/optimizeSchedule', optimizationData).toPromise();
+  }
 }

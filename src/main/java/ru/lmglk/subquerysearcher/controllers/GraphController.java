@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.Edge;
 import ru.lmglk.subquerysearcher.models.Graph;
-import ru.lmglk.subquerysearcher.services.FileService;
+import ru.lmglk.subquerysearcher.models.OptimizationData;
+import ru.lmglk.subquerysearcher.services.GraphService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,17 +18,23 @@ import java.util.HashSet;
 public class GraphController {
 
     @Autowired
-    FileService fileService;
+    GraphService graphService;
 
     @ResponseBody
     @RequestMapping(value = "/loadGraph", method = RequestMethod.POST)
     public Graph uploadFile(@RequestParam("file") MultipartFile file) {
-        return this.fileService.readFile(file);
+        return this.graphService.readFile(file);
     }
 
     @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
     public ArrayList<HashSet<String>> getSchedule(@RequestBody ArrayList<Edge> edgeList) {
-        return this.fileService.generateSchedule(edgeList);
+        return this.graphService.generateSchedule(edgeList);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/optimizeSchedule", method = RequestMethod.POST)
+    public ArrayList<HashSet<String>> optimizeSchedule(@RequestBody OptimizationData optimizationData) {
+        return this.graphService.optimizeSchedule(optimizationData);
     }
 }
