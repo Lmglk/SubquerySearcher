@@ -1,9 +1,7 @@
 <div class="page">
-    <mat-card class="sidebar">
-        <mat-card-content class="content">
-            <sidebar (graphData)="getGraphData($event)" (schedule)="getSchedule($event)"></sidebar>
-        </mat-card-content>
-    </mat-card>
+    <div class="sidebar">
+        <sidebar (graphData)="getGraphData($event)" (schedule)="getSchedule($event)"></sidebar>
+    </div>
     <mat-card class="graph">
         <mat-card-header>
             <mat-card-title>Graph</mat-card-title>
@@ -12,11 +10,10 @@
             <graph [graphData]="graphData" [scheduleData]="schedule" *ngIf="graphData"></graph>
         </mat-card-content>
     </mat-card>
-    <mat-card class="schedule">
+    <mat-card class="schedule block">
         <mat-card-header>
             <mat-card-title>Schedule</mat-card-title>
         </mat-card-header>
-        <mat-divider></mat-divider>
         <mat-card-content class="content">
             <schedule [data]="schedule"></schedule>
         </mat-card-content>

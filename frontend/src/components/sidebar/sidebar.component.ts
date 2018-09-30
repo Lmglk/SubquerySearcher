@@ -14,6 +14,7 @@ export class SidebarComponent {
   @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
   optimizeGraphToogle: boolean;
+  statistics: any;
 
   public graph: IGraph;
   public separatedNodeList: any;
@@ -51,20 +52,22 @@ export class SidebarComponent {
     this.modifiedGraph = {...this.graph};
     this.separatedNodeList.filter(item => item.count > 1).forEach(item => this.separateNodes(item));
     this.httpService.getSchedule(this.modifiedGraph.edges)
-      .then((data: string[][]) => {
+      .then((data: any) => {
         if (this.optimizeGraphToogle) {
           const optimizationData = {
             graph: this.modifiedGraph,
-            schedule: data
+            schedule: data.schedule
           };
           this.httpService.optimizeSchedule(optimizationData)
-            .then((data: string[][]) => {
+            .then((data: any) => {
               this.graphData.emit(this.modifiedGraph);
-              this.schedule.emit(data);
+              this.schedule.emit(data.schedule);
+              this.statistics = data.statistics;
             });
         } else {
           this.graphData.emit(this.modifiedGraph);
-          this.schedule.emit(data);
+          this.schedule.emit(data.schedule);
+          this.statistics = data.statistics;
         }
       });
   }

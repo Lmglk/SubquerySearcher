@@ -5,9 +5,12 @@
   grid-gap: 2em;
   grid-template-columns: 1fr 3fr;
   grid-template-rows: 2fr 1fr;
+  overflow: overlay;
+  box-sizing: border-box;
+  padding: 1em;
   grid-template-areas:
       "sidebar graph"
-      "sidebar schedule"
+      "sidebar schedule";
 }
 
 .sidebar {
@@ -25,4 +28,14 @@
 .graph, .schedule {
   display: grid;
   grid-template-rows: max-content auto;
+}
+
+.block {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: max-content auto;
+}
+
+.content {
+  overflow: auto;
 }

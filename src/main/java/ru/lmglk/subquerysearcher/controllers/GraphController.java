@@ -7,10 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.Edge;
 import ru.lmglk.subquerysearcher.models.Graph;
 import ru.lmglk.subquerysearcher.models.OptimizationData;
+import ru.lmglk.subquerysearcher.models.ScheduleResult;
 import ru.lmglk.subquerysearcher.services.GraphService;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 @Controller
 @RequestMapping(value = "api/graph")
@@ -28,13 +28,13 @@ public class GraphController {
 
     @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
-    public ArrayList<HashSet<String>> getSchedule(@RequestBody ArrayList<Edge> edgeList) {
+    public ScheduleResult getSchedule(@RequestBody ArrayList<Edge> edgeList) {
         return this.graphService.generateSchedule(edgeList);
     }
 
     @ResponseBody
     @RequestMapping(value = "/optimizeSchedule", method = RequestMethod.POST)
-    public ArrayList<HashSet<String>> optimizeSchedule(@RequestBody OptimizationData optimizationData) {
+    public ScheduleResult optimizeSchedule(@RequestBody OptimizationData optimizationData) {
         return this.graphService.optimizeSchedule(optimizationData);
     }
 }

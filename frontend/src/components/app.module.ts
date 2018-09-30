@@ -8,7 +8,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {HttpService} from "../services/http.service";
 import { ScheduleComponent } from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatCardModule, MatDividerModule, MatSlideToggleModule} from "@angular/material";
+import {MatButtonModule, MatCardModule, MatDividerModule, MatSlideToggleModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
@@ -24,6 +24,7 @@ import {FormsModule} from "@angular/forms";
     HttpClientModule,
     BrowserAnimationsModule,
     MatCardModule,
+    MatButtonModule,
     MatDividerModule,
     MatSlideToggleModule
   ],

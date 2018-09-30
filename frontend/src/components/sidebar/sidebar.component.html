@@ -1,31 +1,52 @@
 <div class="wrapper">
-    <div>
-        <input type="file" #fileUpload (change)="changeFile()">
-        <button (click)="uploadFile()">Upload file</button>
+    <mat-card class="block">
+        <mat-card-content class="content">
+            <div class="toolbar">
+                <input type="file" #fileUpload (change)="changeFile()">
+                <button (click)="uploadFile()">Upload file</button>
 
-        <button (click)="optimizeGraph()">Optimize graph</button>
-        <div class="toggle-btn">
-            <div>To optimize graph</div>
-            <mat-slide-toggle [(ngModel)]="optimizeGraphToogle"></mat-slide-toggle>
-        </div>
-    </div>
+                <div class="toggle-btn">
+                    <div>To optimize graph</div>
+                    <mat-slide-toggle [(ngModel)]="optimizeGraphToogle"></mat-slide-toggle>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions class="actions">
+            <button mat-button (click)="optimizeGraph()">Calculate</button>
+        </mat-card-actions>
+    </mat-card>
 
-    <div>
-        <table *ngIf="separatedNodeList">
-            <thead>
-            <tr>
-                <td>Node</td>
-                <td>Count</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let node of separatedNodeList">
-                <td>{{node.label}}</td>
-                <td>
-                    <input type="number" [(ngModel)]="node.count">
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <mat-card class="block">
+        <mat-card-header>
+            <mat-card-title>Statistics of calculation</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="content">
+            <div>Hard bubbles: {{statistics ? statistics.hardBubbles : '-'}}</div>
+            <div>Total bubbles: {{statistics ? statistics.totalBubbles : '-'}}</div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="block">
+        <mat-card-header>
+            <mat-card-title>Separating nodes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="content">
+            <table *ngIf="separatedNodeList">
+                <thead>
+                <tr>
+                    <td>Node</td>
+                    <td>Count</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let node of separatedNodeList">
+                    <td>{{node.label}}</td>
+                    <td>
+                        <input type="number" [(ngModel)]="node.count">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </mat-card-content>
+    </mat-card>
 </div>

@@ -1,6 +1,13 @@
 <table *ngIf="schedule">
+    <thead>
+        <tr>
+            <td class="id">№</td>
+            <td *ngFor="let row of rows[0]; let index = index">T{{index}}</td>
+        </tr>
+    </thead>
     <tbody>
-    <tr *ngFor="let row of rows">
+    <tr *ngFor="let row of rows; let index = index">
+        <td class="id">{{index}}</td>
         <td *ngFor="let node of row">{{node}}</td>
     </tr>
     </tbody>

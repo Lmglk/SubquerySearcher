@@ -2,10 +2,7 @@ package ru.lmglk.subquerysearcher.services.servicesImpl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.lmglk.subquerysearcher.models.Edge;
-import ru.lmglk.subquerysearcher.models.Graph;
-import ru.lmglk.subquerysearcher.models.Node;
-import ru.lmglk.subquerysearcher.models.OptimizationData;
+import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.GraphService;
 
 import java.io.BufferedReader;
@@ -46,7 +43,7 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
-    public ArrayList<HashSet<String>> generateSchedule(ArrayList<Edge> edgeList) {
+    public ScheduleResult generateSchedule(ArrayList<Edge> edgeList) {
         ArrayList<HashSet<String>> schedule = new ArrayList<>();
         HashSet<String> remainder = new HashSet<>();
         HashSet<String> oldRemainder;
@@ -78,10 +75,10 @@ public class GraphServiceImpl implements GraphService {
             }
         }
 
-        return schedule;
+        return new ScheduleResult(schedule, createStatistics(schedule));
     }
 
-    public ArrayList<HashSet<String>> optimizeSchedule(OptimizationData data) {
+    public ScheduleResult optimizeSchedule(OptimizationData data) {
         int maxGroupSize = (int) Math.ceil((double) data.getGraph().getNodes().size() / data.getSchedule().size());
         ArrayList<HashSet<String>> schedule = data.getSchedule();
 
@@ -106,7 +103,7 @@ public class GraphServiceImpl implements GraphService {
             }
         }
 
-        return schedule;
+        return new ScheduleResult(schedule, createStatistics(schedule));
     }
 
     private boolean isExistEdge(String sourceNode, ArrayList<String> group, ArrayList<Edge> edges) {
@@ -117,5 +114,24 @@ public class GraphServiceImpl implements GraphService {
                     .anyMatch(edge -> edge.getSource().equals(sourceNode) && edge.getTarget().equals(targetNode));
         }
         return isExistEdge;
+    }
+
+    private Statistics createStatistics(ArrayList<HashSet<String>> schedule) {
+        int maxCount = schedule.stream().map(HashSet::size).max(Integer::compareTo).get();
+
+        HashSet<String> lastFullyItem = schedule.stream()
+                .filter(group -> group.size() == maxCount)
+                .reduce((a, b) -> b)
+                .orElse(null);
+
+        int totalBubbles = schedule.stream().mapToInt(group -> maxCount - group.size()).sum();
+
+        int hardBubbles = 0;
+        for (HashSet<String> item : schedule) {
+            if (item.equals(lastFullyItem)) break;
+            hardBubbles += maxCount - item.size();
+        }
+
+        return new Statistics(totalBubbles, hardBubbles);
     }
 }
