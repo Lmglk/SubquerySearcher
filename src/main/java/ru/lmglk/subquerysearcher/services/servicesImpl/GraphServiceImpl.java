@@ -79,27 +79,30 @@ public class GraphServiceImpl implements GraphService {
     }
 
     public ScheduleResult optimizeSchedule(OptimizationData data) {
-        int maxGroupSize = (int) Math.ceil((double) data.getGraph().getNodes().size() / data.getSchedule().size());
+        int theoryGroupSize = (int) Math.ceil((double) data.getGraph().getNodes().size() / data.getSchedule().size());
         ArrayList<HashSet<String>> schedule = data.getSchedule();
 
-        for (int i = schedule.size() - 1; i > 0; i--) {
-            ArrayList<String> group = new ArrayList<>(schedule.get(i));
-            if (maxGroupSize - group.size() > 0) {
-                ArrayList<String> previousGroup = new ArrayList<>(schedule.get(i - 1));
+        int maxSize = schedule.stream().map(HashSet::size).max(Integer::compareTo).orElse(0);
+        if (maxSize != theoryGroupSize) {
+            for (int i = schedule.size() - 1; i > 0; i--) {
+                ArrayList<String> group = new ArrayList<>(schedule.get(i));
+                if (theoryGroupSize - group.size() > 0) {
+                    ArrayList<String> previousGroup = new ArrayList<>(schedule.get(i - 1));
 
-                int sourceNodeIndex = 0;
-                while (sourceNodeIndex < previousGroup.size() && group.size() < maxGroupSize) {
-                    String sourceNode = previousGroup.get(sourceNodeIndex);
-                    if (!isExistEdge(sourceNode, group, data.getGraph().getEdges())) {
-                        group.add(sourceNode);
-                        previousGroup.remove(sourceNode);
-                    } else {
-                        sourceNodeIndex++;
+                    int sourceNodeIndex = 0;
+                    while (sourceNodeIndex < previousGroup.size() && group.size() < theoryGroupSize) {
+                        String sourceNode = previousGroup.get(sourceNodeIndex);
+                        if (!isExistEdge(sourceNode, group, data.getGraph().getEdges())) {
+                            group.add(sourceNode);
+                            previousGroup.remove(sourceNode);
+                        } else {
+                            sourceNodeIndex++;
+                        }
                     }
-                }
 
-                schedule.set(i, new HashSet<>(group));
-                schedule.set(i - 1, new HashSet<>(previousGroup));
+                    schedule.set(i, new HashSet<>(group));
+                    schedule.set(i - 1, new HashSet<>(previousGroup));
+                }
             }
         }
 
