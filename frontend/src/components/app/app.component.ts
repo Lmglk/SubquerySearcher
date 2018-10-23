@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {IGraph} from "../../types/graph";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -8,14 +9,19 @@ import {IGraph} from "../../types/graph";
 })
 export class AppComponent {
 
-  public graphData: IGraph;
-  public schedule: string[][];
+  public graphData: Subject<IGraph>;
+  public schedule: Subject<string[][]>;
+
+  constructor() {
+    this.graphData = new Subject<IGraph>();
+    this.schedule = new Subject<string[][]>()
+  }
 
   getGraphData(graph: IGraph) {
-    this.graphData = {...graph};
+    this.graphData.next(graph);
   }
 
   getSchedule(schedule: string[][]) {
-    this.schedule = schedule;
+    this.schedule.next(schedule);
   }
 }

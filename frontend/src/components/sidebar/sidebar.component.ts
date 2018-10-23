@@ -13,11 +13,10 @@ export class SidebarComponent {
   @Output() graphData: EventEmitter<IGraph> = new EventEmitter();
   @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
-  optimizeGraphToogle: boolean;
-  statistics: any;
-
   public graph: IGraph;
+  public statistics: any;
   public separatedNodeList: any;
+  public optimizeGraphToogle: boolean;
 
   private file: File;
   private modifiedGraph: IGraph;

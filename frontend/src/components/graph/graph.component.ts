@@ -1,6 +1,7 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {IGraph} from "../../types/graph";
 import * as d3 from "d3";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'graph',
@@ -9,6 +10,9 @@ import * as d3 from "d3";
   encapsulation: ViewEncapsulation.None
 })
 export class GraphComponent implements OnInit, OnDestroy {
+  @Input() graphData: Observable<IGraph>;
+  @Input() scheduleData: Observable<string[][]>;
+
   public data: IGraph;
 
   private readonly offset = 50;
@@ -17,20 +21,19 @@ export class GraphComponent implements OnInit, OnDestroy {
   private height;
   private schedule: string[][];
 
-  @Input() set graphData(data: IGraph) {
-    this.data = {...data};
-    this.schedule = null;
-    this.redraw()
-  }
-
-  @Input() set scheduleData(schedule: string[][]) {
-    if (schedule) {
-      this.schedule = schedule;
-      this.redraw()
-    }
-  }
-
   ngOnInit(): void {
+    this.graphData.subscribe(data => {
+      this.data = data;
+      this.schedule = null;
+      this.redraw();
+    });
+
+    this.scheduleData.subscribe((schedule) => {
+      if (schedule) {
+        this.schedule = schedule;
+        this.redraw()
+      }
+    });
     window.addEventListener('resize', this.redraw);
   }
 
