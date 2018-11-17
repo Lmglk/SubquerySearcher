@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
+import {Schedule} from "../../types/schedule";
 
 @Component({
   selector: 'schedule',
@@ -7,10 +8,10 @@ import {Observable} from "rxjs";
   styleUrls: ['./schedule.component.css']
 })
 export class ScheduleComponent implements OnInit {
-  @Input() data: Observable<string[][]>;
+  @Input() data: Observable<Schedule>;
 
   public rows = [];
-  public schedule: string[][];
+  public schedule: Schedule;
 
   ngOnInit(): void {
     this.data.subscribe(schedule => {

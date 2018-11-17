@@ -1,6 +1,12 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
 import {HttpService} from "../../services/http.service";
-import {IGraph} from "../../types/graph";
+import {Graph} from "../../types/graph";
+import {ToastrService} from "ngx-toastr";
+import {OptimicationData} from "../../types/optimication-data";
+import {ScheduleResult} from "../../types/schedule-result";
+import {Statistic} from "../../types/statistic";
+import {Edge} from "../../types/edge";
+import {Node} from "../../types/node";
 
 @Component({
   selector: 'sidebar',
@@ -10,106 +16,144 @@ import {IGraph} from "../../types/graph";
 export class SidebarComponent {
   @ViewChild('fileUpload') inputFile: ElementRef;
 
-  @Output() graphData: EventEmitter<IGraph> = new EventEmitter();
+  @Output() graphData: EventEmitter<Graph> = new EventEmitter();
   @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
-  public graph: IGraph;
-  public statistics: any;
+  public graph: Graph;
+  public statistics: Statistic;
   public separatedNodeList: any;
   public optimizeGraphToogle: boolean;
 
   private file: File;
-  private modifiedGraph: IGraph;
+  private modifiedGraph: Graph;
 
-  constructor(private httpService: HttpService) {
+  constructor(private toastr: ToastrService,
+              private httpService: HttpService) {
     this.separatedNodeList = null;
     this.optimizeGraphToogle = false;
   }
 
-  public changeFile() {
+  public changeFile(): void {
     const fileBrowser = this.inputFile.nativeElement;
     this.file = fileBrowser.files[0];
   }
 
-  public uploadFile() {
-    this.httpService.uploadFile(this.file)
-      .then((data: IGraph) => {
-        this.graph = data;
-        this.graphData.emit(this.graph);
-        this.schedule.emit(null);
-        this.separatedNodeList = this.graph.nodes.map(node => ({
-          id: node.id,
-          label: node.label,
-          count: 1
-        }));
-      })
-      .catch(() => console.error('Uploading file - FAIL'))
+  public async uploadFile(): Promise<void> {
+    if (!this.file) {
+      return;
+    }
+
+    try {
+      this.graph = await this.httpService.uploadFile(this.file);
+      this.graphData.emit(this.graph);
+      this.schedule.emit(null);
+      this.separatedNodeList = this.graph.nodes.map(node => ({
+        id: node.id,
+        label: node.label,
+        count: 1
+      }));
+    } catch (e) {
+      this.toastr.error(e.error);
+    }
   }
 
-  public optimizeGraph() {
+  public async calculateGraph(): Promise<void> {
     this.schedule.emit(null);
     this.modifiedGraph = {...this.graph};
-    this.separatedNodeList.filter(item => item.count > 1).forEach(item => this.separateNodes(item));
-    this.httpService.getSchedule(this.modifiedGraph.edges)
-      .then((data: any) => {
-        if (this.optimizeGraphToogle) {
-          const optimizationData = {
-            graph: this.modifiedGraph,
-            schedule: data.schedule
-          };
-          this.httpService.optimizeSchedule(optimizationData)
-            .then((data: any) => {
-              this.graphData.emit(this.modifiedGraph);
-              this.schedule.emit(data.schedule);
-              this.statistics = data.statistics;
-            });
-        } else {
-          this.graphData.emit(this.modifiedGraph);
-          this.schedule.emit(data.schedule);
-          this.statistics = data.statistics;
-        }
-      });
+    this.separatedNodeList
+      .filter(item => item.count > 1)
+      .forEach(item => this.separateNodes(item));
+
+    try {
+      let scheduleResult = await this.httpService.getSchedule(this.modifiedGraph.edges);
+      if (this.optimizeGraphToogle) {
+        scheduleResult = await this.optimizationGraph({
+          graph: this.modifiedGraph,
+          schedule: scheduleResult.schedule
+        });
+      }
+
+      this.graphData.emit(this.modifiedGraph);
+      this.schedule.emit(scheduleResult.schedule);
+      this.statistics = scheduleResult.statistics;
+    } catch (e) {
+      this.toastr.error(e.error);
+    }
+  }
+
+  private async optimizationGraph(optimizationData: OptimicationData): Promise<ScheduleResult> {
+    return await this.httpService.optimizeSchedule(optimizationData)
   }
 
   private separateNodes(item) {
-    const targets = this.modifiedGraph.edges
-      .filter(edge => edge.source === item.id)
-      .map(edge => edge.target);
+    const targetNodeNames = this.getTargetNodes(item.id, this.modifiedGraph.edges);
+    const sourceNodeNames = this.getSourceNodes(item.id, this.modifiedGraph.edges);
 
-    const sources = this.modifiedGraph.edges
-      .filter(edge => edge.target === item.id)
-      .map(edge => edge.source);
-
-    let currentEdgeId = Math.max(...this.modifiedGraph.edges.map(edge => edge.id));
-    this.modifiedGraph.nodes = this.modifiedGraph.nodes.filter(node => node.id != item.id);
-    this.modifiedGraph.edges = this.modifiedGraph.edges.filter(edge => edge.source != item.id && edge.target != item.id);
+    let currentEdgeId = this.getMaxId(this.modifiedGraph.edges);
+    this.modifiedGraph.nodes = this.removeNode(item.id, this.modifiedGraph.nodes);
+    this.modifiedGraph.edges = this.removeInputOutputEdges(item.id, this.modifiedGraph.edges);
 
     for (let i = 1; i <= item.count; i++) {
-      this.modifiedGraph.nodes = [
-        ...this.modifiedGraph.nodes,
-        {
-          id: `${item.id}.${i}`,
-          label: `${item.id}.${i}`,
-        }
-      ];
-
-      this.modifiedGraph.edges = [
-        ...this.modifiedGraph.edges,
-        ...targets.map(targetNode => ({
-          id: ++currentEdgeId,
-          source: `${item.id}.${i}`,
-          target: targetNode
-        }))
-      ];
-
-      this.modifiedGraph.edges = [
-        ...this.modifiedGraph.edges,
-        ...sources.map(sourceNode => ({
-          id: ++currentEdgeId,
-          source: sourceNode,
-          target: `${item.id}.${i}`
-        }))
-      ];
+      const nodeName = `${item.id}.${i}`;
+      this.modifiedGraph.nodes = this.addNode(nodeName, this.modifiedGraph.nodes);
+      this.modifiedGraph.edges = this.addTargetEdge(++currentEdgeId, nodeName, this.modifiedGraph.edges, targetNodeNames);
+      this.modifiedGraph.edges = this.addSourceEdge(++currentEdgeId, nodeName, this.modifiedGraph.edges, sourceNodeNames);
     }
+  }
+
+  private addNode(nodeName: string, nodes: Node[]) {
+    return [
+      ...nodes,
+      {
+        id: nodeName,
+        label: nodeName,
+      }
+    ];
+  }
+
+  private addTargetEdge(id: number, nodeName: string, edges: Edge[], targetNodeNames: string[]) {
+    return [
+      ...edges,
+      ...targetNodeNames.map(targetNode => ({
+        id: ++id,
+        source: nodeName,
+        target: targetNode
+      }))
+    ];
+  }
+
+  private addSourceEdge(id: number, nodeName: string, edges: Edge[], sourceNodeNames: string[]) {
+    return this.modifiedGraph.edges = [
+      ...this.modifiedGraph.edges,
+      ...sourceNodeNames.map(sourceNode => ({
+        id: ++id,
+        source: sourceNode,
+        target: nodeName
+      }))
+    ];
+  }
+
+  private getSourceNodes(nodeId: string, edges: Edge[]) {
+    return edges
+      .filter(edge => edge.target === nodeId)
+      .map(edge => edge.source);
+  }
+
+  private getTargetNodes(nodeId: string, edges: Edge[]) {
+    return edges
+      .filter(edge => edge.source === nodeId)
+      .map(edge => edge.target);
+  }
+
+  private getMaxId(edges: Edge[]) {
+    return Math.max(...edges.map(edge => edge.id));
+  }
+
+  private removeNode(nodeId: string, nodes: Node[]) {
+    return nodes.filter(node => node.id != nodeId);
+  }
+
+  private removeInputOutputEdges(nodeId: string, edges: Edge[]) {
+    return edges.filter(edge => edge.source != nodeId && edge.target != nodeId);
   }
 }

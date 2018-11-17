@@ -1,23 +1,30 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {IEdge} from "../types/edge";
+import {Edge} from "../types/edge";
+import {Graph} from "../types/graph";
+import {ScheduleResult} from "../types/schedule-result";
+import {OptimicationData} from "../types/optimication-data";
 
 @Injectable()
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   uploadFile(file: File) {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post('http://localhost:8080/api/graph/loadGraph', formData).toPromise();
+    return this.http.post<Graph>('http://localhost:8080/api/graph/loadGraph', formData)
+      .toPromise();
   }
 
-  getSchedule(edgeList: IEdge[]) {
-    return this.http.post('http://localhost:8080/api/graph/getSchedule', edgeList).toPromise();
+  getSchedule(edgeList: Edge[]) {
+    return this.http.post<ScheduleResult>('http://localhost:8080/api/graph/getSchedule', edgeList)
+      .toPromise();
   }
 
-  optimizeSchedule(optimizationData: any) {
-    return this.http.post('http://localhost:8080/api/graph/optimizeSchedule', optimizationData).toPromise();
+  optimizeSchedule(optimizationData: OptimicationData) {
+    return this.http.post<ScheduleResult>('http://localhost:8080/api/graph/optimizeSchedule', optimizationData)
+      .toPromise();
   }
 }

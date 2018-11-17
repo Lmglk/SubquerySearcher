@@ -35,8 +35,8 @@ public class GraphServiceImpl implements GraphService {
             nodes = (ArrayList<Node>) tempNodes.stream().map(node -> new Node(node, node)).collect(Collectors.toList());
             bufferedReader.close();
             inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            return null;
         }
 
         return new Graph(nodes, edges);

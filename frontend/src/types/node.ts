@@ -1,4 +1,4 @@
-export interface INode {
+export type Node = {
   id: string;
   label: string;
   x?: number;

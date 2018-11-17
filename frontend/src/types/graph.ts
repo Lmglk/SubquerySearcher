@@ -1,7 +1,7 @@
-import {IEdge} from "./edge";
-import {INode} from "./node";
+import {Edge} from "./edge";
+import {Node} from "./node";
 
-export interface IGraph {
-  edges: IEdge[];
-  nodes: INode[];
+export type Graph = {
+  edges: Edge[];
+  nodes: Node[];
 }

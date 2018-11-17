@@ -10,6 +10,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule, MatCardModule, MatDividerModule, MatSlideToggleModule} from "@angular/material";
 import {FormsModule} from "@angular/forms";
+import {ToastrModule} from "ngx-toastr";
 
 @NgModule({
   declarations: [
@@ -23,6 +24,9 @@ import {FormsModule} from "@angular/forms";
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      closeButton: true
+    }),
     MatCardModule,
     MatButtonModule,
     MatDividerModule,

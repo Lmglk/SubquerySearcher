@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {IGraph} from "../../types/graph";
+import {Graph} from "../../types/graph";
 import * as d3 from "d3";
 import {Observable} from "rxjs";
 
@@ -10,10 +10,10 @@ import {Observable} from "rxjs";
   encapsulation: ViewEncapsulation.None
 })
 export class GraphComponent implements OnInit, OnDestroy {
-  @Input() graphData: Observable<IGraph>;
+  @Input() graphData: Observable<Graph>;
   @Input() scheduleData: Observable<string[][]>;
 
-  public data: IGraph;
+  public data: Graph;
 
   private readonly offset = 50;
   private readonly nodeSize = 15;
@@ -34,12 +34,14 @@ export class GraphComponent implements OnInit, OnDestroy {
         this.redraw()
       }
     });
-    window.addEventListener('resize', this.redraw);
+    window.addEventListener('resize', this.redraw.bind(this));
   }
 
-  private redraw = () => {
-    this.destroyGraph();
-    this.renderGraph();
+  private redraw() {
+    if (this.data) {
+      this.destroyGraph();
+      this.renderGraph();
+    }
   };
 
   private renderGraph() {
@@ -73,12 +75,12 @@ export class GraphComponent implements OnInit, OnDestroy {
   }
 
   private interpolation() {
-    const r = (this.height / 2) - this.offset;
-    this.data.nodes = this.data.nodes.map((node, index) => ({
-      ...node,
-      x: r * Math.cos((2 * Math.PI * index / this.data.nodes.length - Math.PI / 2) + Math.PI) + (this.width / 2),
-      y: r * Math.sin((2 * Math.PI * index / this.data.nodes.length - Math.PI / 2) + Math.PI) + (this.height / 2)
-    }));
+      const r = (this.height / 2) - this.offset;
+      this.data.nodes = this.data.nodes.map((node, index) => ({
+        ...node,
+        x: r * Math.cos((2 * Math.PI * index / this.data.nodes.length - Math.PI / 2) + Math.PI) + (this.width / 2),
+        y: r * Math.sin((2 * Math.PI * index / this.data.nodes.length - Math.PI / 2) + Math.PI) + (this.height / 2)
+      }));
   }
 
   private interpolationForParallelForm() {

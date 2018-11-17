@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {IGraph} from "../../types/graph";
+import {Graph} from "../../types/graph";
 import {Subject} from "rxjs";
 
 @Component({
@@ -9,15 +9,15 @@ import {Subject} from "rxjs";
 })
 export class AppComponent {
 
-  public graphData: Subject<IGraph>;
+  public graphData: Subject<Graph>;
   public schedule: Subject<string[][]>;
 
   constructor() {
-    this.graphData = new Subject<IGraph>();
+    this.graphData = new Subject<Graph>();
     this.schedule = new Subject<string[][]>()
   }
 
-  getGraphData(graph: IGraph) {
+  getGraphData(graph: Graph) {
     this.graphData.next(graph);
   }
 
