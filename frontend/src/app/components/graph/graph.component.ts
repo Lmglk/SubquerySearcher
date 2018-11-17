@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {Graph} from "../../../types/graph";
+import {Graph} from "../../types/graph";
 import * as d3 from "d3";
 import {Observable} from "rxjs";
 

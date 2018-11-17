@@ -1,10 +1,10 @@
 import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
-import {HttpService} from "../../../services/http.service";
-import {Graph} from "../../../types/graph";
+import {HttpService} from "../../services/http.service";
+import {Graph} from "../../types/graph";
 import {ToastrService} from "ngx-toastr";
-import {OptimicationData} from "../../../types/optimication-data";
-import {ScheduleResult} from "../../../types/schedule-result";
-import {Statistic} from "../../../types/statistic";
+import {OptimicationData} from "../../types/optimication-data";
+import {ScheduleResult} from "../../types/schedule-result";
+import {Statistic} from "../../types/statistic";
 
 @Component({
   selector: 'sidebar',

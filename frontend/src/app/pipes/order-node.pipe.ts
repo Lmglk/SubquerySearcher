@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {Node} from "../../types/node";
+import {Node} from "../types/node";
 
 @Pipe({
   name: 'orderNode'

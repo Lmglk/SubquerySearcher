@@ -5,7 +5,7 @@ import {AppComponent} from './components/app/app.component';
 import {GraphComponent} from './components/graph/graph.component';
 import {SidebarComponent} from './components/sidebar/sidebar.component';
 import {HttpClientModule} from "@angular/common/http";
-import {HttpService} from "../services/http.service";
+import {HttpService} from "./services/http.service";
 import {ScheduleComponent} from './components/schedule/schedule.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule, MatCardModule, MatDividerModule, MatSlideToggleModule} from "@angular/material";
