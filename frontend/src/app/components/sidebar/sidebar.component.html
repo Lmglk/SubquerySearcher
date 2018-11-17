@@ -39,7 +39,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let node of separatedNodeList">
+                <tr *ngFor="let node of separatedNodeList | orderNode">
                     <td>{{node.label}}</td>
                     <td>
                         <input type="number" [(ngModel)]="node.count">

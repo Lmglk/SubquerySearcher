@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Graph} from "../../types/graph";
+import {Graph} from "../../../types/graph";
 import {Subject} from "rxjs";
 
 @Component({

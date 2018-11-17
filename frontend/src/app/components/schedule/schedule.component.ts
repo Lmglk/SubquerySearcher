@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {Schedule} from "../../types/schedule";
+import {Schedule} from "../../../types/schedule";
 
 @Component({
   selector: 'schedule',
