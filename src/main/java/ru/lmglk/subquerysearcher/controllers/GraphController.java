@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.lmglk.subquerysearcher.models.Edge;
-import ru.lmglk.subquerysearcher.models.Graph;
-import ru.lmglk.subquerysearcher.models.OptimizationData;
-import ru.lmglk.subquerysearcher.models.ScheduleResult;
+import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.GraphService;
 
 import java.util.ArrayList;
@@ -32,16 +29,22 @@ public class GraphController {
 
     @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
-    public ResponseEntity getSchedule(@RequestBody ArrayList<Edge> edgeList) {
-        ScheduleResult result = this.graphService.generateSchedule(edgeList);
-        return (result != null)
-                ? ResponseEntity.ok(result)
+    public ResponseEntity getSchedule(@RequestBody Graph graph) {
+        Schedule schedule = this.graphService.generateSchedule(graph);
+        return (schedule != null)
+                ? ResponseEntity.ok(schedule)
                 : ResponseEntity.badRequest().body("Calculation error. The graph may contain loops.");
     }
 
     @ResponseBody
-    @RequestMapping(value = "/optimizeSchedule", method = RequestMethod.POST)
-    public ScheduleResult optimizeSchedule(@RequestBody OptimizationData optimizationData) {
-        return this.graphService.optimizeSchedule(optimizationData);
+    @RequestMapping(value = "/optimizeScheduleWithoutTimestamp", method = RequestMethod.POST)
+    public ScheduleResult optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData optimizationData) {
+        return this.graphService.optimizeScheduleWithoutTimestamp(optimizationData);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/optimizeScheduleWithTimestamp", method = RequestMethod.POST)
+    public ScheduleResult optimizeScheduleWithTimestamp(@RequestBody OptimizationData optimizationData) {
+        return this.graphService.optimizeScheduleWithTimestamp(optimizationData);
     }
 }

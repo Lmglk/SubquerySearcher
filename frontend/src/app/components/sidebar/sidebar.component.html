@@ -5,10 +5,21 @@
                 <input type="file" #fileUpload (change)="changeFile()">
                 <button (click)="uploadFile()">Upload file</button>
 
-                <div class="toggle-btn">
-                    <div>To optimize graph</div>
-                    <mat-slide-toggle [(ngModel)]="optimizeGraphToogle"></mat-slide-toggle>
-                </div>
+                <select (change)="changeOptimizationOption($event)">
+                    <option
+                        *ngFor="let option of optimizationOptions; let index = index"
+                        [value]="index"
+                    >
+                        {{ option }}
+                    </option>
+                    <!--<option [value]="null">No optimization</option>-->
+                    <!--<option [value]="1">Optimization with timestamp</option>-->
+                    <!--<option [value]="2">Optimization without timestamp</option>-->
+                </select>
+                <!--<div class="toggle-btn">-->
+                    <!--<div>Optimize the schedule without timestamps</div>-->
+                    <!--<mat-slide-toggle [(ngModel)]="optimizeGraphToogle"></mat-slide-toggle>-->
+                <!--</div>-->
             </div>
         </mat-card-content>
         <mat-card-actions class="actions">

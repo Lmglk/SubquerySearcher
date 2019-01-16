@@ -11,20 +11,30 @@ export class HttpService {
   constructor(private http: HttpClient) {
   }
 
-  uploadFile(file: File) {
+  uploadFile(file: File): Promise<Graph> {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<Graph>('http://localhost:8080/api/graph/loadGraph', formData)
       .toPromise();
   }
 
-  getSchedule(edgeList: Edge[]) {
-    return this.http.post<ScheduleResult>('http://localhost:8080/api/graph/getSchedule', edgeList)
+  getSchedule(graph: Graph): Promise<ScheduleResult> {
+    return this.http.post<ScheduleResult>('http://localhost:8080/api/graph/getSchedule', graph)
       .toPromise();
   }
 
-  optimizeSchedule(optimizationData: OptimicationData) {
-    return this.http.post<ScheduleResult>('http://localhost:8080/api/graph/optimizeSchedule', optimizationData)
-      .toPromise();
+  optimizeScheduleWithoutTimestamp(optimizationData: OptimicationData): Promise<ScheduleResult> {
+    return this.http.post<ScheduleResult>(
+      'http://localhost:8080/api/graph/optimizeScheduleWithoutTimestamp',
+      optimizationData
+    ).toPromise();
   }
+
+  optimizeScheduleWithTimestamp(optimizationData: OptimicationData): Promise<ScheduleResult> {
+    return this.http.post<ScheduleResult>(
+      'http://localhost:8080/api/graph/optimizeScheduleWithTimestamp',
+      optimizationData
+    ).toPromise();
+  }
+
 }

@@ -1,19 +1,31 @@
 package ru.lmglk.subquerysearcher.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Edge {
+public class Edge extends Entity {
 
-    private long id;
+    private Node source;
 
-    private String source;
+    private Node target;
 
-    private String target;
+    private int time;
+
+    public Edge(Node source, Node target, int time) {
+        this.source = source;
+        this.target = target;
+        this.time = time;
+    }
+
+    String getSourceName() {
+        return source.getName();
+    }
+
+    String getTargetName() {
+        return target.getName();
+    }
 }

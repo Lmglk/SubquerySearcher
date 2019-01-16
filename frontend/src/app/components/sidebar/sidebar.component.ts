@@ -17,18 +17,24 @@ export class SidebarComponent {
   @Output() graphData: EventEmitter<Graph> = new EventEmitter();
   @Output() schedule: EventEmitter<string[][]> = new EventEmitter();
 
+  public readonly optimizationOptions = [
+    'No optimization',
+    'Optimization with timestamp',
+    'Optimization without timestamp'
+  ];
+
   public graph: Graph;
   public statistics: Statistic;
   public separatedNodeList: any;
-  public optimizeGraphToogle: boolean;
+  public selectedOptimizationOption: number;
 
   private file: File;
   private modifiedGraph: Graph;
 
+
   constructor(private toastr: ToastrService,
               private httpService: HttpService) {
-    this.separatedNodeList = null;
-    this.optimizeGraphToogle = false;
+    this.separatedNodeList = 0;
   }
 
   public changeFile(): void {
@@ -55,6 +61,10 @@ export class SidebarComponent {
     }
   }
 
+  public changeOptimizationOption(event: Event) {
+    this.selectedOptimizationOption = parseInt((event.target as HTMLSelectElement).value);
+  }
+
   public async calculateGraph(): Promise<void> {
     this.schedule.emit(null);
     this.modifiedGraph = new Graph(this.graph);
@@ -63,12 +73,21 @@ export class SidebarComponent {
       .forEach(item => this.separateNodes(item));
 
     try {
-      let scheduleResult = await this.httpService.getSchedule(this.modifiedGraph.edges);
-      if (this.optimizeGraphToogle) {
-        scheduleResult = await this.optimizationGraph({
-          graph: this.modifiedGraph,
-          schedule: scheduleResult.schedule
-        });
+      let scheduleResult = await this.httpService.getSchedule(this.modifiedGraph);
+
+      switch (this.selectedOptimizationOption) {
+        case 1:
+          scheduleResult = await this.optimizationGraphWithTimestamp({
+            graph: this.modifiedGraph,
+            schedule: scheduleResult.schedule
+          });
+          break;
+        case 2:
+          scheduleResult = await this.optimizationGraphWithoutTimestamp({
+            graph: this.modifiedGraph,
+            schedule: scheduleResult.schedule
+          });
+          break;
       }
 
       this.graphData.emit(this.modifiedGraph);
@@ -79,24 +98,28 @@ export class SidebarComponent {
     }
   }
 
-  private async optimizationGraph(optimizationData: OptimicationData): Promise<ScheduleResult> {
-    return await this.httpService.optimizeSchedule(optimizationData)
+  private async optimizationGraphWithoutTimestamp(optimizationData: OptimicationData): Promise<ScheduleResult> {
+    return await this.httpService.optimizeScheduleWithoutTimestamp(optimizationData)
+  }
+
+  private async optimizationGraphWithTimestamp(optimizationData: OptimicationData): Promise<ScheduleResult> {
+    return await this.httpService.optimizeScheduleWithTimestamp(optimizationData)
   }
 
   private separateNodes(item) {
-    const targetNodes = this.modifiedGraph.getTargetEdges(item.id);
-    const sourceNodes = this.modifiedGraph.getSourceEdges(item.id);
-    this.modifiedGraph.removeNode(item.id);
-
-    for (let i = 1; i <= item.count; i++) {
-      const nodeName = `${item.id}.${i}`;
-      this.modifiedGraph.addNode(nodeName);
-
-      targetNodes.forEach(targetNode =>
-        this.modifiedGraph.addTargetEdge(nodeName, targetNode.target));
-
-      sourceNodes.forEach(sourceNode =>
-        this.modifiedGraph.addSourceEdge(sourceNode.source, nodeName))
-    }
+    // const targetNodes = this.modifiedGraph.getTargetEdges(item.id);
+    // const sourceNodes = this.modifiedGraph.getSourceEdges(item.id);
+    // this.modifiedGraph.removeNode(item.id);
+    //
+    // for (let i = 1; i <= item.count; i++) {
+    //   const nodeName = `${item.id}.${i}`;
+    //   this.modifiedGraph.addNode(nodeName);
+    //
+    //   targetNodes.forEach(targetNode =>
+    //     this.modifiedGraph.addTargetEdge(nodeName, targetNode.target));
+    //
+    //   sourceNodes.forEach(sourceNode =>
+    //     this.modifiedGraph.addSourceEdge(sourceNode.source, nodeName))
+    // }
   }
 }

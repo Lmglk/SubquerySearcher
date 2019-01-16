@@ -64,8 +64,8 @@ export class GraphComponent implements OnInit, OnDestroy {
     this.data.edges = this.data.edges.map(edges => ({
       ...edges,
       coordinates: [
-        this.getCoordinates(edges.source),
-        this.getCoordinates(edges.target)
+        this.getCoordinates(edges.source.label),
+        this.getCoordinates(edges.target.label)
       ]
     }));
 
@@ -90,7 +90,7 @@ export class GraphComponent implements OnInit, OnDestroy {
 
     this.schedule.forEach((group, groupIndex) => {
       group.forEach((nodeId, nodeIndex) => {
-        const currentNode = this.data.nodes.find(node => node.id === nodeId);
+        const currentNode = this.data.nodes.find(node => node.label === nodeId);
         currentNode.x = linearX(groupIndex);
         currentNode.y = linearY(maxValue - nodeIndex - 1);
       })

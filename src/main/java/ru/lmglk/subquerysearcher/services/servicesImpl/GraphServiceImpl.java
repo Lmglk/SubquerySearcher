@@ -1,84 +1,77 @@
 package ru.lmglk.subquerysearcher.services.servicesImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.GraphService;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class GraphServiceImpl implements GraphService {
 
+    Logger logger = LoggerFactory.getLogger(GraphServiceImpl.class);
+
     @Override
     public Graph readFile(MultipartFile file) {
-        ArrayList<Edge> edges = new ArrayList<>();
-        ArrayList<Node> nodes = new ArrayList<>();
-        HashSet<String> tempNodes = new HashSet<>();
+        Graph graph = new Graph();
         try {
             InputStream inputStream = file.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String str;
-            long id = 1;
             while ((str = bufferedReader.readLine()) != null) {
-                String arr[] = str.split(" ");
-                edges.add(new Edge(id++, arr[0], arr[1]));
-                tempNodes.add(arr[0]);
-                tempNodes.add(arr[1]);
+                String[] arr = str.split(" ");
+                int time = (arr.length == 3) ? Integer.parseInt(arr[2]) : 1;
+                graph.addNode(arr[0]);
+                graph.addNode(arr[1]);
+                graph.addEdge(arr[0], arr[1], time);
             }
-            nodes = (ArrayList<Node>) tempNodes.stream().map(node -> new Node(node, node)).collect(Collectors.toList());
             bufferedReader.close();
             inputStream.close();
         } catch (Exception e) {
             return null;
         }
 
-        return new Graph(nodes, edges);
+        return graph;
     }
+
 
     @Override
-    public ScheduleResult generateSchedule(ArrayList<Edge> edgeList) {
-        ArrayList<HashSet<String>> schedule = new ArrayList<>();
-        HashSet<String> remainder = new HashSet<>();
-        HashSet<String> oldRemainder;
+    public Schedule generateSchedule(Graph graph) {
+        Schedule schedule = new Schedule();
 
-        while (edgeList.size() > 0) {
-            HashSet<String> group = new HashSet<>();
-            HashSet<String> targetNodes = new HashSet<>();
-            edgeList.forEach(item -> {
-                group.add(item.getSource());
-                targetNodes.add(item.getTarget());
-            });
-            oldRemainder = new HashSet<>(remainder);
-            remainder = new HashSet<>(targetNodes);
-            remainder.removeAll(group);
-            group.removeAll(targetNodes);
+        while (!graph.getNodes().isEmpty()) {
+            ArrayList<Node> sourceNodes = graph.getSourceNodeList();
+            ArrayList<Node> targetNodes = graph.getTargetNodeList();
 
-            oldRemainder.removeAll(remainder);
-            if (group.size() == 0)
-                return null;
-
-            if (oldRemainder.size() != 0)
-                group.addAll(oldRemainder);
-            schedule.add(group);
-            edgeList = edgeList.stream()
-                    .filter(e -> !group.contains(e.getSource()))
+            ArrayList<Sequence> sequences = subtractSet(sourceNodes, targetNodes)
+                    .stream()
+                    .map(Sequence::new)
                     .collect(Collectors.toCollection(ArrayList::new));
-            if (edgeList.size() <= 0 && group.size() != 0) {
-                schedule.add(targetNodes);
-            }
+
+            Group group = new Group(sequences);
+            graph.getIndependentNodes().forEach(node -> {
+                group.addSequence(node);
+                graph.removeNode(node);
+            });
+            graph.removeNode(group.getNodes());
+
+            if (group.getNodes().isEmpty()) return null;
+
+            schedule.addGroup(group);
         }
 
-        return new ScheduleResult(schedule, createStatistics(schedule));
+        schedule.createStatistic();
+        return schedule;
     }
 
-    public ScheduleResult optimizeSchedule(OptimizationData data) {
+    public ScheduleResult optimizeScheduleWithoutTimestamp(OptimizationData data) {
         int theoryGroupSize = (int) Math.ceil((double) data.getGraph().getNodes().size() / data.getSchedule().size());
         ArrayList<HashSet<String>> schedule = data.getSchedule();
 
@@ -106,7 +99,44 @@ public class GraphServiceImpl implements GraphService {
             }
         }
 
-        return new ScheduleResult(schedule, createStatistics(schedule));
+        return new ScheduleResult(schedule, null);
+    }
+
+    public ScheduleResult optimizeScheduleWithTimestamp(OptimizationData data) {
+        HashSet<String> group = data.getSchedule().get(0);
+        ArrayList<Edge> edges = data.getGraph().getEdges();
+
+        ArrayList<Edge> currentGroup = getEdgeListWithEqualSource(group, edges);
+
+        Edge min = currentGroup.stream().min(Comparator.comparingInt(Edge::getTime)).orElse(null);
+
+        ArrayList<Edge> bindEdges = edges
+                .stream()
+                .filter(edge -> min.getTarget().equals(edge.getTarget()) && group.contains(edge.getSource()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        Edge maxTimeEdge = bindEdges
+                .stream()
+                .max(Comparator.comparingInt(Edge::getTime))
+                .orElse(null);
+
+//        HashSet<String> nextGroupNameList = data.getSchedule().get(1);
+//        ArrayList<Edge> nextGroup = getEdgeListWithEqualSource(nextGroupNameList, edges);
+
+        return null;
+    }
+
+    private ArrayList<Edge> getEdgeListWithEqualSource(HashSet<String> edgeNameList, ArrayList<Edge> edges) {
+        ArrayList<Edge> group = new ArrayList<>();
+        edgeNameList.forEach(item -> {
+            Edge currentEdge = edges
+                    .stream()
+                    .filter(edge -> item.equals(edge.getSource()))
+                    .findFirst()
+                    .orElse(null);
+            group.add(currentEdge);
+        });
+        return group;
     }
 
     private boolean isExistEdge(String sourceNode, ArrayList<String> group, ArrayList<Edge> edges) {
@@ -119,22 +149,10 @@ public class GraphServiceImpl implements GraphService {
         return isExistEdge;
     }
 
-    private Statistics createStatistics(ArrayList<HashSet<String>> schedule) {
-        int maxCount = schedule.stream().map(HashSet::size).max(Integer::compareTo).get();
-
-        HashSet<String> lastFullyItem = schedule.stream()
-                .filter(group -> group.size() == maxCount)
-                .reduce((a, b) -> b)
-                .orElse(null);
-
-        int totalBubbles = schedule.stream().mapToInt(group -> maxCount - group.size()).sum();
-
-        int hardBubbles = 0;
-        for (HashSet<String> item : schedule) {
-            if (item.equals(lastFullyItem)) break;
-            hardBubbles += maxCount - item.size();
-        }
-
-        return new Statistics(totalBubbles, hardBubbles);
+    private ArrayList<Node> subtractSet(ArrayList<Node> source, ArrayList<Node> target) {
+        return source
+                .stream()
+                .filter(e -> target.stream().noneMatch(item -> item.getId().equals(e.getId())))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

@@ -1,19 +1,15 @@
 package ru.lmglk.subquerysearcher.services;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.lmglk.subquerysearcher.models.Edge;
-import ru.lmglk.subquerysearcher.models.Graph;
-import ru.lmglk.subquerysearcher.models.OptimizationData;
-import ru.lmglk.subquerysearcher.models.ScheduleResult;
-
-import java.util.ArrayList;
-import java.util.HashSet;
+import ru.lmglk.subquerysearcher.models.*;
 
 public interface GraphService {
 
     Graph readFile(MultipartFile file);
 
-    ScheduleResult generateSchedule(ArrayList<Edge> edgeList);
+    Schedule generateSchedule(Graph graph);
 
-    ScheduleResult optimizeSchedule(OptimizationData data);
+    ScheduleResult optimizeScheduleWithoutTimestamp(OptimizationData data);
+
+    ScheduleResult optimizeScheduleWithTimestamp(OptimizationData data);
 }

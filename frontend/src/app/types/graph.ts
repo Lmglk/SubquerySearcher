@@ -23,38 +23,38 @@ export class Graph {
     ];
   }
 
-  public addTargetEdge(sourceNode: string, targetNode: string): void {
+  public addTargetEdge(source: Node, target: Node): void {
     this.edges = [
       ...this.edges,
       {
         id: ++this.edgeId,
-        source: sourceNode,
-        target: targetNode
+        source: source,
+        target: target
       }
     ];
   }
 
-  public addSourceEdge(sourceNode: string, targetNode: string): void {
+  public addSourceEdge(source: Node, target: Node): void {
     this.edges = [
       ...this.edges,
       {
         id: ++this.edgeId,
-        source: sourceNode,
-        target: targetNode
+        source: source,
+        target: target
       }
     ];
   }
 
   public removeNode(nodeId: string): void {
     this.nodes.filter(node => node.id != nodeId);
-    this.edges.filter(edge => edge.source != nodeId && edge.target != nodeId);
+    this.edges.filter(edge => edge.source.id != nodeId && edge.target.id != nodeId);
   }
 
   public getTargetEdges(nodeId: string) {
-    return this.edges.filter(edge => edge.source === nodeId)
+    return this.edges.filter(edge => edge.source.id === nodeId)
   }
 
   public getSourceEdges(nodeId: string) {
-    return this.edges.filter(edge => edge.target === nodeId)
+    return this.edges.filter(edge => edge.target.id === nodeId)
   }
 }

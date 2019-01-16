@@ -1,5 +1,7 @@
+import {Node} from "./node";
+
 export type Edge = {
   id: number;
-  source: string;
-  target: string;
+  source: Node ;
+  target: Node;
 }

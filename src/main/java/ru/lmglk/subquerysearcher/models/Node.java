@@ -1,17 +1,17 @@
 package ru.lmglk.subquerysearcher.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Node {
+public class Node extends Entity {
 
-    String id;
+    private String name;
 
-    String label;
+    public Node(String name) {
+        this.name = name;
+    }
 }
