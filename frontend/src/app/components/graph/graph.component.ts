@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { Graph } from '../../types/graph';
 import * as d3 from 'd3';
+import { Group } from '../../types/Group';
 
 interface GraphNode {
     id: string;
@@ -29,6 +30,7 @@ interface GraphEdge {
 })
 export class GraphComponent implements OnChanges {
     @Input() graph: Graph;
+    @Input() schedule: Group[];
 
     public data: any;
 
@@ -39,20 +41,18 @@ export class GraphComponent implements OnChanges {
     private readonly nodeSize = 15;
     private width;
     private height;
-    private schedule: string[][];
 
     ngOnChanges(): void {
         if (!this.graph) {
             return;
         }
         this.data = this.graph;
-        this.schedule = null;
         this.redraw();
     }
 
     @HostListener('window:resize')
     private redraw() {
-        if (!this.data) {
+        if (!this.graph) {
             return;
         }
         this.destroyGraph();
@@ -114,7 +114,7 @@ export class GraphComponent implements OnChanges {
     }
 
     private interpolationForParallelForm() {
-        const maxValue = Math.max(...this.schedule.map(group => group.length));
+        const maxValue = this.getSizeMaxGroup(this.schedule);
         const linearX = d3
             .scaleLinear()
             .domain([0, this.schedule.length - 1])
@@ -125,14 +125,20 @@ export class GraphComponent implements OnChanges {
             .range([this.offset, this.height - this.offset]);
 
         this.schedule.forEach((group, groupIndex) => {
-            group.forEach((nodeId, nodeIndex) => {
-                const currentNode = this.data.nodes.find(
-                    node => node.label === nodeId
-                );
-                currentNode.x = linearX(groupIndex);
-                currentNode.y = linearY(maxValue - nodeIndex - 1);
+            group.sequences.forEach((sequence, sequenceIndex) => {
+                sequence.nodes.forEach(node => {
+                    const currentNode = this.nodes.find(
+                        item => item.id === node.id
+                    );
+                    currentNode.x = linearX(groupIndex);
+                    currentNode.y = linearY(maxValue - sequenceIndex - 1);
+                });
             });
         });
+    }
+
+    private getSizeMaxGroup(groups: Group[]) {
+        return Math.max(...groups.map(group => group.sequences.length));
     }
 
     private renderNodes(nodes) {
@@ -226,8 +232,6 @@ export class GraphComponent implements OnChanges {
             .attr('x', (d.x = x))
             .attr('y', (d.y = y));
 
-        console.log(d);
-
         d3.selectAll(`line[source="${d.id}"]`)
             .attr('x1', (d.x = x))
             .attr('y1', (d.y = y));
@@ -237,7 +241,7 @@ export class GraphComponent implements OnChanges {
             .attr('y2', (d.y = y));
     }
 
-    private draggedForParallelForm(d) {
+    private draggedForParallelForm(d: GraphNode) {
         const { y } = d3.event;
         d3.select(this)
             .select('circle')
@@ -247,9 +251,8 @@ export class GraphComponent implements OnChanges {
             .select('text')
             .attr('y', (d.y = y));
 
-        d3.selectAll(`line[source="${d.label}"]`).attr('y1', (d.y = y));
-
-        d3.selectAll(`line[target="${d.label}"]`).attr('y2', (d.y = y));
+        d3.selectAll(`line[source="${d.id}"]`).attr('y1', (d.y = y));
+        d3.selectAll(`line[target="${d.id}"]`).attr('y2', (d.y = y));
     }
 
     private static markAllActive() {

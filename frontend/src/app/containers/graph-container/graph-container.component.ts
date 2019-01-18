@@ -4,18 +4,22 @@ import { select, Store } from '@ngrx/store';
 import { selectGraph } from '../../store/selectors/graph.selector';
 import { Graph } from '../../types/graph';
 import { Observable } from 'rxjs';
+import { Group } from '../../types/Group';
+import { selectGroups } from '../../store/selectors/schedule.selector';
 
-// template: '<graph [graphData]="graphData" [scheduleData]="schedule" *ngIf="graphData"></graph>',
 @Component({
     selector: 'app-graph-container',
-    template: '<graph [graph]="graph$ | async"></graph>',
+    template:
+        '<graph [graph]="graph$ | async" [schedule]="schedule$ | async"></graph>',
 })
 export class GraphContainerComponent implements OnInit {
     public graph$: Observable<Graph>;
+    public schedule$: Observable<Group[]>;
 
     constructor(private store: Store<AppState>) {}
 
     ngOnInit() {
         this.graph$ = this.store.pipe(select(selectGraph));
+        this.schedule$ = this.store.pipe(select(selectGroups));
     }
 }

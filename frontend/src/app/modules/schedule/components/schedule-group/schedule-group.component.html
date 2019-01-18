@@ -1,5 +1,5 @@
 <div class="group-grid">
     <div class="sequence" *ngFor="let emptyCell of getEmptyCells()"></div>
-    <div class="sequence" *ngFor="let sequence of group.sequences">{{ getNodeNames(sequence) }}</div>
+    <div class="sequence" *ngFor="let sequence of group.sequences.reverse()">{{ getNodeNames(sequence) }}</div>
     <div class="title">T{{ index }}</div>
 </div>
