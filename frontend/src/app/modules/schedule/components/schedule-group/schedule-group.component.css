@@ -1,0 +1,26 @@
+:host:last-child {
+    border-right: 1px solid #000;
+}
+
+.group-grid:hover {
+    background-color: #DDD;
+    transition: background-color .2s ease;
+}
+
+.title,
+.sequence {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    height: 32px;
+    border: 1px solid #000;
+}
+
+.sequence {
+    border-bottom: none;
+    border-right: none;
+}
+
+.title {
+    border-right: none;
+}

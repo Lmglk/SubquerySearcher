@@ -1,41 +1,41 @@
 #graph {
-  height: 100%;
+    height: 100%;
 }
 
 .node {
-  fill: lightcoral;
-  cursor: -webkit-grab;
-  transition: fill .5s ease;
+    fill: lightcoral;
+    cursor: -webkit-grab;
+    transition: fill 0.5s ease;
 }
 
 .label {
-  stroke: black;
-  text-anchor: middle;
-  alignment-baseline: middle;
+    stroke: black;
+    text-anchor: middle;
+    alignment-baseline: middle;
 }
 
 .edge {
-  stroke: lightcoral;
-  stroke-width: 2;
-  transition: stroke .5s ease;
+    stroke: lightcoral;
+    stroke-width: 2;
+    transition: stroke 0.5s ease;
 }
 
 .marker {
-  transition: fill .5s ease;
+    transition: fill 0.5s ease;
 }
 
-.marker#arrow_active{
-  fill: lightcoral;
+.marker#arrow_active {
+    fill: lightcoral;
 }
 
-.marker#arrow_inactive{
-  fill: lightgray;
+.marker#arrow_inactive {
+    fill: lightgray;
 }
 
 .edge.inactive {
-  stroke: lightgray;
+    stroke: lightgray;
 }
 
 .node.inactive {
-  fill: lightgray;
+    fill: lightgray;
 }

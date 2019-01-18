@@ -2,60 +2,31 @@
     <mat-card class="block-main">
         <mat-card-content class="content">
             <div class="toolbar">
-                <input type="file" #fileUpload (change)="changeFile()">
-                <button (click)="uploadFile()">Upload file</button>
+                <input type="file" #fileUpload (change)="changeFile()" /> <button (click)="uploadFile()">Upload file</button>
 
                 <select (change)="changeOptimizationOption($event)">
-                    <option
-                        *ngFor="let option of optimizationOptions; let index = index"
-                        [value]="index"
-                    >
-                        {{ option }}
-                    </option>
-                    <!--<option [value]="null">No optimization</option>-->
-                    <!--<option [value]="1">Optimization with timestamp</option>-->
-                    <!--<option [value]="2">Optimization without timestamp</option>-->
+                    <option *ngFor="let option of optimizationOptions; let index = index" [value]="index"> {{ option }} </option>
                 </select>
-                <!--<div class="toggle-btn">-->
-                    <!--<div>Optimize the schedule without timestamps</div>-->
-                    <!--<mat-slide-toggle [(ngModel)]="optimizeGraphToogle"></mat-slide-toggle>-->
-                <!--</div>-->
             </div>
         </mat-card-content>
-        <mat-card-actions class="actions">
-            <button mat-button (click)="calculateGraph()">Calculate</button>
-        </mat-card-actions>
+        <mat-card-actions class="actions"> <button mat-button (click)="calculateGraph()">Calculate</button> </mat-card-actions>
     </mat-card>
 
     <mat-card class="block">
-        <mat-card-header>
-            <mat-card-title>Statistics</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="content">
-            <div>Hard bubbles: {{statistics ? statistics.hardBubbles : '-'}}</div>
-            <div>Total bubbles: {{statistics ? statistics.totalBubbles : '-'}}</div>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card class="block">
-        <mat-card-header>
-            <mat-card-title>Separating nodes</mat-card-title>
-        </mat-card-header>
+        <mat-card-header> <mat-card-title>Separating nodes</mat-card-title> </mat-card-header>
         <mat-card-content class="content">
             <table *ngIf="separatedNodeList">
                 <thead>
-                <tr>
-                    <td>Node</td>
-                    <td>Count</td>
-                </tr>
+                    <tr>
+                        <td>Node</td>
+                        <td>Count</td>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let node of separatedNodeList | orderNode">
-                    <td>{{node.label}}</td>
-                    <td>
-                        <input type="number" [(ngModel)]="node.count">
-                    </td>
-                </tr>
+                    <tr *ngFor="let node of (separatedNodeList | orderNode)">
+                        <td>{{ node.label }}</td>
+                        <td><input type="number" [(ngModel)]="node.count" /></td>
+                    </tr>
                 </tbody>
             </table>
         </mat-card-content>

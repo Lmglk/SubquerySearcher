@@ -1,7 +1,8 @@
-import {Node} from "./node";
+import { Node } from './Node';
 
 export type Edge = {
-  id: number;
-  source: Node ;
-  target: Node;
-}
+    id: string;
+    source: Node;
+    target: Node;
+    time: number;
+};

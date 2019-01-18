@@ -1,7 +1,7 @@
-import {Schedule} from "./schedule";
-import {Statistic} from "./statistic";
+import { Schedule } from './schedule';
+import { Statistic } from './statistic';
 
 export type ScheduleResult = {
-  schedule: Schedule,
-  statistics: Statistic
+    schedule: Schedule;
+    statistics: Statistic;
 };
