@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Graph } from '../../types/graph';
+import { Graph } from '../../types/Graph';
 
 export enum ActionTypes {
     SetGraphAction = '[Graph] Set',

@@ -38,13 +38,13 @@ public class GraphController {
 
     @ResponseBody
     @RequestMapping(value = "/optimizeScheduleWithoutTimestamp", method = RequestMethod.POST)
-    public ScheduleResult optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData optimizationData) {
-        return this.graphService.optimizeScheduleWithoutTimestamp(optimizationData);
+    public Schedule optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData data) {
+        return this.graphService.optimizeScheduleWithoutTimestamp(data);
     }
 
     @ResponseBody
     @RequestMapping(value = "/optimizeScheduleWithTimestamp", method = RequestMethod.POST)
-    public ScheduleResult optimizeScheduleWithTimestamp(@RequestBody OptimizationData optimizationData) {
-        return this.graphService.optimizeScheduleWithTimestamp(optimizationData);
+    public Schedule optimizeScheduleWithTimestamp(@RequestBody OptimizationData data) {
+        return this.graphService.optimizeScheduleWithTimestamp(data);
     }
 }

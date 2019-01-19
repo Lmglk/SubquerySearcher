@@ -3,7 +3,7 @@ import { AppState } from '../../types/AppState';
 
 export const selectStatistic = createSelector(
     (state: AppState) => state.scheduleState,
-    state => state.statistics
+    state => state.statistic
 );
 
 export const selectGroups = createSelector(
@@ -13,5 +13,5 @@ export const selectGroups = createSelector(
 
 export const selectMaxGroupSize = createSelector(
     (state: AppState) => state.scheduleState,
-    state => state.statistics && state.statistics.width
+    state => state.statistic && state.statistic.width
 );

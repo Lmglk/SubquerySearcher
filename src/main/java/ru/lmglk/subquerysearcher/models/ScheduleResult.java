@@ -16,5 +16,5 @@ public class ScheduleResult {
 
     ArrayList<HashSet<String>> schedule;
 
-    Statistics statistics;
+    Statistic statistics;
 }

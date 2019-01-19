@@ -14,4 +14,9 @@ public class Node extends Entity {
     public Node(String name) {
         this.name = name;
     }
+
+    public Node(Node node) {
+        super(node.getId());
+        name = node.name;
+    }
 }

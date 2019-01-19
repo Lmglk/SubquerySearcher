@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,6 +17,14 @@ public class Sequence extends Entity {
     public Sequence(Node node) {
         nodes = new ArrayList<>();
         nodes.add(node);
+    }
+
+    public Sequence(Sequence sequence) {
+        super(sequence.getId());
+        nodes = sequence.getNodes()
+                .stream()
+                .map(Node::new)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Sequence() {

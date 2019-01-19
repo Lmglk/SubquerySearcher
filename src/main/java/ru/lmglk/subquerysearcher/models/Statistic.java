@@ -2,6 +2,7 @@ package ru.lmglk.subquerysearcher.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,7 +10,8 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Statistics {
+@NoArgsConstructor
+public class Statistic {
 
     private int totalBubbles;
 
@@ -19,11 +21,18 @@ public class Statistics {
 
     private int height;
 
-    public Statistics(ArrayList<Group> groups) {
+    private int nodes;
+
+    public Statistic(ArrayList<Group> groups) {
         this.height = groups.size();
         this.width = this.calcWeight(groups);
         this.totalBubbles = calcTotalBubbles(groups, this.width);
+        this.nodes = calcNodes(groups);
         this.hardBubbles = calcHardBubbles(groups, this.width);
+    }
+
+    public Statistic(Statistic statistic) {
+        this(statistic.totalBubbles, statistic.hardBubbles, statistic.width, statistic.height, statistic.nodes);
     }
 
     private int calcWeight(ArrayList<Group> groups) {
@@ -55,5 +64,13 @@ public class Statistics {
         }
 
         return hardBubbles;
+    }
+
+    private int calcNodes(ArrayList<Group> groups) {
+        return groups.stream().mapToInt(group -> (int) group.getSequences()
+                .stream()
+                .mapToInt(sequence -> sequence.getNodes().size())
+                .count()
+        ).sum();
     }
 }

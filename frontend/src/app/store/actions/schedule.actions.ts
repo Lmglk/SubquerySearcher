@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Schedule } from '../../types/schedule';
+import { Schedule } from '../../types/Schedule';
 
 export enum ActionTypes {
     SetScheduleAction = '[Statistic] Set',

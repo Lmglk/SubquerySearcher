@@ -28,4 +28,12 @@ public class Edge extends Entity {
     String getTargetName() {
         return target.getName();
     }
+
+    String getSourceId() {
+        return source.getId();
+    }
+
+    String getTargetId() {
+        return target.getId();
+    }
 }

@@ -16,5 +16,5 @@ public class OptimizationData {
 
     Graph graph;
 
-    ArrayList<HashSet<String>> schedule;
+    Schedule schedule;
 }

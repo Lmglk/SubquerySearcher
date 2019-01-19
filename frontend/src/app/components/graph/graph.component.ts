@@ -5,7 +5,7 @@ import {
     OnChanges,
     ViewEncapsulation,
 } from '@angular/core';
-import { Graph } from '../../types/graph';
+import { Graph } from '../../types/Graph';
 import * as d3 from 'd3';
 import { Group } from '../../types/Group';
 

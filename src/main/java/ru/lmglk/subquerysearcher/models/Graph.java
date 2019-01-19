@@ -27,7 +27,7 @@ public class Graph {
     }
 
     public void addNode(String nodeName) {
-        if (isExist(nodeName)) return;
+        if (isExistNode(nodeName)) return;
 
         nodes.add(new Node(nodeName));
     }
@@ -44,9 +44,9 @@ public class Graph {
 
     public void removeEdge(Edge edge) {
         this.edges = this.edges
-            .stream()
-            .filter(item -> !item.getId().equals(edge.getId()))
-            .collect(Collectors.toCollection(ArrayList::new));
+                .stream()
+                .filter(item -> !item.getId().equals(edge.getId()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void removeNode(Node node) {
@@ -95,6 +95,13 @@ public class Graph {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    @JsonIgnore
+    public boolean isExistEdge(Node sourceNode, Node targetNode) {
+        return this.edges
+                .stream()
+                .anyMatch(edge -> edge.getSourceId().equals(sourceNode.getId()) && edge.getTargetId().equals(targetNode.getId()));
+    }
+
     private ArrayList<Edge> getSourceEdgesForNode(Node node) {
         return this.edges
                 .stream()
@@ -109,7 +116,7 @@ public class Graph {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isExist(String nodeName) {
+    private boolean isExistNode(String nodeName) {
         return nodes.stream().anyMatch(node -> nodeName.equals(node.getName()));
     }
 

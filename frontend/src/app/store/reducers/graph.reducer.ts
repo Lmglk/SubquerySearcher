@@ -1,5 +1,5 @@
 import * as GraphAction from '../actions/graph.actions';
-import { Graph } from '../../types/graph';
+import { Graph } from '../../types/Graph';
 
 export interface GraphState {
     graph: Graph;

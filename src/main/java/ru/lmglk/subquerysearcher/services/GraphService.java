@@ -9,7 +9,7 @@ public interface GraphService {
 
     Schedule generateSchedule(Graph graph);
 
-    ScheduleResult optimizeScheduleWithoutTimestamp(OptimizationData data);
+    Schedule optimizeScheduleWithoutTimestamp(OptimizationData data);
 
-    ScheduleResult optimizeScheduleWithTimestamp(OptimizationData data);
+    Schedule optimizeScheduleWithTimestamp(OptimizationData data);
 }

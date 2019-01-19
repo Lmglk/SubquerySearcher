@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Graph } from '../types/graph';
-import { ScheduleResult } from '../types/schedule-result';
-import { OptimicationData } from '../types/optimication-data';
-import { Schedule } from '../types/schedule';
+import { Graph } from '../types/Graph';
+import { Schedule } from '../types/Schedule';
+import { OptimizationData } from '../types/OptimizationData';
 
 @Injectable()
 export class HttpService {
@@ -26,24 +25,20 @@ export class HttpService {
             .toPromise();
     }
 
-    optimizeScheduleWithoutTimestamp(
-        optimizationData: OptimicationData
-    ): Promise<ScheduleResult> {
+    optimizeScheduleWithoutTimestamp(optimizationData: OptimizationData): Promise<Schedule> {
         return this.http
-            .post<ScheduleResult>(
+            .post<Schedule>(
                 'http://localhost:8080/api/graph/optimizeScheduleWithoutTimestamp',
                 optimizationData
             )
             .toPromise();
     }
 
-    optimizeScheduleWithTimestamp(
-        optimizationData: OptimicationData
-    ): Promise<ScheduleResult> {
+    optimizeScheduleWithTimestamp(schedule: Schedule): Promise<Schedule> {
         return this.http
-            .post<ScheduleResult>(
+            .post<Schedule>(
                 'http://localhost:8080/api/graph/optimizeScheduleWithTimestamp',
-                optimizationData
+                schedule
             )
             .toPromise();
     }

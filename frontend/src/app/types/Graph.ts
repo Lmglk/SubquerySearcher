@@ -1,4 +1,4 @@
-import { Edge } from './edge';
+import { Edge } from './Edge';
 import { Node } from './Node';
 
 export class Graph {

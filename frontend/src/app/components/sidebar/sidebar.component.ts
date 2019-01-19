@@ -1,16 +1,16 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { HttpService } from '../../services/http.service';
-import { Graph } from '../../types/graph';
+import { Graph } from '../../types/Graph';
 import { ToastrService } from 'ngx-toastr';
-import { OptimicationData } from '../../types/optimication-data';
-import { ScheduleResult } from '../../types/schedule-result';
-import { Statistic } from '../../types/statistic';
 import { AppState } from '../../types/AppState';
 import { select, Store } from '@ngrx/store';
 import { SetGraphAction } from '../../store/actions/graph.actions';
 import { selectGraph } from '../../store/selectors/graph.selector';
 import { take } from 'rxjs/operators';
 import { SetScheduleAction } from '../../store/actions/schedule.actions';
+import { OptimizationOption, OptimizationOptions } from '../../enums/OptimizationOptions';
+import { Schedule } from '../../types/Schedule';
+import { OptimizationData } from '../../types/OptimizationData';
 
 @Component({
     selector: 'sidebar',
@@ -20,16 +20,11 @@ import { SetScheduleAction } from '../../store/actions/schedule.actions';
 export class SidebarComponent {
     @ViewChild('fileUpload') inputFile: ElementRef;
 
-    public readonly optimizationOptions = [
-        'No optimization',
-        'Optimization with timestamp',
-        'Optimization without timestamp',
-    ];
+    public readonly optimizationOptions = OptimizationOptions;
 
     public graph: Graph;
-    public statistics: Statistic;
     public separatedNodeList: any;
-    public selectedOptimizationOption: number;
+    public selectedOptimizationOption: OptimizationOption;
 
     private file: File;
 
@@ -39,6 +34,7 @@ export class SidebarComponent {
         private store: Store<AppState>
     ) {
         this.separatedNodeList = 0;
+        this.selectedOptimizationOption = OptimizationOption.NO_OPTIMIZATION;
     }
 
     public changeFile(): void {
@@ -60,9 +56,8 @@ export class SidebarComponent {
     }
 
     public changeOptimizationOption(event: Event) {
-        this.selectedOptimizationOption = parseInt(
-            (event.target as HTMLSelectElement).value
-        );
+        this.selectedOptimizationOption = (event.target as HTMLSelectElement)
+            .value as OptimizationOption;
     }
 
     public async calculateGraph(): Promise<void> {
@@ -75,54 +70,31 @@ export class SidebarComponent {
 
         try {
             const schedule = await this.httpService.getSchedule(graph);
-            this.store.dispatch(new SetScheduleAction(schedule));
+
+            switch (this.selectedOptimizationOption) {
+                case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
+                    console.log('timestamp optimization');
+                    break;
+
+                case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
+                    const optimizedSchedule = await this.optimizationGraphWithoutTimestamp({graph, schedule});
+                    this.store.dispatch(new SetScheduleAction(optimizedSchedule));
+                    break;
+
+                default:
+                    this.store.dispatch(new SetScheduleAction(schedule));
+            }
         } catch (e) {
             this.toastr.error(e.error);
         }
-        // this.schedule.emit(null);
-        // this.modifiedGraph = anew Graph(this.graph);
-        // this.separatedNodeList.filter(item => item.count > 1).forEach(item => this.separateNodes(item));
-        //
-        // try {
-        //     let scheduleResult = await this.httpService.getSchedule(this.modifiedGraph);
-        //
-        //     switch (this.selectedOptimizationOption) {
-        //         case 1:
-        //             scheduleResult = await this.optimizationGraphWithTimestamp({
-        //                 graph: this.modifiedGraph,
-        //                 schedule: scheduleResult.schedule,
-        //             });
-        //             break;
-        //         case 2:
-        //             scheduleResult = await this.optimizationGraphWithoutTimestamp({
-        //                 graph: this.modifiedGraph,
-        //                 schedule: scheduleResult.schedule,
-        //             });
-        //             break;
-        //     }
-        //
-        //     this.graphData.emit(this.modifiedGraph);
-        //     this.schedule.emit(scheduleResult.schedule);
-        //     this.statistics = scheduleResult.statistics;
-        // } catch (e) {
-        //     this.toastr.error(e.error);
-        // }
     }
 
-    private async optimizationGraphWithoutTimestamp(
-        optimizationData: OptimicationData
-    ): Promise<ScheduleResult> {
-        return await this.httpService.optimizeScheduleWithoutTimestamp(
-            optimizationData
-        );
+    private async optimizationGraphWithoutTimestamp(optimizationData: OptimizationData): Promise<Schedule> {
+        return await this.httpService.optimizeScheduleWithoutTimestamp(optimizationData);
     }
 
-    private async optimizationGraphWithTimestamp(
-        optimizationData: OptimicationData
-    ): Promise<ScheduleResult> {
-        return await this.httpService.optimizeScheduleWithTimestamp(
-            optimizationData
-        );
+    private async optimizationGraphWithTimestamp(schedule: Schedule): Promise<Schedule> {
+        return await this.httpService.optimizeScheduleWithTimestamp(schedule);
     }
 
     private separateNodes(item) {

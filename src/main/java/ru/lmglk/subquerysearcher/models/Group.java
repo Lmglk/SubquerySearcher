@@ -19,6 +19,14 @@ public class Group extends Entity {
         sequences = new ArrayList<>();
     }
 
+    public Group(Group group) {
+        super(group.getId());
+        sequences = group.getSequences()
+                .stream()
+                .map(Sequence::new)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public void addSequence(Sequence sequence) {
         sequences.add(sequence);
     }
@@ -27,12 +35,20 @@ public class Group extends Entity {
         sequences.add(new Sequence(node));
     }
 
+    public void removeSequence(Sequence sequence) {
+        sequences.remove(sequence);
+    }
+
     @JsonIgnore
     public ArrayList<Node> getNodes() {
         return this.sequences
                 .stream()
                 .flatMap(sequence -> sequence.getNodes().stream())
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public Sequence getSequence(int index) {
+        return this.sequences.get(index);
     }
 
     @JsonIgnore

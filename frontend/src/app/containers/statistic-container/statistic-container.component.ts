@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AppState } from '../../types/AppState';
 import { select, Store } from '@ngrx/store';
-import { Statistic } from '../../types/statistic';
+import { Statistic } from '../../types/Statistic';
 import { Observable } from 'rxjs';
 import { selectStatistic } from '../../store/selectors/schedule.selector';
 
