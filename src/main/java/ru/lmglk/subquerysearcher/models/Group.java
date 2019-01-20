@@ -15,6 +15,8 @@ public class Group extends Entity {
 
     private ArrayList<Sequence> sequences;
 
+    private int time;
+
     public Group() {
         sequences = new ArrayList<>();
     }
@@ -25,18 +27,41 @@ public class Group extends Entity {
                 .stream()
                 .map(Sequence::new)
                 .collect(Collectors.toCollection(ArrayList::new));
+        time = calcTime();
+    }
+
+    public Group(ArrayList<Sequence> sequences) {
+        this.sequences = sequences;
+        time = calcTime();
     }
 
     public void addSequence(Sequence sequence) {
         sequences.add(sequence);
+        time = calcTime();
     }
 
     public void addSequence(Node node) {
         sequences.add(new Sequence(node));
+        time = calcTime();
     }
 
     public void removeSequence(Sequence sequence) {
         sequences.remove(sequence);
+        time = calcTime();
+    }
+
+    public void removeNode(Node node) {
+        Sequence findSequence = sequences
+                .stream()
+                .filter(sequence -> sequence.getNodes().contains(node))
+                .findFirst()
+                .orElse(null);
+
+        if (findSequence == null) return;
+
+        findSequence.removeNode(node);
+        if (findSequence.size() == 0)
+            sequences.remove(findSequence);
     }
 
     @JsonIgnore
@@ -52,7 +77,30 @@ public class Group extends Entity {
     }
 
     @JsonIgnore
+    public Sequence getSequenceWithMinTime() {
+        int minTime = sequences
+                .stream()
+                .mapToInt(Sequence::getTime)
+                .min()
+                .orElse(0);
+
+        return sequences
+                .stream()
+                .filter(sequence -> sequence.getTime() == minTime)
+                .findFirst()
+                .orElse(sequences.get(0));
+    }
+
+    @JsonIgnore
     public int size() {
         return this.sequences.size();
+    }
+
+    private int calcTime() {
+        return time = sequences
+                .stream()
+                .mapToInt(Sequence::getTime)
+                .max()
+                .orElse(0);
     }
 }

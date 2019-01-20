@@ -38,7 +38,8 @@ export class GraphComponent implements OnChanges {
     private edges: GraphEdge[];
 
     private readonly offset = 50;
-    private readonly nodeSize = 15;
+    private readonly nodeRadius = 15;
+    private readonly nodeOffset = 15;
     private width;
     private height;
 
@@ -126,11 +127,13 @@ export class GraphComponent implements OnChanges {
 
         this.schedule.forEach((group, groupIndex) => {
             group.sequences.forEach((sequence, sequenceIndex) => {
-                sequence.nodes.forEach(node => {
+                sequence.nodes.forEach((node, nodeIndex) => {
                     const currentNode = this.nodes.find(
                         item => item.id === node.id
                     );
-                    currentNode.x = linearX(groupIndex);
+                    currentNode.x =
+                        linearX(groupIndex) +
+                        nodeIndex * (this.nodeRadius * 2 + this.nodeOffset);
                     currentNode.y = linearY(maxValue - sequenceIndex - 1);
                 });
             });
@@ -162,7 +165,7 @@ export class GraphComponent implements OnChanges {
             .append('circle')
             .attr('cx', (d: GraphNode) => d.x)
             .attr('cy', (d: GraphNode) => d.y)
-            .attr('r', this.nodeSize);
+            .attr('r', this.nodeRadius);
 
         nodes
             .selectAll('g.node')
@@ -198,7 +201,7 @@ export class GraphComponent implements OnChanges {
             .attr('id', d => d)
             .attr('class', 'marker')
             .attr('viewBox', '0 -5 10 10')
-            .attr('refX', this.nodeSize + 5)
+            .attr('refX', this.nodeRadius + 5)
             .attr('markerWidth', 6)
             .attr('markerHeight', 6)
             .attr('orient', 'auto')

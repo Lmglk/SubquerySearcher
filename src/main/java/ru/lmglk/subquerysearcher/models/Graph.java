@@ -26,20 +26,23 @@ public class Graph {
         edges = new ArrayList<>();
     }
 
-    public void addNode(String nodeName) {
-        if (isExistNode(nodeName)) return;
-
-        nodes.add(new Node(nodeName));
+    public void addNode(String nodeName, int time) {
+        Node node = findNode(nodeName);
+        if (node != null) {
+            node.setTime(time);
+        } else {
+            nodes.add(new Node(nodeName, time));
+        }
     }
 
-    public void addEdge(String source, String target, int time) {
+    public void addEdge(String source, String target) {
         Node sourceNode = getNodeByName(source);
         Node targetNode = getNodeByName(target);
 
         if (sourceNode == null) throw new NullPointerException("Node named \"" + source + "\" does not exist");
         if (targetNode == null) throw new NullPointerException("Node named \"" + target + "\" does not exist");
 
-        edges.add(new Edge(sourceNode, targetNode, time));
+        edges.add(new Edge(sourceNode, targetNode));
     }
 
     public void removeEdge(Edge edge) {
@@ -116,8 +119,12 @@ public class Graph {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isExistNode(String nodeName) {
-        return nodes.stream().anyMatch(node -> nodeName.equals(node.getName()));
+    private Node findNode(String nodeName) {
+        return nodes
+                .stream()
+                .filter(node -> nodeName.equals(node.getName()))
+                .findFirst()
+                .orElse(null);
     }
 
     private Node getNodeByName(String nodeName) {

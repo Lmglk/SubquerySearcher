@@ -25,9 +25,9 @@ public class GraphServiceImpl implements GraphService {
             while ((str = bufferedReader.readLine()) != null) {
                 String[] arr = str.split(" ");
                 int time = (arr.length == 3) ? Integer.parseInt(arr[2]) : 1;
-                graph.addNode(arr[0]);
-                graph.addNode(arr[1]);
-                graph.addEdge(arr[0], arr[1], time);
+                graph.addNode(arr[0], time);
+                graph.addNode(arr[1], 1);
+                graph.addEdge(arr[0], arr[1]);
             }
             bufferedReader.close();
             inputStream.close();
@@ -93,6 +93,56 @@ public class GraphServiceImpl implements GraphService {
         return schedule;
     }
 
+    @Override
+    public Schedule optimizeScheduleWithTimestamp(OptimizationData data) {
+        Schedule schedule = data.getSchedule();
+        Graph graph = data.getGraph();
+
+        for (int i = 0; i < schedule.getGroups().size() - 1; i++) {
+            Group group = schedule.getGroup(i);
+            Group newGroup = schedule.getGroup(i + 1);
+
+            while (true) {
+                boolean isCanMove = true;
+
+                boolean isAlignGroup = group.getSequences()
+                        .stream()
+                        .allMatch(sequence -> sequence.getTime() == group.getTime());
+
+                if (isAlignGroup) break;
+
+                Sequence sequence = group.getSequenceWithMinTime();
+                ArrayList<Node> bindTargetNodes = newGroup.getNodes()
+                        .stream()
+                        .filter(targetNode -> graph.isExistEdge(sequence.getLastNode(), targetNode))
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+                if (bindTargetNodes.size() == 0) break;
+
+                for (Node targetNode : bindTargetNodes) {
+                    ArrayList<Node> bindSourceNodes = group.getNodes()
+                            .stream()
+                            .filter(sourceNode -> graph.isExistEdge(sourceNode, targetNode))
+                            .filter(sourceNode -> sourceNode != sequence.getLastNode())
+                            .collect(Collectors.toCollection(ArrayList::new));
+
+                    if (bindSourceNodes.isEmpty()) {
+                        newGroup.removeNode(targetNode);
+                        sequence.addNode(targetNode);
+                        break;
+                    } else {
+                        isCanMove = false;
+                    }
+                }
+
+                if (!isCanMove) break;
+            }
+        }
+
+        schedule.createStatistic();
+        return schedule;
+    }
+
     private Schedule moveIndependentSequences(int groupIndex, int secondGroupIndex, int theoryGroupSize, Schedule s, Graph graph, Direction optimizationDirection) {
         Schedule schedule = new Schedule(s);
         Group group = schedule.getGroup(groupIndex);
@@ -110,35 +160,6 @@ public class GraphServiceImpl implements GraphService {
         }
 
         return schedule;
-    }
-
-//    public ScheduleResult optimizeScheduleWithTimestamp(OptimizationData data) {
-//        HashSet<String> group = data.getSchedule().get(0);
-//        ArrayList<Edge> edges = data.getGraph().getEdges();
-//
-//        ArrayList<Edge> currentGroup = getEdgeListWithEqualSource(group, edges);
-//
-//        Edge min = currentGroup.stream().min(Comparator.comparingInt(Edge::getTime)).orElse(null);
-//
-//        ArrayList<Edge> bindEdges = edges
-//                .stream()
-//                .filter(edge -> min.getTarget().equals(edge.getTarget()) && group.contains(edge.getSource()))
-//                .collect(Collectors.toCollection(ArrayList::new));
-//
-//        Edge maxTimeEdge = bindEdges
-//                .stream()
-//                .max(Comparator.comparingInt(Edge::getTime))
-//                .orElse(null);
-//
-////        HashSet<String> nextGroupNameList = data.getSchedule().get(1);
-////        ArrayList<Edge> nextGroup = getEdgeListWithEqualSource(nextGroupNameList, edges);
-//
-//        return null;
-//    }
-
-    @Override
-    public Schedule optimizeScheduleWithTimestamp(OptimizationData data) {
-        return null;
     }
 
     private int calcTheoryGroupSize(int countNodes, int maxGroupSize) {

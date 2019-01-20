@@ -25,7 +25,9 @@ export class HttpService {
             .toPromise();
     }
 
-    optimizeScheduleWithoutTimestamp(optimizationData: OptimizationData): Promise<Schedule> {
+    optimizeScheduleWithoutTimestamp(
+        optimizationData: OptimizationData
+    ): Promise<Schedule> {
         return this.http
             .post<Schedule>(
                 'http://localhost:8080/api/graph/optimizeScheduleWithoutTimestamp',
@@ -34,11 +36,13 @@ export class HttpService {
             .toPromise();
     }
 
-    optimizeScheduleWithTimestamp(schedule: Schedule): Promise<Schedule> {
+    optimizeScheduleWithTimestamp(
+        optimizationData: OptimizationData
+    ): Promise<Schedule> {
         return this.http
             .post<Schedule>(
                 'http://localhost:8080/api/graph/optimizeScheduleWithTimestamp',
-                schedule
+                optimizationData
             )
             .toPromise();
     }

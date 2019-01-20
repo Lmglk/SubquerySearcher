@@ -23,16 +23,19 @@ public class Statistic {
 
     private int nodes;
 
+    private int time;
+
     public Statistic(ArrayList<Group> groups) {
         this.height = groups.size();
         this.width = this.calcWeight(groups);
         this.totalBubbles = calcTotalBubbles(groups, this.width);
         this.nodes = calcNodes(groups);
         this.hardBubbles = calcHardBubbles(groups, this.width);
+        this.time = calcTime(groups);
     }
 
     public Statistic(Statistic statistic) {
-        this(statistic.totalBubbles, statistic.hardBubbles, statistic.width, statistic.height, statistic.nodes);
+        this(statistic.totalBubbles, statistic.hardBubbles, statistic.width, statistic.height, statistic.nodes, statistic.time);
     }
 
     private int calcWeight(ArrayList<Group> groups) {
@@ -72,5 +75,9 @@ public class Statistic {
                 .mapToInt(sequence -> sequence.getNodes().size())
                 .count()
         ).sum();
+    }
+
+    private int calcTime(ArrayList<Group> groups) {
+        return groups.stream().mapToInt(Group::getTime).sum();
     }
 }

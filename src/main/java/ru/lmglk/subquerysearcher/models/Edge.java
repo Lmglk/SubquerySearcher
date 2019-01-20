@@ -13,12 +13,9 @@ public class Edge extends Entity {
 
     private Node target;
 
-    private int time;
-
-    public Edge(Node source, Node target, int time) {
+    public Edge(Node source, Node target) {
         this.source = source;
         this.target = target;
-        this.time = time;
     }
 
     String getSourceName() {

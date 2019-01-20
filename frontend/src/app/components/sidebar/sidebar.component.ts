@@ -8,7 +8,10 @@ import { SetGraphAction } from '../../store/actions/graph.actions';
 import { selectGraph } from '../../store/selectors/graph.selector';
 import { take } from 'rxjs/operators';
 import { SetScheduleAction } from '../../store/actions/schedule.actions';
-import { OptimizationOption, OptimizationOptions } from '../../enums/OptimizationOptions';
+import {
+    OptimizationOption,
+    OptimizationOptions,
+} from '../../enums/OptimizationOptions';
 import { Schedule } from '../../types/Schedule';
 import { OptimizationData } from '../../types/OptimizationData';
 
@@ -73,12 +76,19 @@ export class SidebarComponent {
 
             switch (this.selectedOptimizationOption) {
                 case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
-                    console.log('timestamp optimization');
+                    const optimizedScheduleWithTime = await this.optimizationGraphWithTimestamp(
+                        { graph, schedule }
+                    );
+                    this.store.dispatch(new SetScheduleAction(optimizedScheduleWithTime));
                     break;
 
                 case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
-                    const optimizedSchedule = await this.optimizationGraphWithoutTimestamp({graph, schedule});
-                    this.store.dispatch(new SetScheduleAction(optimizedSchedule));
+                    const optimizedSchedule = await this.optimizationGraphWithoutTimestamp(
+                        { graph, schedule }
+                    );
+                    this.store.dispatch(
+                        new SetScheduleAction(optimizedSchedule)
+                    );
                     break;
 
                 default:
@@ -89,12 +99,20 @@ export class SidebarComponent {
         }
     }
 
-    private async optimizationGraphWithoutTimestamp(optimizationData: OptimizationData): Promise<Schedule> {
-        return await this.httpService.optimizeScheduleWithoutTimestamp(optimizationData);
+    private async optimizationGraphWithoutTimestamp(
+        optimizationData: OptimizationData
+    ): Promise<Schedule> {
+        return await this.httpService.optimizeScheduleWithoutTimestamp(
+            optimizationData
+        );
     }
 
-    private async optimizationGraphWithTimestamp(schedule: Schedule): Promise<Schedule> {
-        return await this.httpService.optimizeScheduleWithTimestamp(schedule);
+    private async optimizationGraphWithTimestamp(
+        optimizationData: OptimizationData
+    ): Promise<Schedule> {
+        return await this.httpService.optimizeScheduleWithTimestamp(
+            optimizationData
+        );
     }
 
     private separateNodes(item) {

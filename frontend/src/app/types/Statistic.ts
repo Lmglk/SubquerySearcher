@@ -4,4 +4,5 @@ export type Statistic = {
     nodes: number;
     height: number;
     width: number;
+    time: number;
 };

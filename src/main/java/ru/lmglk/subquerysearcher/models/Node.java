@@ -11,12 +11,16 @@ public class Node extends Entity {
 
     private String name;
 
-    public Node(String name) {
+    private int time;
+
+    public Node(String name, int time) {
         this.name = name;
+        this.time = time;
     }
 
     public Node(Node node) {
         super(node.getId());
         name = node.name;
+        time = node.time;
     }
 }
