@@ -62,6 +62,7 @@ public class Group extends Entity {
         findSequence.removeNode(node);
         if (findSequence.size() == 0)
             sequences.remove(findSequence);
+        time = calcTime();
     }
 
     @JsonIgnore

@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class GraphServiceImpl implements GraphService {
@@ -104,43 +105,89 @@ public class GraphServiceImpl implements GraphService {
 
             while (true) {
                 boolean isCanMove = true;
+                if (isAlignGroup(group)) break;
 
-                boolean isAlignGroup = group.getSequences()
-                        .stream()
-                        .allMatch(sequence -> sequence.getTime() == group.getTime());
+                Sequence minSequence = group.getSequenceWithMinTime();
+                ArrayList<Node> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), group, newGroup, graph);
 
-                if (isAlignGroup) break;
+                for (Node targetNode : allowedNodesToAttach) {
+                    isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, group, graph);
 
-                Sequence sequence = group.getSequenceWithMinTime();
-                ArrayList<Node> bindTargetNodes = newGroup.getNodes()
-                        .stream()
-                        .filter(targetNode -> graph.isExistEdge(sequence.getLastNode(), targetNode))
-                        .collect(Collectors.toCollection(ArrayList::new));
+                    if (!isCanMove) continue;
 
-                if (bindTargetNodes.size() == 0) break;
-
-                for (Node targetNode : bindTargetNodes) {
-                    ArrayList<Node> bindSourceNodes = group.getNodes()
-                            .stream()
-                            .filter(sourceNode -> graph.isExistEdge(sourceNode, targetNode))
-                            .filter(sourceNode -> sourceNode != sequence.getLastNode())
-                            .collect(Collectors.toCollection(ArrayList::new));
-
-                    if (bindSourceNodes.isEmpty()) {
-                        newGroup.removeNode(targetNode);
-                        sequence.addNode(targetNode);
-                        break;
-                    } else {
-                        isCanMove = false;
-                    }
+                    newGroup.removeNode(targetNode);
+                    minSequence.addNode(targetNode);
+                    break;
                 }
 
-                if (!isCanMove) break;
+                if (!isCanMove || allowedNodesToAttach.isEmpty()) break;
             }
         }
 
         schedule.createStatistic();
         return schedule;
+    }
+
+    private ArrayList<Node> getAllowedNodesToAttach(Node sourceNode, Group sourceGroup, Group targetGroup, Graph graph) {
+        return Stream
+                .concat(
+                        getTargetNodesBindedToNode(targetGroup, sourceNode, graph).stream(),
+                        getIndependentTargetNodesForSubGraph(sourceGroup, targetGroup, graph.getEdges()).stream()
+                )
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private boolean isCanMoveNode(Node sourceNode, Node targetNode, Group group, Graph graph) {
+        return getSourceNodesBindedToTargetNode(group, targetNode, graph)
+                .stream()
+                .filter(node -> node != sourceNode)
+                .collect(Collectors.toCollection(ArrayList::new))
+                .isEmpty();
+    }
+
+    private ArrayList<Node> getSourceNodesBindedToTargetNode(Group group, Node targetNode, Graph graph) {
+        return group.getNodes()
+                .stream()
+                .filter(sourceNode -> graph.isExistEdge(sourceNode, targetNode))
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private ArrayList<Node> getTargetNodesBindedToNode(Group group, Node node, Graph graph) {
+        return group.getNodes()
+                .stream()
+                .filter(targetNode -> graph.isExistEdge(node, targetNode))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+    }
+
+    private ArrayList<Node> getIndependentTargetNodesForSubGraph(Group firstGroup, Group secondGroup, ArrayList<Edge> edges) {
+        ArrayList<Node> sourceNodes = firstGroup.getNodes();
+        ArrayList<Node> targetNodes = secondGroup.getNodes();
+
+        ArrayList<Edge> subGraphEdges = edges
+                .stream()
+                .filter(edge -> isExistNodeInArray(sourceNodes, edge.getSource()) && isExistNodeInArray(targetNodes, edge.getTarget()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        ArrayList<Node> subGraphNodes = new ArrayList<>();
+        subGraphNodes.addAll(sourceNodes);
+        subGraphNodes.addAll(targetNodes);
+
+        Graph subGraph = new Graph(subGraphNodes, subGraphEdges);
+        ArrayList<Node> independentNodes = subGraph.getIndependentNodes();
+        return subtractSet(independentNodes, sourceNodes);
+    }
+
+    private boolean isExistNodeInArray(ArrayList<Node> nodeList, Node node) {
+        return nodeList
+                .stream()
+                .anyMatch(item -> item.getId().equals(node.getId()));
+    }
+
+    private boolean isAlignGroup(Group group) {
+        return group.getSequences()
+                .stream()
+                .allMatch(sequence -> sequence.getTime() == group.getTime());
     }
 
     private Schedule moveIndependentSequences(int groupIndex, int secondGroupIndex, int theoryGroupSize, Schedule s, Graph graph, Direction optimizationDirection) {
