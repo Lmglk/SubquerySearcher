@@ -45,6 +45,11 @@ public class Group extends Entity {
         time = calcTime();
     }
 
+    public void addNodeToSequence(Sequence sequence, Node node) {
+        sequence.addNode(node);
+        time = calcTime();
+    }
+
     public void removeSequence(Sequence sequence) {
         sequences.remove(sequence);
         time = calcTime();

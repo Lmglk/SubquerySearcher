@@ -100,23 +100,24 @@ public class GraphServiceImpl implements GraphService {
         Graph graph = data.getGraph();
 
         for (int i = 0; i < schedule.getGroups().size() - 1; i++) {
-            Group group = schedule.getGroup(i);
-            Group newGroup = schedule.getGroup(i + 1);
+            Group sourceGroup = schedule.getGroup(i);
+            Group targetGroup = schedule.getGroup(i + 1);
 
             while (true) {
                 boolean isCanMove = true;
-                if (isAlignGroup(group)) break;
+                if (isAlignGroup(sourceGroup)) break;
 
-                Sequence minSequence = group.getSequenceWithMinTime();
-                ArrayList<Node> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), group, newGroup, graph);
+                Sequence minSequence = sourceGroup.getSequenceWithMinTime();
+                ArrayList<Node> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), sourceGroup, targetGroup, graph);
+
 
                 for (Node targetNode : allowedNodesToAttach) {
-                    isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, group, graph);
+                    isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, sourceGroup, graph);
 
                     if (!isCanMove) continue;
 
-                    newGroup.removeNode(targetNode);
-                    minSequence.addNode(targetNode);
+                    targetGroup.removeNode(targetNode);
+                    sourceGroup.addNodeToSequence(minSequence, targetNode);
                     break;
                 }
 
@@ -146,13 +147,23 @@ public class GraphServiceImpl implements GraphService {
     }
 
     private ArrayList<Node> getSourceNodesBindedToTargetNode(Group group, Node targetNode, Graph graph) {
-        return group.getNodes()
+        ArrayList<Node> lastNodes = group.getSequences()
+            .stream()
+            .map(item -> item.getLastNode())
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        return lastNodes
                 .stream()
                 .filter(sourceNode -> graph.isExistEdge(sourceNode, targetNode))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private ArrayList<Node> getTargetNodesBindedToNode(Group group, Node node, Graph graph) {
+//        ArrayList<Node> lastNodes = group.getSequences()
+//                .stream()
+//                .map(item -> item.getLastNode())
+//                .collect(Collectors.toCollection(ArrayList::new));
+
         return group.getNodes()
                 .stream()
                 .filter(targetNode -> graph.isExistEdge(node, targetNode))
@@ -161,8 +172,11 @@ public class GraphServiceImpl implements GraphService {
     }
 
     private ArrayList<Node> getIndependentTargetNodesForSubGraph(Group firstGroup, Group secondGroup, ArrayList<Edge> edges) {
-        ArrayList<Node> sourceNodes = firstGroup.getNodes();
-        ArrayList<Node> targetNodes = secondGroup.getNodes();
+        ArrayList<Node> sourceNodes = firstGroup.getSequences().stream().map(sequence -> sequence.getLastNode()).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Node> targetNodes = secondGroup.getSequences().stream().map(sequence -> sequence.getLastNode()).collect(Collectors.toCollection(ArrayList::new));
+
+//        ArrayList<Node> sourceNodes = firstGroup.getNodes();
+//        ArrayList<Node> targetNodes = secondGroup.getNodes();
 
         ArrayList<Edge> subGraphEdges = edges
                 .stream()
