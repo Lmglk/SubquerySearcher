@@ -1,0 +1,10 @@
+<div class="header">
+    <input type="file" #fileUpload (change)="changeFile()">
+    <button (click)="uploadFile()">Upload file</button>
+    <select (change)="changeOptimizationOption($event)">
+        <option *ngFor="let option of optimizationOptions" [value]="option">
+            {{ option }}
+        </option>
+    </select>
+    <button mat-button (click)="calculateGraph()">Calculate</button>
+</div>

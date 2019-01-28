@@ -27,6 +27,8 @@ import { StatisticContainerComponent } from './containers/statistic-container/st
 import { StatisticItemComponent } from './components/statistic-item/statistic-item.component';
 import { ScheduleContainerComponent } from './containers/schedule-container/schedule-container.component';
 import { ScheduleModule } from './modules/schedule/schedule.module';
+import { HeaderComponent } from './components/header/header.component';
+import { BlockComponent } from './components/block/block.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +41,8 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
         StatisticContainerComponent,
         StatisticItemComponent,
         ScheduleContainerComponent,
+        HeaderComponent,
+        BlockComponent,
     ],
     imports: [
         BrowserModule,

@@ -1,17 +1,4 @@
 <div class="wrapper">
-    <mat-card class="block-main">
-        <mat-card-content class="content">
-            <div class="toolbar">
-                <input type="file" #fileUpload (change)="changeFile()" /> <button (click)="uploadFile()">Upload file</button>
-
-                <select (change)="changeOptimizationOption($event)">
-                    <option *ngFor="let option of optimizationOptions" [value]="option"> {{ option }} </option>
-                </select>
-            </div>
-        </mat-card-content>
-        <mat-card-actions class="actions"> <button mat-button (click)="calculateGraph()">Calculate</button> </mat-card-actions>
-    </mat-card>
-
     <mat-card class="block">
         <mat-card-header> <mat-card-title>Separating nodes</mat-card-title> </mat-card-header>
         <mat-card-content class="content">

@@ -1,20 +1,13 @@
 <div class="page">
-    <div class="sidebar"><sidebar></sidebar></div>
-    <mat-card class="graph">
-        <mat-card-header>
-            <mat-card-title>Graph</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="content">
+    <app-header></app-header>
+
+    <div class="content">
+        <app-block name="Graph">
             <app-graph-container></app-graph-container>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="schedule block">
-        <mat-card-header>
-            <mat-card-title>Schedule</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="content">
+        </app-block>
+        <app-block name="Schedule">
             <app-schedule-container></app-schedule-container>
-        </mat-card-content>
-    </mat-card>
-    <app-statistic-container class="statistic"></app-statistic-container>
+        </app-block>
+        <app-statistic-container></app-statistic-container>
+    </div>
 </div>
