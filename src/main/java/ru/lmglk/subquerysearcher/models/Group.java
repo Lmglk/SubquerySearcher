@@ -83,7 +83,7 @@ public class Group extends Entity {
     }
 
     @JsonIgnore
-    public Sequence getSequenceWithMinTime() {
+    public ArrayList<Sequence> getSequenceWithMinTime() {
         int minTime = sequences
                 .stream()
                 .mapToInt(Sequence::getTime)
@@ -93,8 +93,7 @@ public class Group extends Entity {
         return sequences
                 .stream()
                 .filter(sequence -> sequence.getTime() == minTime)
-                .findFirst()
-                .orElse(sequences.get(0));
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @JsonIgnore

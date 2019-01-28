@@ -103,25 +103,29 @@ public class GraphServiceImpl implements GraphService {
             Group sourceGroup = schedule.getGroup(i);
             Group targetGroup = schedule.getGroup(i + 1);
 
-            while (true) {
-                boolean isCanMove = true;
+            boolean isCanMove = true;
+            while (isCanMove) {
                 if (isAlignGroup(sourceGroup)) break;
 
-                Sequence minSequence = sourceGroup.getSequenceWithMinTime();
-                ArrayList<Node> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), sourceGroup, targetGroup, graph);
+                if (targetGroup.size() == 0)
+                    targetGroup = schedule.getGroup(i + 1);
 
+                ArrayList<Sequence> minSequenceList = sourceGroup.getSequenceWithMinTime();
 
-                for (Node targetNode : allowedNodesToAttach) {
-                    isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, sourceGroup, graph);
+                for (Sequence minSequence: minSequenceList) {
+                    ArrayList<Node> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), sourceGroup, targetGroup, graph);
 
-                    if (!isCanMove) continue;
+                    for (Node targetNode : allowedNodesToAttach) {
+                        isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, sourceGroup, graph);
+                        if (isCanMove) {
+                            schedule.removeNode(targetNode, targetGroup);
+                            sourceGroup.addNodeToSequence(minSequence, targetNode);
+                            break;
+                        }
+                    }
 
-                    targetGroup.removeNode(targetNode);
-                    sourceGroup.addNodeToSequence(minSequence, targetNode);
-                    break;
+                    if (!isCanMove) break;
                 }
-
-                if (!isCanMove || allowedNodesToAttach.isEmpty()) break;
             }
         }
 
@@ -149,7 +153,7 @@ public class GraphServiceImpl implements GraphService {
     private ArrayList<Node> getSourceNodesBindedToTargetNode(Group group, Node targetNode, Graph graph) {
         ArrayList<Node> lastNodes = group.getSequences()
             .stream()
-            .map(item -> item.getLastNode())
+            .map(Sequence::getLastNode)
             .collect(Collectors.toCollection(ArrayList::new));
 
         return lastNodes
@@ -159,11 +163,6 @@ public class GraphServiceImpl implements GraphService {
     }
 
     private ArrayList<Node> getTargetNodesBindedToNode(Group group, Node node, Graph graph) {
-//        ArrayList<Node> lastNodes = group.getSequences()
-//                .stream()
-//                .map(item -> item.getLastNode())
-//                .collect(Collectors.toCollection(ArrayList::new));
-
         return group.getNodes()
                 .stream()
                 .filter(targetNode -> graph.isExistEdge(node, targetNode))
@@ -172,11 +171,8 @@ public class GraphServiceImpl implements GraphService {
     }
 
     private ArrayList<Node> getIndependentTargetNodesForSubGraph(Group firstGroup, Group secondGroup, ArrayList<Edge> edges) {
-        ArrayList<Node> sourceNodes = firstGroup.getSequences().stream().map(sequence -> sequence.getLastNode()).collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<Node> targetNodes = secondGroup.getSequences().stream().map(sequence -> sequence.getLastNode()).collect(Collectors.toCollection(ArrayList::new));
-
-//        ArrayList<Node> sourceNodes = firstGroup.getNodes();
-//        ArrayList<Node> targetNodes = secondGroup.getNodes();
+        ArrayList<Node> sourceNodes = getLastNodesFromGroup(firstGroup);
+        ArrayList<Node> targetNodes = getLastNodesFromGroup(secondGroup);
 
         ArrayList<Edge> subGraphEdges = edges
                 .stream()
@@ -191,6 +187,13 @@ public class GraphServiceImpl implements GraphService {
         ArrayList<Node> independentNodes = subGraph.getIndependentNodes();
         return subtractSet(independentNodes, sourceNodes);
     }
+
+     private ArrayList<Node> getLastNodesFromGroup(Group group) {
+        return group.getSequences()
+                .stream()
+                .map(Sequence::getLastNode)
+                .collect(Collectors.toCollection(ArrayList::new));
+     }
 
     private boolean isExistNodeInArray(ArrayList<Node> nodeList, Node node) {
         return nodeList

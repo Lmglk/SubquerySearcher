@@ -41,4 +41,12 @@ public class Schedule {
     public Group getGroup(int index) {
         return groups.get(index);
     }
+
+    public void removeNode(Node node, Group group) {
+        group.removeNode(node);
+
+        if (group.size() == 0) {
+            groups.remove(group);
+        }
+    }
 }
