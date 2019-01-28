@@ -8,8 +8,4 @@ public interface GraphService {
     Graph readFile(MultipartFile file);
 
     Schedule generateSchedule(Graph graph);
-
-    Schedule optimizeScheduleWithoutTimestamp(OptimizationData data);
-
-    Schedule optimizeScheduleWithTimestamp(OptimizationData data);
 }

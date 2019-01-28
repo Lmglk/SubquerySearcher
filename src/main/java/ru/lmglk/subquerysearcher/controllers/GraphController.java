@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.GraphService;
-
-import java.util.ArrayList;
+import ru.lmglk.subquerysearcher.services.TimeOptimizationAlgorithm;
+import ru.lmglk.subquerysearcher.services.WidthOptimizationAlgorithm;
 
 @Controller
 @RequestMapping(value = "api/graph")
@@ -16,7 +16,13 @@ import java.util.ArrayList;
 public class GraphController {
 
     @Autowired
-    GraphService graphService;
+    private GraphService graphService;
+
+    @Autowired
+    private TimeOptimizationAlgorithm timeOptimizationAlgorithm;
+
+    @Autowired
+    private WidthOptimizationAlgorithm widthOptimizationAlgorithm;
 
     @ResponseBody
     @RequestMapping(value = "/loadGraph", method = RequestMethod.POST)
@@ -39,12 +45,12 @@ public class GraphController {
     @ResponseBody
     @RequestMapping(value = "/optimizeScheduleWithoutTimestamp", method = RequestMethod.POST)
     public Schedule optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData data) {
-        return this.graphService.optimizeScheduleWithoutTimestamp(data);
+        return this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(data);
     }
 
     @ResponseBody
     @RequestMapping(value = "/optimizeScheduleWithTimestamp", method = RequestMethod.POST)
     public Schedule optimizeScheduleWithTimestamp(@RequestBody OptimizationData data) {
-        return this.graphService.optimizeScheduleWithTimestamp(data);
+        return this.timeOptimizationAlgorithm.scheduleOptimizationByTime(data);
     }
 }
