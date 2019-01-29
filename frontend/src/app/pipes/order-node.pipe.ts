@@ -5,7 +5,7 @@ import { Node } from '../types/Node';
     name: 'orderNode',
 })
 export class OrderNodePipe implements PipeTransform {
-    transform(nodes: Node[], args?: any): Node[] {
+    transform(nodes: Node[]): Node[] {
         return nodes.sort((a, b) => parseInt(a.name) - parseInt(b.name));
     }
 }

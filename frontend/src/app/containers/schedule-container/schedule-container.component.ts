@@ -10,8 +10,12 @@ import {
 
 @Component({
     selector: 'app-schedule-container',
-    template:
-        '<schedule [data]="groups$ | async" [maxGroupSize]="maxGroupSize$ | async"></schedule>',
+    template: `
+        <schedule
+            [data]="groups$ | async"
+            [maxGroupSize]="maxGroupSize$ | async"
+        ></schedule>
+    `,
 })
 export class ScheduleContainerComponent {
     public groups$: Observable<Group[]>;

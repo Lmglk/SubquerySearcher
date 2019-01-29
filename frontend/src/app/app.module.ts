@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './components/app/app.component';
 import { GraphComponent } from './components/graph/graph.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from './services/http.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,12 +29,12 @@ import { ScheduleModule } from './modules/schedule/schedule.module';
 import { HeaderComponent } from './components/header/header.component';
 import { BlockComponent } from './components/block/block.component';
 import { NodeListComponent } from './components/node-list/node-list.component';
+import { NodeListContainerComponent } from './containers/node-list-container/node-list-container.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         GraphComponent,
-        SidebarComponent,
         OrderNodePipe,
         GraphContainerComponent,
         StatisticComponent,
@@ -45,6 +44,7 @@ import { NodeListComponent } from './components/node-list/node-list.component';
         HeaderComponent,
         BlockComponent,
         NodeListComponent,
+        NodeListContainerComponent,
     ],
     imports: [
         BrowserModule,

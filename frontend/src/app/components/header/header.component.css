@@ -9,3 +9,11 @@
     box-shadow: 0 0.1rem 0.1rem var(--color-shadow);
     background-color: var(--color-surface);
 }
+
+.content {
+    display: grid;
+    grid-gap: 1.6rem;
+    grid-auto-flow: column;
+    justify-content: left;
+    align-items: center;
+}

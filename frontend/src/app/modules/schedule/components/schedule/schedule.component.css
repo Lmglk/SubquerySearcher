@@ -3,12 +3,3 @@
     grid-auto-flow: column;
     grid-template-columns: minmax(2rem, max-content);
 }
-
-.empty-block {
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    height: 100%;
-    font-size: 2em;
-    color: #757575;
-}

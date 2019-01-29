@@ -7,8 +7,9 @@ import { selectStatistic } from '../../store/selectors/schedule.selector';
 
 @Component({
     selector: 'app-statistic-container',
-    template:
-        '<app-statistic [statistic]="statistic$ | async"></app-statistic>',
+    template: `
+        <app-statistic [statistic]="statistic$ | async"></app-statistic>
+    `,
 })
 export class StatisticContainerComponent {
     public statistic$: Observable<Statistic>;

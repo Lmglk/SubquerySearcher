@@ -2,12 +2,15 @@
     <app-header></app-header>
 
     <div class="content">
-        <app-block name="Graph">
+        <app-block class="graph" name="Graph">
             <app-graph-container></app-graph-container>
         </app-block>
-        <app-block name="Schedule">
+        <app-block class="schedule" name="Schedule">
             <app-schedule-container></app-schedule-container>
         </app-block>
-        <app-statistic-container></app-statistic-container>
+        <app-block class="nodes" name="Nodes">
+            <app-node-list-container></app-node-list-container>
+        </app-block>
+        <app-statistic-container class="statistic"></app-statistic-container>
     </div>
 </div>
