@@ -29,6 +29,7 @@ import { ScheduleContainerComponent } from './containers/schedule-container/sche
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { HeaderComponent } from './components/header/header.component';
 import { BlockComponent } from './components/block/block.component';
+import { NodeListComponent } from './components/node-list/node-list.component';
 
 @NgModule({
     declarations: [
@@ -43,6 +44,7 @@ import { BlockComponent } from './components/block/block.component';
         ScheduleContainerComponent,
         HeaderComponent,
         BlockComponent,
+        NodeListComponent,
     ],
     imports: [
         BrowserModule,
