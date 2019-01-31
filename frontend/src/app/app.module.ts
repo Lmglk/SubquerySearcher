@@ -6,12 +6,7 @@ import { GraphComponent } from './components/graph/graph.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from './services/http.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    MatButtonModule,
-    MatCardModule,
-    MatDividerModule,
-    MatSlideToggleModule,
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { OrderNodePipe } from './pipes/order-node.pipe';
@@ -62,10 +57,7 @@ import { NodeListContainerComponent } from './containers/node-list-container/nod
             maxAge: 25,
             logOnly: environment.production,
         }),
-        MatCardModule,
         MatButtonModule,
-        MatDividerModule,
-        MatSlideToggleModule,
         ScheduleModule,
     ],
     providers: [HttpService],

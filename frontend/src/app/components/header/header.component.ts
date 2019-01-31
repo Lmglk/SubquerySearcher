@@ -10,7 +10,7 @@ import {
 } from '../../enums/OptimizationOptions';
 import { selectGraph } from '../../store/selectors/graph.selector';
 import { take } from 'rxjs/operators';
-import { SetScheduleAction } from '../../store/actions/schedule.actions';
+import { ResetScheduleAction, SetScheduleAction } from '../../store/actions/schedule.actions';
 import { OptimizationData } from '../../types/OptimizationData';
 import { Schedule } from '../../types/Schedule';
 
@@ -48,6 +48,7 @@ export class HeaderComponent {
         try {
             const graph = await this.httpService.uploadFile(this.file);
             this.store.dispatch(new SetGraphAction(graph));
+            this.store.dispatch(new ResetScheduleAction());
         } catch (e) {
             this.toastr.error(e.error);
         }

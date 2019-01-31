@@ -23,6 +23,11 @@ export function scheduleReducer(
                 ...action.payload,
             };
 
+        case ScheduleAction.ActionTypes.ResetScheduleAction:
+            return {
+                ...initialState,
+            };
+
         default:
             return state;
     }
