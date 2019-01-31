@@ -1,15 +1,15 @@
 import * as ScheduleAction from '../actions/schedule.actions';
 import { Group } from '../../types/Group';
-import { Statistic } from '../../types/Statistic';
+import { Metrics } from '../../types/Metrics';
 
 export interface ScheduleState {
     groups: Group[];
-    statistic: Statistic;
+    metrics: Metrics;
 }
 
 const initialState: ScheduleState = {
     groups: null,
-    statistic: null,
+    metrics: null,
 };
 
 export function scheduleReducer(

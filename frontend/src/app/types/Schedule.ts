@@ -1,7 +1,7 @@
 import { Group } from './Group';
-import { Statistic } from './Statistic';
+import { Metrics } from './Metrics';
 
 export interface Schedule {
     groups: Group[];
-    statistic: Statistic;
+    metrics: Metrics;
 }

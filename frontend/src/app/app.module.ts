@@ -21,9 +21,9 @@ import { StoreModule } from '@ngrx/store';
 import { graphReducer } from './store/reducers/graph.reducer';
 import { GraphContainerComponent } from './containers/graph-container/graph-container.component';
 import { scheduleReducer } from './store/reducers/schedule.reducer';
-import { StatisticComponent } from './components/statistic/statistic.component';
-import { StatisticContainerComponent } from './containers/statistic-container/statistic-container.component';
-import { StatisticItemComponent } from './components/statistic-item/statistic-item.component';
+import { MetricsComponent } from './components/metrics/metrics.component';
+import { MetricsContainerComponent } from './containers/metrics-container/metrics-container.component';
+import { MetricsItemComponent } from './components/metrics-item/metrics-item.component';
 import { ScheduleContainerComponent } from './containers/schedule-container/schedule-container.component';
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { HeaderComponent } from './components/header/header.component';
@@ -37,9 +37,9 @@ import { NodeListContainerComponent } from './containers/node-list-container/nod
         GraphComponent,
         OrderNodePipe,
         GraphContainerComponent,
-        StatisticComponent,
-        StatisticContainerComponent,
-        StatisticItemComponent,
+        MetricsComponent,
+        MetricsContainerComponent,
+        MetricsItemComponent,
         ScheduleContainerComponent,
         HeaderComponent,
         BlockComponent,

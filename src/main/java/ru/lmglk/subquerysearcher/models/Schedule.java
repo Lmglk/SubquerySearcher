@@ -15,7 +15,7 @@ public class Schedule {
 
     private ArrayList<Group> groups;
 
-    private Statistic statistic;
+    private Metrics metrics;
 
     public Schedule() {
         groups = new ArrayList<>();
@@ -26,11 +26,11 @@ public class Schedule {
                 .stream()
                 .map(Group::new)
                 .collect(Collectors.toCollection(ArrayList::new));
-        statistic = new Statistic(schedule.getStatistic());
+        metrics = new Metrics(schedule.getMetrics());
     }
 
-    public void createStatistic() {
-        statistic = new Statistic(this.groups);
+    public void createMetrics() {
+        metrics = new Metrics(this.groups);
     }
 
     public void addGroup(Group group) {

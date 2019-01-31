@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { Schedule } from '../../types/Schedule';
 
 export enum ActionTypes {
-    SetScheduleAction = '[Statistic] Set',
+    SetScheduleAction = '[Metrics] Set',
 }
 
 export class SetScheduleAction implements Action {

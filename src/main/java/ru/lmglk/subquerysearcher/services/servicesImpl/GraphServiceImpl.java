@@ -62,7 +62,7 @@ public class GraphServiceImpl implements GraphService {
             schedule.addGroup(group);
         }
 
-        schedule.createStatistic();
+        schedule.createMetrics();
         return schedule;
     }
 

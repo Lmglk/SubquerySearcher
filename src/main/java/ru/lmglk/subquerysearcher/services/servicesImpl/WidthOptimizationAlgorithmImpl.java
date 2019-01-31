@@ -12,24 +12,24 @@ public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorith
     public Schedule scheduleOptimizationByWidth (OptimizationData data) {
         Graph graph = data.getGraph();
         Schedule schedule = data.getSchedule();
-        Statistic statistic = schedule.getStatistic();
+        Metrics metrics = schedule.getMetrics();
 
-        int theoryGroupSize = calcTheoryGroupSize(statistic.getNodes(), statistic.getHeight());
-        int maxSizeGroup = statistic.getWidth();
+        int theoryGroupSize = calcTheoryGroupSize(metrics.getNodes(), metrics.getHeight());
+        int maxSizeGroup = metrics.getWidth();
 
         if (maxSizeGroup == theoryGroupSize) return schedule;
 
-        for (int i = statistic.getHeight() - 1; i > 0; i--) {
+        for (int i = metrics.getHeight() - 1; i > 0; i--) {
             if (theoryGroupSize - schedule.getGroup(i).size() == 0) continue;
             schedule = moveIndependentSequences(i, i - 1, theoryGroupSize, schedule, graph, Direction.RIGHT);
         }
 
-        for (int i = 0; i < statistic.getHeight() - 1; i++) {
+        for (int i = 0; i < metrics.getHeight() - 1; i++) {
             if (theoryGroupSize - schedule.getGroup(i).size() == 0) continue;
             schedule = moveIndependentSequences(i, i + 1, theoryGroupSize, schedule, graph, Direction.LEFT);
         }
 
-        schedule.createStatistic();
+        schedule.createMetrics();
         return schedule;
     }
 

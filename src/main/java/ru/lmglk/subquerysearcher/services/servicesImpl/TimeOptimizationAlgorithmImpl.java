@@ -46,7 +46,7 @@ public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm 
             }
         }
 
-        schedule.createStatistic();
+        schedule.createMetrics();
         return schedule;
     }
 

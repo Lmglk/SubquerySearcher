@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Statistic {
+public class Metrics {
 
     private int totalBubbles;
 
@@ -25,7 +25,7 @@ public class Statistic {
 
     private int time;
 
-    public Statistic(ArrayList<Group> groups) {
+    public Metrics(ArrayList<Group> groups) {
         this.height = groups.size();
         this.width = this.calcWeight(groups);
         this.totalBubbles = calcTotalBubbles(groups, this.width);
@@ -34,8 +34,8 @@ public class Statistic {
         this.time = calcTime(groups);
     }
 
-    public Statistic(Statistic statistic) {
-        this(statistic.totalBubbles, statistic.hardBubbles, statistic.width, statistic.height, statistic.nodes, statistic.time);
+    public Metrics(Metrics metrics) {
+        this(metrics.totalBubbles, metrics.hardBubbles, metrics.width, metrics.height, metrics.nodes, metrics.time);
     }
 
     private int calcWeight(ArrayList<Group> groups) {

@@ -1,9 +1,9 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../../types/AppState';
 
-export const selectStatistic = createSelector(
+export const selectMetrics = createSelector(
     (state: AppState) => state.scheduleState,
-    state => state.statistic
+    state => state.metrics
 );
 
 export const selectGroups = createSelector(
@@ -13,5 +13,5 @@ export const selectGroups = createSelector(
 
 export const selectMaxGroupSize = createSelector(
     (state: AppState) => state.scheduleState,
-    state => state.statistic && state.statistic.width
+    state => state.metrics && state.metrics.width
 );

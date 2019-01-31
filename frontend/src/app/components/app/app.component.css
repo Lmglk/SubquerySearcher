@@ -16,7 +16,7 @@
     grid-template-areas:
         'graph nodes'
         'schedule nodes'
-        'statistic statistic';
+        'metrics metrics';
 }
 
 .graph {
@@ -31,6 +31,6 @@
     grid-area: nodes;
 }
 
-.statistic {
-    grid-area: statistic;
+.metrics {
+    grid-area: metrics;
 }
