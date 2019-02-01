@@ -1,7 +1,7 @@
-import { Node } from './Node';
+import { GraphNode } from './GraphNode';
 
 export class Sequence {
     id: string;
-    nodes: Node[];
+    nodes: GraphNode[];
     time: number;
 }

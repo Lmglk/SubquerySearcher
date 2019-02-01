@@ -1,0 +1,11 @@
+<td>{{ node.name }}</td>
+<td>{{ node.time }}</td>
+<td>
+    <input
+        class="value-editor"
+        type="number"
+        [value]="nodeCount$ | async"
+        [min]="1"
+        (change)="handleChange($event, node.id)"
+    />
+</td>

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Group } from '../../../../types/Group';
 
 @Component({
-    selector: 'schedule',
+    selector: 'app-schedule',
     templateUrl: './schedule.component.html',
     styleUrls: ['./schedule.component.css'],
 })
@@ -14,5 +14,9 @@ export class ScheduleComponent {
         return Array(size)
             .fill(0)
             .map((data, i) => (i + 1).toString());
+    }
+
+    public trackByFn(index, group: Group): string {
+        return group.id;
     }
 }

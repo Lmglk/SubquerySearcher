@@ -1,13 +1,7 @@
-table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-}
-
-td, th {
+td {
     height: 2.4rem;
     text-align: center;
-    border: .1rem solid var(--color-border);
+    border: 0.1rem solid var(--color-border);
 }
 
 .value-editor {

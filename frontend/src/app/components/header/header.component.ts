@@ -10,9 +10,13 @@ import {
 } from '../../enums/OptimizationOptions';
 import { selectGraph } from '../../store/selectors/graph.selector';
 import { take } from 'rxjs/operators';
-import { ResetScheduleAction, SetScheduleAction } from '../../store/actions/schedule.actions';
+import {
+    ResetScheduleAction,
+    SetScheduleAction,
+} from '../../store/actions/schedule.actions';
 import { OptimizationData } from '../../types/OptimizationData';
 import { Schedule } from '../../types/Schedule';
+import { SetNodesListAction } from '../../store/actions/separate-nodes.action';
 
 @Component({
     selector: 'app-header',
@@ -48,6 +52,7 @@ export class HeaderComponent {
         try {
             const graph = await this.httpService.uploadFile(this.file);
             this.store.dispatch(new SetGraphAction(graph));
+            this.store.dispatch(new SetNodesListAction(graph.nodes));
             this.store.dispatch(new ResetScheduleAction());
         } catch (e) {
             this.toastr.error(e.error);

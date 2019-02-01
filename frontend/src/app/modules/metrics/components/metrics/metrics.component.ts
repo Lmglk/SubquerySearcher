@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Metrics } from '../../types/Metrics';
+import { Metrics } from '../../../../types/Metrics';
 
 @Component({
     selector: 'app-metrics',

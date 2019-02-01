@@ -1,4 +1,6 @@
 <div>
-    <div class="sequence" *ngFor="let header of headers">{{ header }}</div>
+    <div class="sequence" *ngFor="let header of headers; trackBy: trackByFn">
+        {{ header }}
+    </div>
     <div class="title">№</div>
 </div>

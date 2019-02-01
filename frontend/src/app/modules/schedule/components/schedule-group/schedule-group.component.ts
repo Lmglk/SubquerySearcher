@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Group } from '../../../../types/Group';
 import { Sequence } from '../../../../types/Sequence';
 
 @Component({
@@ -8,7 +7,7 @@ import { Sequence } from '../../../../types/Sequence';
     styleUrls: ['./schedule-group.component.css'],
 })
 export class ScheduleGroupComponent {
-    @Input() group: Group;
+    @Input() sequences: Sequence[];
     @Input() index: number;
     @Input() maxSize: number;
 
@@ -17,6 +16,14 @@ export class ScheduleGroupComponent {
     }
 
     public getEmptyCells() {
-        return Array(this.maxSize - this.group.sequences.length);
+        return Array(this.maxSize - this.sequences.length);
+    }
+
+    public trackByFn(index: number, sequence: Sequence): string {
+        return sequence.id;
+    }
+
+    public trackByFnEmptyCell(index: number): number {
+        return index;
     }
 }

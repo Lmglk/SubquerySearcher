@@ -1,0 +1,16 @@
+<table *ngIf="nodes">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Time</th>
+            <th>Part</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr
+            *ngFor="let node of (nodes | orderNode); trackBy: trackByFn"
+            app-node-list-item
+            [node]="node"
+        ></tr>
+    </tbody>
+</table>

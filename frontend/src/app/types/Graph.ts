@@ -1,7 +1,7 @@
-import { Edge } from './Edge';
-import { Node } from './Node';
+import { GraphEdge } from './GraphEdge';
+import { GraphNode } from './GraphNode';
 
 export class Graph {
-    public edges: Edge[];
-    public nodes: Node[];
+    public edges: GraphEdge[];
+    public nodes: GraphNode[];
 }

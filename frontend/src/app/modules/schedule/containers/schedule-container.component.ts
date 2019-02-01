@@ -1,20 +1,20 @@
 import { Component } from '@angular/core';
-import { AppState } from '../../types/AppState';
+import { AppState } from '../../../types/AppState';
 import { select, Store } from '@ngrx/store';
-import { Group } from '../../types/Group';
+import { Group } from '../../../types/Group';
 import { Observable } from 'rxjs';
 import {
     selectGroups,
     selectMaxGroupSize,
-} from '../../store/selectors/schedule.selector';
+} from '../../../store/selectors/schedule.selector';
 
 @Component({
     selector: 'app-schedule-container',
     template: `
-        <schedule
+        <app-schedule
             [data]="groups$ | async"
             [maxGroupSize]="maxGroupSize$ | async"
-        ></schedule>
+        ></app-schedule>
     `,
 })
 export class ScheduleContainerComponent {

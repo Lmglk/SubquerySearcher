@@ -38,6 +38,11 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
+    public Graph separateNodes(Graph graph, InfoSeparate info) {
+        return null;
+    }
+
+    @Override
     public Schedule generateSchedule(Graph graph) {
         Schedule schedule = new Schedule();
 

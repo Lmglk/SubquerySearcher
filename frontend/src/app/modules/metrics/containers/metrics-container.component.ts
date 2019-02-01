@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { AppState } from '../../types/AppState';
+import { AppState } from '../../../types/AppState';
 import { select, Store } from '@ngrx/store';
-import { Metrics } from '../../types/Metrics';
+import { Metrics } from '../../../types/Metrics';
 import { Observable } from 'rxjs';
-import { selectMetrics } from '../../store/selectors/schedule.selector';
+import { selectMetrics } from '../../../store/selectors/schedule.selector';
 
 @Component({
     selector: 'app-metrics-container',

@@ -7,4 +7,8 @@ import { Component, Input } from '@angular/core';
 })
 export class ScheduleRowHeaderComponent {
     @Input() headers: string[];
+
+    public trackByFn(index: number): number {
+        return index;
+    }
 }

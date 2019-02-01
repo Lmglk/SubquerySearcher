@@ -34,6 +34,12 @@ public class GraphController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/separateNodes", method = RequestMethod.POST)
+    public Graph separateNodes(@RequestBody SeparateNodesRequest req) {
+        return this.graphService.separateNodes(req.getGraph(), req.getInfo());
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
     public ResponseEntity getSchedule(@RequestBody Graph graph) {
         Schedule schedule = this.graphService.generateSchedule(graph);

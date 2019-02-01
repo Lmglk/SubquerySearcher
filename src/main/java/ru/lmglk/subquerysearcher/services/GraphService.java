@@ -7,5 +7,7 @@ public interface GraphService {
 
     Graph readFile(MultipartFile file);
 
+    Graph separateNodes(Graph graph, InfoSeparate info);
+
     Schedule generateSchedule(Graph graph);
 }

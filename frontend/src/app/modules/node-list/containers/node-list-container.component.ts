@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { AppState } from '../../types/AppState';
+import { AppState } from '../../../types/AppState';
 import { Observable } from 'rxjs';
-import { selectNodes } from '../../store/selectors/graph.selector';
-import { Node } from '../../types/Node';
+import { selectNodes } from '../../../store/selectors/graph.selector';
+import { GraphNode } from '../../../types/GraphNode';
 
 @Component({
     selector: 'app-node-list-container',
@@ -12,7 +12,7 @@ import { Node } from '../../types/Node';
     `,
 })
 export class NodeListContainerComponent implements OnInit {
-    public nodes$: Observable<Node[]>;
+    public nodes$: Observable<GraphNode[]>;
 
     constructor(private store: Store<AppState>) {}
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Node } from '../../types/Node';
+import { GraphNode } from '../../../../types/GraphNode';
 
 @Component({
     selector: 'app-node-list',
@@ -7,5 +7,9 @@ import { Node } from '../../types/Node';
     styleUrls: ['./node-list.component.css'],
 })
 export class NodeListComponent {
-    @Input() nodes: Node[];
+    @Input() nodes: GraphNode[];
+
+    public trackByFn(index: number, node: GraphNode): string {
+        return node.id;
+    }
 }

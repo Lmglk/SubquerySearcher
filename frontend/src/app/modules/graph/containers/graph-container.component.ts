@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AppState } from '../../types/AppState';
+import { AppState } from '../../../types/AppState';
 import { select, Store } from '@ngrx/store';
-import { selectGraph } from '../../store/selectors/graph.selector';
-import { Graph } from '../../types/Graph';
+import { selectGraph } from '../../../store/selectors/graph.selector';
+import { Graph } from '../../../types/Graph';
 import { Observable } from 'rxjs';
-import { Group } from '../../types/Group';
-import { selectGroups } from '../../store/selectors/schedule.selector';
+import { Group } from '../../../types/Group';
+import { selectGroups } from '../../../store/selectors/schedule.selector';
 
 @Component({
     selector: 'app-graph-container',
