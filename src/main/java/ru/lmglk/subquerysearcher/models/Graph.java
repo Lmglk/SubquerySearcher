@@ -26,6 +26,18 @@ public class Graph {
         edges = new ArrayList<>();
     }
 
+    public Graph(Graph graph) {
+        nodes = graph.getNodes()
+                .stream()
+                .map(Node::new)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        edges = graph.getEdges()
+                .stream()
+                .map(Edge::new)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public void addNode(String nodeName, int time) {
         Node node = findNode(nodeName);
         if (node != null) {
@@ -33,6 +45,10 @@ public class Graph {
         } else {
             nodes.add(new Node(nodeName, time));
         }
+    }
+
+    public void addNode(Node node) {
+        nodes.add(node);
     }
 
     public void addEdge(String source, String target) {
@@ -43,6 +59,14 @@ public class Graph {
         if (targetNode == null) throw new NullPointerException("Node named \"" + target + "\" does not exist");
 
         edges.add(new Edge(sourceNode, targetNode));
+    }
+
+    public void addEdge(Edge edge) {
+        boolean isExist = edges.stream().anyMatch(item -> edge.getId().equals(item.getId()));
+
+        if (!isExist) {
+            edges.add(edge);
+        }
     }
 
     public void removeEdge(Edge edge) {
@@ -66,6 +90,15 @@ public class Graph {
 
     public void removeNode(ArrayList<Node> nodes) {
         nodes.forEach(this::removeNode);
+    }
+
+    @JsonIgnore
+    public Node getNodeById(String id) {
+        return this.nodes
+                .stream()
+                .filter(node -> id.equals(node.getId()))
+                .findFirst()
+                .orElse(null);
     }
 
     @JsonIgnore
@@ -105,14 +138,24 @@ public class Graph {
                 .anyMatch(edge -> edge.getSourceId().equals(sourceNode.getId()) && edge.getTargetId().equals(targetNode.getId()));
     }
 
-    private ArrayList<Edge> getSourceEdgesForNode(Node node) {
+    @JsonIgnore
+    public ArrayList<Node> getSourceNodesForNode(Node node) {
+        return getTargetEdgesForNode(node)
+                .stream()
+                .map(Edge::getSource)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @JsonIgnore
+    public ArrayList<Edge> getSourceEdgesForNode(Node node) {
         return this.edges
                 .stream()
                 .filter(edge -> edge.getSource().getId().equals(node.getId()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private ArrayList<Edge> getTargetEdgesForNode(Node node) {
+    @JsonIgnore
+    public ArrayList<Edge> getTargetEdgesForNode(Node node) {
         return this.edges
                 .stream()
                 .filter(edge -> edge.getTarget().getId().equals(node.getId()))

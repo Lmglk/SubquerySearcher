@@ -18,6 +18,11 @@ public class Edge extends Entity {
         this.target = target;
     }
 
+    public Edge(Edge edge) {
+        this.source = edge.getSource();
+        this.target = edge.getTarget();
+    }
+
     String getSourceName() {
         return source.getName();
     }

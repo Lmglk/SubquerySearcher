@@ -38,8 +38,34 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
-    public Graph separateNodes(Graph graph, InfoSeparate info) {
-        return null;
+    public Graph separateNodes(Graph graph, ArrayList<InfoSeparate> separateNodesInfo) {
+        Graph newGraph = new Graph(graph);
+
+        separateNodesInfo
+                .stream()
+                .filter(item -> item.getCount() > 1)
+                .forEach(item -> {
+                    Node node = newGraph.getNodeById(item.getNodeId());
+                    ArrayList<Node> sourceNodes = newGraph.getSourceNodesForNode(node);
+                    ArrayList<Edge> sourceEdges = newGraph.getTargetEdgesForNode(node);
+
+                    sourceEdges.forEach(newGraph::removeEdge);
+
+                    for (int i = 1; i <= item.getCount(); i++) {
+                        Node newNode = new Node(node.getName() + "." + i, node.getTime());
+                        newGraph.addNode(newNode);
+
+                        Edge newEdge = new Edge(newNode, node);
+                        newGraph.addEdge(newEdge);
+
+                        sourceNodes.forEach(sourceNode -> {
+                            Edge newSourceEdge = new Edge(sourceNode, newNode);
+                            newGraph.addEdge(newSourceEdge);
+                        });
+                    }
+                });
+        
+        return newGraph;
     }
 
     @Override

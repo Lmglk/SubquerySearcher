@@ -23,7 +23,7 @@ interface GraphEdge {
 }
 
 @Component({
-    selector: 'graph',
+    selector: 'app-graph',
     templateUrl: './graph.component.html',
     styleUrls: ['graph.component.css'],
     encapsulation: ViewEncapsulation.None,
@@ -128,13 +128,21 @@ export class GraphComponent implements OnChanges {
         this.schedule.forEach((group, groupIndex) => {
             group.sequences.forEach((sequence, sequenceIndex) => {
                 sequence.nodes.forEach((node, nodeIndex) => {
-                    const currentNode = this.nodes.find(
+                    const currentNode = this.graph.nodes.find(
                         item => item.id === node.id
                     );
-                    currentNode.x =
-                        linearX(groupIndex) +
-                        nodeIndex * (this.nodeRadius * 2 + this.nodeOffset);
-                    currentNode.y = linearY(maxValue - sequenceIndex - 1);
+
+                    this.nodes = [
+                        ...this.nodes,
+                        {
+                            ...currentNode,
+                            x:
+                                linearX(groupIndex) +
+                                nodeIndex *
+                                    (this.nodeRadius * 2 + this.nodeOffset),
+                            y: linearY(maxValue - sequenceIndex - 1),
+                        },
+                    ];
                 });
             });
         });
@@ -275,6 +283,8 @@ export class GraphComponent implements OnChanges {
     }
 
     private destroyGraph() {
+        this.edges = [];
+        this.nodes = [];
         d3.select('#chart').remove();
     }
 }

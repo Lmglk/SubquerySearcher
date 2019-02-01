@@ -10,7 +10,10 @@ import { selectGroups } from '../../../store/selectors/schedule.selector';
 @Component({
     selector: 'app-graph-container',
     template: `
-        <graph [graph]="graph$ | async" [schedule]="schedule$ | async"></graph>
+        <app-graph
+            [graph]="graph$ | async"
+            [schedule]="schedule$ | async"
+        ></app-graph>
     `,
 })
 export class GraphContainerComponent implements OnInit {

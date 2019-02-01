@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { SetGraphAction } from '../../store/actions/graph.actions';
 import { HttpService } from '../../services/http.service';
 import { select, Store } from '@ngrx/store';
@@ -9,27 +9,32 @@ import {
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
 import { selectGraph } from '../../store/selectors/graph.selector';
-import { take } from 'rxjs/operators';
 import {
     ResetScheduleAction,
     SetScheduleAction,
 } from '../../store/actions/schedule.actions';
-import { OptimizationData } from '../../types/OptimizationData';
-import { Schedule } from '../../types/Schedule';
 import { SetNodesListAction } from '../../store/actions/separate-nodes.action';
+import { selectSeparateNodes } from '../../store/selectors/separate-nodes.selector';
+import { InfoSeparate } from '../../types/InfoSeparate';
+import { Graph } from '../../types/Graph';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
     @ViewChild('fileUpload') inputFile: ElementRef;
 
     public readonly optimizationOptions = OptimizationOptions;
     public selectedOptimizationOption: OptimizationOption;
 
     private file: File;
+    private graph: Graph;
+    private separateNodesInfo: InfoSeparate[];
+    private graphSubscription: Subscription;
+    private separateNodeInfoSubscription: Subscription;
 
     constructor(
         private toastr: ToastrService,
@@ -37,6 +42,17 @@ export class HeaderComponent {
         private store: Store<AppState>
     ) {
         this.selectedOptimizationOption = OptimizationOption.NO_OPTIMIZATION;
+
+        this.graphSubscription = this.store
+            .pipe(select(selectGraph))
+            .subscribe(graph => (this.graph = graph));
+
+        this.separateNodeInfoSubscription = this.store
+            .pipe(select(selectSeparateNodes))
+            .subscribe(
+                separateNodesInfo =>
+                    (this.separateNodesInfo = separateNodesInfo)
+            );
     }
 
     public changeFile(): void {
@@ -65,20 +81,21 @@ export class HeaderComponent {
     }
 
     public async calculateGraph(): Promise<void> {
-        const graph = await this.store
-            .pipe(
-                select(selectGraph),
-                take(1)
-            )
-            .toPromise();
-
         try {
-            const schedule = await this.httpService.getSchedule(graph);
+            const graphWithSeparateNodes = await this.httpService.separateNodes(
+                this.graph,
+                this.separateNodesInfo
+            );
+
+            const schedule = await this.httpService.getSchedule(
+                graphWithSeparateNodes
+            );
+            this.store.dispatch(new SetGraphAction(graphWithSeparateNodes));
 
             switch (this.selectedOptimizationOption) {
                 case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
-                    const optimizedScheduleWithTime = await this.optimizationGraphWithTimestamp(
-                        { graph, schedule }
+                    const optimizedScheduleWithTime = await this.httpService.optimizeScheduleWithTimestamp(
+                        { graph: graphWithSeparateNodes, schedule: schedule }
                     );
                     this.store.dispatch(
                         new SetScheduleAction(optimizedScheduleWithTime)
@@ -86,8 +103,8 @@ export class HeaderComponent {
                     break;
 
                 case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
-                    const optimizedSchedule = await this.optimizationGraphWithoutTimestamp(
-                        { graph, schedule }
+                    const optimizedSchedule = await this.httpService.optimizeScheduleWithoutTimestamp(
+                        { graph: graphWithSeparateNodes, schedule: schedule }
                     );
                     this.store.dispatch(
                         new SetScheduleAction(optimizedSchedule)
@@ -102,19 +119,8 @@ export class HeaderComponent {
         }
     }
 
-    private async optimizationGraphWithoutTimestamp(
-        optimizationData: OptimizationData
-    ): Promise<Schedule> {
-        return await this.httpService.optimizeScheduleWithoutTimestamp(
-            optimizationData
-        );
-    }
-
-    private async optimizationGraphWithTimestamp(
-        optimizationData: OptimizationData
-    ): Promise<Schedule> {
-        return await this.httpService.optimizeScheduleWithTimestamp(
-            optimizationData
-        );
+    public ngOnDestroy(): void {
+        this.graphSubscription.unsubscribe();
+        this.separateNodeInfoSubscription.unsubscribe();
     }
 }
