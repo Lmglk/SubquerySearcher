@@ -4,17 +4,19 @@ import { Graph } from '../types/Graph';
 import { Schedule } from '../types/Schedule';
 import { OptimizationData } from '../types/OptimizationData';
 import { InfoSeparate } from '../types/InfoSeparate';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class HttpService {
     constructor(private http: HttpClient) {}
 
-    public uploadFile(file: File): Promise<Graph> {
+    public uploadFile(file: File): Observable<Graph> {
         const formData = new FormData();
         formData.append('file', file);
-        return this.http
-            .post<Graph>('http://localhost:8080/api/graph/loadGraph', formData)
-            .toPromise();
+        return this.http.post<Graph>(
+            'http://localhost:8080/api/graph/loadGraph',
+            formData
+        );
     }
 
     public separateNodes(graph: Graph, info: InfoSeparate[]): Promise<Graph> {

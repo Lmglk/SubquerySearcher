@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import {
-    SetInitialGraphAction,
     SetModifiedGraphAction,
+    UploadGraphAction,
 } from '../../store/actions/graph.actions';
 import { HttpService } from '../../services/http.service';
 import { select, Store } from '@ngrx/store';
@@ -12,11 +12,7 @@ import {
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
 import { selectGraph } from '../../store/selectors/graph.selector';
-import {
-    ResetScheduleAction,
-    SetScheduleAction,
-} from '../../store/actions/schedule.actions';
-import { SetNodesListAction } from '../../store/actions/separate-nodes.action';
+import { SetScheduleAction } from '../../store/actions/schedule.actions';
 import { selectSeparateNodes } from '../../store/selectors/separate-nodes.selector';
 import { InfoSeparate } from '../../types/InfoSeparate';
 import { Graph } from '../../types/Graph';
@@ -64,18 +60,10 @@ export class HeaderComponent implements OnDestroy {
     }
 
     public async uploadFile(): Promise<void> {
-        if (!this.file) {
-            return;
-        }
-
-        try {
-            const graph = await this.httpService.uploadFile(this.file);
-            this.store.dispatch(new ResetScheduleAction());
-            this.store.dispatch(new SetInitialGraphAction(graph));
-            this.store.dispatch(new SetNodesListAction(graph.nodes));
-            this.store.dispatch(new SetModifiedGraphAction(graph));
-        } catch (e) {
-            this.toastr.error(e.error);
+        if (this.file) {
+            this.store.dispatch(new UploadGraphAction(this.file));
+        } else {
+            this.toastr.info('Please select a file');
         }
     }
 

@@ -20,6 +20,8 @@ import { separateNodesReducer } from './store/reducers/separate-nodes.reducer';
 import { NodeListModule } from './modules/node-list/node-list.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
 import { GraphModule } from './modules/graph/graph.module';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './effects/app.effects';
 
 @NgModule({
     declarations: [AppComponent, HeaderComponent, BlockComponent],
@@ -45,6 +47,7 @@ import { GraphModule } from './modules/graph/graph.module';
         ScheduleModule,
         NodeListModule,
         MetricsModule,
+        EffectsModule.forRoot([AppEffects]),
     ],
     providers: [HttpService],
     bootstrap: [AppComponent],
