@@ -2,8 +2,8 @@ import { Action } from '@ngrx/store';
 import { Schedule } from '../../types/Schedule';
 
 export enum ActionTypes {
-    SetScheduleAction = '[Metrics] Set',
-    ResetScheduleAction = '[Metrics] Reset',
+    SetScheduleAction = '[Schedule] Set',
+    ResetScheduleAction = '[Schedule] Reset',
 }
 
 export class SetScheduleAction implements Action {

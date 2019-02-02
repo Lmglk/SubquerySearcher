@@ -1,5 +1,8 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { SetGraphAction } from '../../store/actions/graph.actions';
+import {
+    SetInitialGraphAction,
+    SetModifiedGraphAction,
+} from '../../store/actions/graph.actions';
 import { HttpService } from '../../services/http.service';
 import { select, Store } from '@ngrx/store';
 import { AppState } from '../../types/AppState';
@@ -67,9 +70,10 @@ export class HeaderComponent implements OnDestroy {
 
         try {
             const graph = await this.httpService.uploadFile(this.file);
-            this.store.dispatch(new SetGraphAction(graph));
-            this.store.dispatch(new SetNodesListAction(graph.nodes));
             this.store.dispatch(new ResetScheduleAction());
+            this.store.dispatch(new SetInitialGraphAction(graph));
+            this.store.dispatch(new SetNodesListAction(graph.nodes));
+            this.store.dispatch(new SetModifiedGraphAction(graph));
         } catch (e) {
             this.toastr.error(e.error);
         }
@@ -82,20 +86,16 @@ export class HeaderComponent implements OnDestroy {
 
     public async calculateGraph(): Promise<void> {
         try {
-            const graphWithSeparateNodes = await this.httpService.separateNodes(
+            const modifiedGraph = await this.httpService.separateNodes(
                 this.graph,
                 this.separateNodesInfo
             );
-
-            const schedule = await this.httpService.getSchedule(
-                graphWithSeparateNodes
-            );
-            this.store.dispatch(new SetGraphAction(graphWithSeparateNodes));
+            const schedule = await this.httpService.getSchedule(modifiedGraph);
 
             switch (this.selectedOptimizationOption) {
                 case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
                     const optimizedScheduleWithTime = await this.httpService.optimizeScheduleWithTimestamp(
-                        { graph: graphWithSeparateNodes, schedule: schedule }
+                        { graph: modifiedGraph, schedule: schedule }
                     );
                     this.store.dispatch(
                         new SetScheduleAction(optimizedScheduleWithTime)
@@ -104,7 +104,7 @@ export class HeaderComponent implements OnDestroy {
 
                 case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
                     const optimizedSchedule = await this.httpService.optimizeScheduleWithoutTimestamp(
-                        { graph: graphWithSeparateNodes, schedule: schedule }
+                        { graph: modifiedGraph, schedule: schedule }
                     );
                     this.store.dispatch(
                         new SetScheduleAction(optimizedSchedule)
@@ -114,6 +114,7 @@ export class HeaderComponent implements OnDestroy {
                 default:
                     this.store.dispatch(new SetScheduleAction(schedule));
             }
+            this.store.dispatch(new SetModifiedGraphAction(modifiedGraph));
         } catch (e) {
             this.toastr.error(e.error);
         }

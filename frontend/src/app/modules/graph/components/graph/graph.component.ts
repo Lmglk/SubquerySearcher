@@ -3,6 +3,7 @@ import {
     HostListener,
     Input,
     OnChanges,
+    SimpleChanges,
     ViewEncapsulation,
 } from '@angular/core';
 import { Graph } from '../../../../types/Graph';
@@ -43,12 +44,11 @@ export class GraphComponent implements OnChanges {
     private width;
     private height;
 
-    ngOnChanges(): void {
-        if (!this.graph) {
-            return;
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.graph || changes.schedule) {
+            this.data = this.graph;
+            this.redraw();
         }
-        this.data = this.graph;
-        this.redraw();
     }
 
     @HostListener('window:resize')

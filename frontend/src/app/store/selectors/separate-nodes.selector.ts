@@ -7,9 +7,11 @@ export const selectSeparateNodes = createSelector(
 );
 
 export const selectCountNode = createSelector(
-    (state: AppState) => state.separateNodesState,
-    (separateNodes, prop: { id: string }) =>
-        separateNodes.separateNodes.filter(
+    selectSeparateNodes,
+    (separateNodes, prop: { id: string }) => {
+        const node = separateNodes.filter(
             infoSeparate => infoSeparate.nodeId === prop.id
-        )[0].count
+        )[0];
+        return node ? node.count : 1;
+    }
 );

@@ -2,11 +2,13 @@ import * as GraphAction from '../actions/graph.actions';
 import { Graph } from '../../types/Graph';
 
 export interface GraphState {
-    graph: Graph;
+    initialGraph: Graph;
+    modifiedGraph: Graph;
 }
 
 const initialState: GraphState = {
-    graph: null,
+    initialGraph: null,
+    modifiedGraph: null,
 };
 
 export function graphReducer(
@@ -14,10 +16,16 @@ export function graphReducer(
     action: GraphAction.ActionsUnion
 ): GraphState {
     switch (action.type) {
-        case GraphAction.ActionTypes.SetGraphAction:
+        case GraphAction.ActionTypes.SetInitialGraphAction:
             return {
                 ...state,
-                graph: action.payload,
+                initialGraph: action.payload,
+            };
+
+        case GraphAction.ActionTypes.SetModifiedGraphAction:
+            return {
+                ...state,
+                modifiedGraph: action.payload,
             };
 
         default:
