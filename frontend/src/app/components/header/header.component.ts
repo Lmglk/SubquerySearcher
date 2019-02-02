@@ -12,7 +12,11 @@ import {
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
 import { selectGraph } from '../../store/selectors/graph.selector';
-import { SetScheduleAction } from '../../store/actions/schedule.actions';
+import {
+    OptimizeScheduleWithoutTimeStep,
+    OptimizeScheduleWithTimeStep,
+    SetScheduleAction,
+} from '../../store/actions/schedule.actions';
 import { selectSeparateNodes } from '../../store/selectors/separate-nodes.selector';
 import { InfoSeparate } from '../../types/InfoSeparate';
 import { Graph } from '../../types/Graph';
@@ -82,20 +86,20 @@ export class HeaderComponent implements OnDestroy {
 
             switch (this.selectedOptimizationOption) {
                 case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
-                    const optimizedScheduleWithTime = await this.httpService.optimizeScheduleWithTimestamp(
-                        { graph: modifiedGraph, schedule: schedule }
-                    );
                     this.store.dispatch(
-                        new SetScheduleAction(optimizedScheduleWithTime)
+                        new OptimizeScheduleWithTimeStep({
+                            graph: modifiedGraph,
+                            schedule: schedule,
+                        })
                     );
                     break;
 
                 case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
-                    const optimizedSchedule = await this.httpService.optimizeScheduleWithoutTimestamp(
-                        { graph: modifiedGraph, schedule: schedule }
-                    );
                     this.store.dispatch(
-                        new SetScheduleAction(optimizedSchedule)
+                        new OptimizeScheduleWithoutTimeStep({
+                            graph: modifiedGraph,
+                            schedule: schedule,
+                        })
                     );
                     break;
 

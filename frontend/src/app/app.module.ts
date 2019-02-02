@@ -21,7 +21,8 @@ import { NodeListModule } from './modules/node-list/node-list.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
 import { GraphModule } from './modules/graph/graph.module';
 import { EffectsModule } from '@ngrx/effects';
-import { AppEffects } from './effects/app.effects';
+import { GraphEffects } from './effects/graph.effects';
+import { ScheduleEffects } from './effects/schedule.effects';
 
 @NgModule({
     declarations: [AppComponent, HeaderComponent, BlockComponent],
@@ -47,7 +48,7 @@ import { AppEffects } from './effects/app.effects';
         ScheduleModule,
         NodeListModule,
         MetricsModule,
-        EffectsModule.forRoot([AppEffects]),
+        EffectsModule.forRoot([GraphEffects, ScheduleEffects]),
     ],
     providers: [HttpService],
     bootstrap: [AppComponent],

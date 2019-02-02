@@ -15,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 
 @Injectable()
-export class AppEffects {
+export class GraphEffects {
     @Effect()
     public uploadGraph$ = this.actions$.pipe(
         ofType(ActionTypes.UploadGraphAction),

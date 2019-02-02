@@ -39,23 +39,19 @@ export class HttpService {
 
     public optimizeScheduleWithoutTimestamp(
         optimizationData: OptimizationData
-    ): Promise<Schedule> {
-        return this.http
-            .post<Schedule>(
-                'http://localhost:8080/api/graph/optimizeScheduleWithoutTimestamp',
-                optimizationData
-            )
-            .toPromise();
+    ): Observable<Schedule> {
+        return this.http.post<Schedule>(
+            'http://localhost:8080/api/graph/optimizeScheduleWithoutTimestamp',
+            optimizationData
+        );
     }
 
     public optimizeScheduleWithTimestamp(
         optimizationData: OptimizationData
-    ): Promise<Schedule> {
-        return this.http
-            .post<Schedule>(
-                'http://localhost:8080/api/graph/optimizeScheduleWithTimestamp',
-                optimizationData
-            )
-            .toPromise();
+    ): Observable<Schedule> {
+        return this.http.post<Schedule>(
+            'http://localhost:8080/api/graph/optimizeScheduleWithTimestamp',
+            optimizationData
+        );
     }
 }
