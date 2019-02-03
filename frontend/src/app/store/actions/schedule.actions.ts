@@ -1,13 +1,16 @@
 import { Action } from '@ngrx/store';
 import { Schedule } from '../../types/Schedule';
 import { OptimizationData } from '../../types/OptimizationData';
+import { OptimizationOption } from '../../enums/OptimizationOptions';
+import { Graph } from '../../types/Graph';
 
 export enum ActionTypes {
     SetScheduleAction = '[Schedule] Set',
     ResetScheduleAction = '[Schedule] Reset',
-    OptimizeScheduleWithTimeStep = '[Schedule] Optimize schedule with time step',
-    OptimizeScheduleWithoutTimeStep = '[Schedule] Optimize schedule without time step',
-    RejectOptimizeSchedule = '[Schedule] Reject optimize schedule',
+    OptimizeScheduleWithTimeStepAction = '[Schedule] Optimize schedule with time step',
+    OptimizeScheduleWithoutTimeStepAction = '[Schedule] Optimize schedule without time step',
+    RejectOptimizeScheduleAction = '[Schedule] Reject optimize schedule',
+    LoadScheduleAction = '[Schedule] Load',
 }
 
 export class SetScheduleAction implements Action {
@@ -21,19 +24,27 @@ export class ResetScheduleAction implements Action {
 }
 
 export class OptimizeScheduleWithTimeStep implements Action {
-    readonly type = ActionTypes.OptimizeScheduleWithTimeStep;
+    readonly type = ActionTypes.OptimizeScheduleWithTimeStepAction;
 
     constructor(public readonly payload: OptimizationData) {}
 }
 
 export class OptimizeScheduleWithoutTimeStep implements Action {
-    readonly type = ActionTypes.OptimizeScheduleWithoutTimeStep;
+    readonly type = ActionTypes.OptimizeScheduleWithoutTimeStepAction;
 
     constructor(public readonly payload: OptimizationData) {}
 }
 
 export class RejectOptimizeSchedule implements Action {
-    readonly type = ActionTypes.RejectOptimizeSchedule;
+    readonly type = ActionTypes.RejectOptimizeScheduleAction;
+}
+
+export class LoadScheduleAction implements Action {
+    readonly type = ActionTypes.LoadScheduleAction;
+
+    constructor(
+        public readonly payload: { graph: Graph; option: OptimizationOption }
+    ) {}
 }
 
 export type ActionUnion = SetScheduleAction | ResetScheduleAction;

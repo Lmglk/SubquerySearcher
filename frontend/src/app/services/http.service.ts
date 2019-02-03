@@ -28,13 +28,11 @@ export class HttpService {
             .toPromise();
     }
 
-    public getSchedule(graph: Graph): Promise<Schedule> {
-        return this.http
-            .post<Schedule>(
-                'http://localhost:8080/api/graph/getSchedule',
-                graph
-            )
-            .toPromise();
+    public getSchedule(graph: Graph): Observable<Schedule> {
+        return this.http.post<Schedule>(
+            'http://localhost:8080/api/graph/getSchedule',
+            graph
+        );
     }
 
     public optimizeScheduleWithoutTimestamp(

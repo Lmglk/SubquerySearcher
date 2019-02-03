@@ -12,11 +12,7 @@ import {
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
 import { selectGraph } from '../../store/selectors/graph.selector';
-import {
-    OptimizeScheduleWithoutTimeStep,
-    OptimizeScheduleWithTimeStep,
-    SetScheduleAction,
-} from '../../store/actions/schedule.actions';
+import { LoadScheduleAction } from '../../store/actions/schedule.actions';
 import { selectSeparateNodes } from '../../store/selectors/separate-nodes.selector';
 import { InfoSeparate } from '../../types/InfoSeparate';
 import { Graph } from '../../types/Graph';
@@ -82,30 +78,14 @@ export class HeaderComponent implements OnDestroy {
                 this.graph,
                 this.separateNodesInfo
             );
-            const schedule = await this.httpService.getSchedule(modifiedGraph);
 
-            switch (this.selectedOptimizationOption) {
-                case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
-                    this.store.dispatch(
-                        new OptimizeScheduleWithTimeStep({
-                            graph: modifiedGraph,
-                            schedule: schedule,
-                        })
-                    );
-                    break;
+            this.store.dispatch(
+                new LoadScheduleAction({
+                    graph: modifiedGraph,
+                    option: this.selectedOptimizationOption,
+                })
+            );
 
-                case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
-                    this.store.dispatch(
-                        new OptimizeScheduleWithoutTimeStep({
-                            graph: modifiedGraph,
-                            schedule: schedule,
-                        })
-                    );
-                    break;
-
-                default:
-                    this.store.dispatch(new SetScheduleAction(schedule));
-            }
             this.store.dispatch(new SetModifiedGraphAction(modifiedGraph));
         } catch (e) {
             this.toastr.error(e.error);
