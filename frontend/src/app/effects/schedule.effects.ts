@@ -6,6 +6,7 @@ import {
     LoadScheduleAction,
     OptimizeScheduleWithoutTimeStep,
     OptimizeScheduleWithTimeStep,
+    RejectLoadSchedule,
     RejectOptimizeSchedule,
     SetScheduleAction,
 } from '../store/actions/schedule.actions';
@@ -43,7 +44,7 @@ export class ScheduleEffects {
                 }),
                 catchError(() => {
                     this.toastr.error('Optimize schedule is failed');
-                    return of(new RejectOptimizeSchedule());
+                    return of(new RejectLoadSchedule());
                 })
             )
         )

@@ -1,21 +1,16 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import {
-    SetModifiedGraphAction,
+    CalculateGraphAction,
     UploadGraphAction,
 } from '../../store/actions/graph.actions';
 import { HttpService } from '../../services/http.service';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { AppState } from '../../types/AppState';
 import { ToastrService } from 'ngx-toastr';
 import {
     OptimizationOption,
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
-import { selectGraph } from '../../store/selectors/graph.selector';
-import { LoadScheduleAction } from '../../store/actions/schedule.actions';
-import { selectSeparateNodes } from '../../store/selectors/separate-nodes.selector';
-import { InfoSeparate } from '../../types/InfoSeparate';
-import { Graph } from '../../types/Graph';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -30,8 +25,6 @@ export class HeaderComponent implements OnDestroy {
     public selectedOptimizationOption: OptimizationOption;
 
     private file: File;
-    private graph: Graph;
-    private separateNodesInfo: InfoSeparate[];
     private graphSubscription: Subscription;
     private separateNodeInfoSubscription: Subscription;
 
@@ -41,17 +34,6 @@ export class HeaderComponent implements OnDestroy {
         private store: Store<AppState>
     ) {
         this.selectedOptimizationOption = OptimizationOption.NO_OPTIMIZATION;
-
-        this.graphSubscription = this.store
-            .pipe(select(selectGraph))
-            .subscribe(graph => (this.graph = graph));
-
-        this.separateNodeInfoSubscription = this.store
-            .pipe(select(selectSeparateNodes))
-            .subscribe(
-                separateNodesInfo =>
-                    (this.separateNodesInfo = separateNodesInfo)
-            );
     }
 
     public changeFile(): void {
@@ -73,23 +55,9 @@ export class HeaderComponent implements OnDestroy {
     }
 
     public async calculateGraph(): Promise<void> {
-        try {
-            const modifiedGraph = await this.httpService.separateNodes(
-                this.graph,
-                this.separateNodesInfo
-            );
-
-            this.store.dispatch(
-                new LoadScheduleAction({
-                    graph: modifiedGraph,
-                    option: this.selectedOptimizationOption,
-                })
-            );
-
-            this.store.dispatch(new SetModifiedGraphAction(modifiedGraph));
-        } catch (e) {
-            this.toastr.error(e.error);
-        }
+        this.store.dispatch(
+            new CalculateGraphAction(this.selectedOptimizationOption)
+        );
     }
 
     public ngOnDestroy(): void {

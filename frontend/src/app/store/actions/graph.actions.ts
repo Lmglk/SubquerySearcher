@@ -1,11 +1,13 @@
 import { Action } from '@ngrx/store';
 import { Graph } from '../../types/Graph';
+import { OptimizationOption } from '../../enums/OptimizationOptions';
 
 export enum ActionTypes {
     SetInitialGraphAction = '[Graph] Set initial graph',
     SetModifiedGraphAction = '[Graph] Set modified graph',
     UploadGraphAction = '[Graph] Upload graph',
     RejectUploadGraphAction = '[Graph] Reject upload graph',
+    CalculateGraphAction = '[Schedule] Calculate graph',
 }
 
 export class SetInitialGraphAction implements Action {
@@ -30,8 +32,15 @@ export class RejectUploadGraphAction implements Action {
     readonly type = ActionTypes.RejectUploadGraphAction;
 }
 
+export class CalculateGraphAction implements Action {
+    readonly type = ActionTypes.CalculateGraphAction;
+
+    constructor(public readonly payload: OptimizationOption) {}
+}
+
 export type ActionsUnion =
     | SetInitialGraphAction
     | SetModifiedGraphAction
     | UploadGraphAction
-    | RejectUploadGraphAction;
+    | RejectUploadGraphAction
+    | CalculateGraphAction;

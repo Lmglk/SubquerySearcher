@@ -19,13 +19,17 @@ export class HttpService {
         );
     }
 
-    public separateNodes(graph: Graph, info: InfoSeparate[]): Promise<Graph> {
-        return this.http
-            .post<Graph>('http://localhost:8080/api/graph/separateNodes', {
+    public separateNodes(
+        graph: Graph,
+        info: InfoSeparate[]
+    ): Observable<Graph> {
+        return this.http.post<Graph>(
+            'http://localhost:8080/api/graph/separateNodes',
+            {
                 graph,
                 info,
-            })
-            .toPromise();
+            }
+        );
     }
 
     public getSchedule(graph: Graph): Observable<Schedule> {
