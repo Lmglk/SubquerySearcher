@@ -1,0 +1,17 @@
+.edge {
+    stroke: lightcoral;
+    stroke-width: 2;
+    transition: stroke 0.5s ease;
+}
+
+.inactive {
+    stroke: lightgray;
+}
+
+.marker-active {
+    fill: lightcoral;
+}
+
+.marker-inactive {
+    fill: lightgray;
+}

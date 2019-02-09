@@ -1,0 +1,16 @@
+.node {
+    fill: lightcoral;
+    cursor: -webkit-grab;
+    user-select: none;
+    transition: fill 0.5s ease;
+}
+
+.inactive {
+    fill: lightgray;
+}
+
+.label {
+    stroke: black;
+    text-anchor: middle;
+    alignment-baseline: middle;
+}

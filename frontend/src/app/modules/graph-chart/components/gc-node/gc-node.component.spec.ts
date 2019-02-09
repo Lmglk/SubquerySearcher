@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GraphContainerComponent } from './graph-container.component';
+import { GcNodeComponent } from './gc-node.component';
 
-describe('GraphContainerComponent', () => {
-    let component: GraphContainerComponent;
-    let fixture: ComponentFixture<GraphContainerComponent>;
+describe('GcNodeComponent', () => {
+    let component: GcNodeComponent;
+    let fixture: ComponentFixture<GcNodeComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [GraphContainerComponent],
+            declarations: [GcNodeComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(GraphContainerComponent);
+        fixture = TestBed.createComponent(GcNodeComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

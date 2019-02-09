@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <marker
+            id="marker-active"
+            class="marker-active"
+            viewBox="0 -5 10 10"
+            markerHeight="6"
+            markerWidth="6"
+            orient="auto"
+            [attr.refX]="nodeRadius + 5"
+        >
+            <path d="M0,-5L10,0L0,5"></path>
+        </marker>
+        <marker
+            id="marker-inactive"
+            class="marker-inactive"
+            viewBox="0 -5 10 10"
+            markerHeight="6"
+            markerWidth="6"
+            orient="auto"
+            [attr.refX]="nodeRadius + 5"
+        >
+            <path d="M0,-5L10,0L0,5"></path>
+        </marker>
+    </defs>
+    <line
+        class="edge"
+        [class.inactive]="inactive"
+        [attr.x1]="x1"
+        [attr.y1]="y1"
+        [attr.x2]="x2"
+        [attr.y2]="y2"
+        [attr.marker-end]="getMarker()"
+    ></line>
+</svg>

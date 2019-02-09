@@ -19,10 +19,10 @@ import { BlockComponent } from './components/block/block.component';
 import { separateNodesReducer } from './store/reducers/separate-nodes.reducer';
 import { NodeListModule } from './modules/node-list/node-list.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
-import { GraphModule } from './modules/graph/graph.module';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { ScheduleEffects } from './effects/schedule.effects';
+import { GraphChartModule } from './modules/graph-chart/graph-chart.module';
 
 @NgModule({
     declarations: [AppComponent, HeaderComponent, BlockComponent],
@@ -44,7 +44,7 @@ import { ScheduleEffects } from './effects/schedule.effects';
             logOnly: environment.production,
         }),
         MatButtonModule,
-        GraphModule,
+        GraphChartModule,
         ScheduleModule,
         NodeListModule,
         MetricsModule,

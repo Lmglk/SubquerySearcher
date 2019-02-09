@@ -7,8 +7,14 @@ export interface GraphState {
 }
 
 const initialState: GraphState = {
-    initialGraph: null,
-    modifiedGraph: null,
+    initialGraph: {
+        nodes: [],
+        edges: [],
+    },
+    modifiedGraph: {
+        nodes: [],
+        edges: [],
+    },
 };
 
 export function graphReducer(

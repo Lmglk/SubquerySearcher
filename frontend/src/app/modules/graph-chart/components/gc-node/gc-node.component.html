@@ -1,0 +1,12 @@
+<svg>
+    <g class="node" [class.inactive]="inactive" (dblclick)="handleClick()">
+        <circle
+            [attr.cx]="node.x"
+            [attr.cy]="node.y"
+            [attr.r]="radius"
+        ></circle>
+        <text class="label" [attr.x]="node.x" [attr.y]="node.y">
+            {{ node.name }}
+        </text>
+    </g>
+</svg>

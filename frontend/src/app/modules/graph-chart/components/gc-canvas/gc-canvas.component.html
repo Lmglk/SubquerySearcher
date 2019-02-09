@@ -1,0 +1,23 @@
+<svg>
+    <g
+        app-gc-edge
+        *ngFor="let edge of edges; trackBy: trackByFnEdge"
+        [x1]="edge.source.x"
+        [y1]="edge.source.y"
+        [x2]="edge.target.x"
+        [y2]="edge.target.y"
+        [inactive]="!isSelectedEdge(edge)"
+        [nodeRadius]="nodeRadius"
+    ></g>
+    <g
+        app-gc-node
+        *ngFor="let node of nodes; trackBy: trackByFnNode"
+        [node]="node"
+        [radius]="nodeRadius"
+        [inactive]="!isSelectedNode(node.id)"
+        [layoutHeight]="height"
+        [layoutWidth]="width"
+        (move)="handleMoveNode($event)"
+        (select)="handleSelectNode($event)"
+    ></g>
+</svg>
