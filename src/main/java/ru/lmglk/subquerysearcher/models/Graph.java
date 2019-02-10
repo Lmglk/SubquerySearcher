@@ -132,6 +132,13 @@ public class Graph {
     }
 
     @JsonIgnore
+    public boolean isExistNode(String nodeName) {
+        return this.nodes
+                .stream()
+                .anyMatch(node -> nodeName.equals(node.getName()));
+    }
+
+    @JsonIgnore
     public boolean isExistEdge(Node sourceNode, Node targetNode) {
         return this.edges
                 .stream()

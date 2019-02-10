@@ -25,7 +25,9 @@ public class GraphServiceImpl implements GraphService {
                 String[] arr = str.split(" ");
                 int time = (arr.length == 3) ? Integer.parseInt(arr[2]) : 1;
                 graph.addNode(arr[0], time);
-                graph.addNode(arr[1], 1);
+                if (!graph.isExistNode(arr[1])) {
+                    graph.addNode(arr[1], 1);
+                }
                 graph.addEdge(arr[0], arr[1]);
             }
             bufferedReader.close();
