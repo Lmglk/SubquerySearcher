@@ -27,6 +27,8 @@ import { Group } from '../../../types/Group';
             [height]="height"
             [width]="width"
             [nodeRadius]="nodeRadius"
+            [verticalDragging]="true"
+            [horizontalDragging]="!groups"
         ></app-gc-canvas>
     `,
     styles: [

@@ -17,6 +17,8 @@
         [inactive]="!isSelectedNode(node.id)"
         [layoutHeight]="height"
         [layoutWidth]="width"
+        [horizontalDragging]="horizontalDragging"
+        [verticalDragging]="verticalDragging"
         (move)="handleMoveNode($event)"
         (select)="handleSelectNode($event)"
     ></g>

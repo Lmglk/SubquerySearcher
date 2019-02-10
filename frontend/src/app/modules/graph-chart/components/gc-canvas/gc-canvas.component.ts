@@ -13,6 +13,8 @@ export class GcCanvasComponent {
     @Input() height: number;
     @Input() width: number;
     @Input() nodeRadius: number;
+    @Input() horizontalDragging: boolean;
+    @Input() verticalDragging: boolean;
 
     public selectedNodeId: string;
 
