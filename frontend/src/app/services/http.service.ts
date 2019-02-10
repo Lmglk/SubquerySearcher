@@ -13,37 +13,28 @@ export class HttpService {
     public uploadFile(file: File): Observable<Graph> {
         const formData = new FormData();
         formData.append('file', file);
-        return this.http.post<Graph>(
-            'http://localhost:8080/api/graph/loadGraph',
-            formData
-        );
+        return this.http.post<Graph>('api/graph/loadGraph', formData);
     }
 
     public separateNodes(
         graph: Graph,
         info: InfoSeparate[]
     ): Observable<Graph> {
-        return this.http.post<Graph>(
-            'http://localhost:8080/api/graph/separateNodes',
-            {
-                graph,
-                info,
-            }
-        );
+        return this.http.post<Graph>('api/graph/separateNodes', {
+            graph,
+            info,
+        });
     }
 
     public getSchedule(graph: Graph): Observable<Schedule> {
-        return this.http.post<Schedule>(
-            'http://localhost:8080/api/graph/getSchedule',
-            graph
-        );
+        return this.http.post<Schedule>('api/graph/getSchedule', graph);
     }
 
     public optimizeScheduleWithoutTimestamp(
         optimizationData: OptimizationData
     ): Observable<Schedule> {
         return this.http.post<Schedule>(
-            'http://localhost:8080/api/graph/optimizeScheduleWithoutTimestamp',
+            'api/graph/optimizeScheduleWithoutTimestamp',
             optimizationData
         );
     }
@@ -52,7 +43,7 @@ export class HttpService {
         optimizationData: OptimizationData
     ): Observable<Schedule> {
         return this.http.post<Schedule>(
-            'http://localhost:8080/api/graph/optimizeScheduleWithTimestamp',
+            'api/graph/optimizeScheduleWithTimestamp',
             optimizationData
         );
     }
