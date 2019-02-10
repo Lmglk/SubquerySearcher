@@ -71,9 +71,10 @@ export class GcContainerComponent implements AfterViewInit, OnDestroy {
             this.store.pipe(select(selectGroups)),
             this.store.pipe(select(selectMaxGroupSize))
         ).subscribe(([{ nodes, edges }, groups, maxGroupSize]) => {
+            this.groups = groups;
+            this.maxGroupSize = maxGroupSize;
+
             if (groups) {
-                this.groups = groups;
-                this.maxGroupSize = maxGroupSize;
                 this.calculateScalesForSchedule(groups.length, maxGroupSize);
                 this.calculateNodeTicksForSchedule(groups, maxGroupSize);
             } else {
