@@ -5,7 +5,6 @@ import { AppComponent } from './components/app/app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpService } from './services/http.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -43,7 +42,6 @@ import { GraphChartModule } from './modules/graph-chart/graph-chart.module';
             maxAge: 25,
             logOnly: environment.production,
         }),
-        MatButtonModule,
         GraphChartModule,
         ScheduleModule,
         NodeListModule,

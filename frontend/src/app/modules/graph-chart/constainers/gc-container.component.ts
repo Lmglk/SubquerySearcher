@@ -46,12 +46,12 @@ export class GcContainerComponent implements AfterViewInit, OnDestroy {
 
     public scaledNodes: GraphChartNode[] = [];
     public scaledEdges: GraphChartEdge[] = [];
+    public groups: Group[];
     public height: number;
     public width: number;
 
     private nodes: GraphChartNode[] = [];
     private edges: GraphChartEdge[] = [];
-    private groups: Group[];
     private maxGroupSize: number;
     private scaleX: (number) => number;
     private scaleY: (number) => number;
