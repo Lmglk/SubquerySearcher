@@ -8,7 +8,7 @@ export interface ScheduleState {
 }
 
 const initialState: ScheduleState = {
-    groups: null,
+    groups: [],
     metrics: null,
 };
 
@@ -26,6 +26,12 @@ export function scheduleReducer(
         case ScheduleAction.ActionTypes.ResetScheduleAction:
             return {
                 ...initialState,
+            };
+
+        case ScheduleAction.ActionTypes.ResetGroupsAction:
+            return {
+                ...state,
+                groups: [],
             };
 
         default:

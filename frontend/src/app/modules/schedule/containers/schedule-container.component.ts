@@ -12,6 +12,7 @@ import {
     selector: 'app-schedule-container',
     template: `
         <app-schedule
+            *ngIf="(groups$ | async).length > 0"
             [data]="groups$ | async"
             [maxGroupSize]="maxGroupSize$ | async"
         ></app-schedule>

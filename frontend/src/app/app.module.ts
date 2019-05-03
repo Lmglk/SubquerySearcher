@@ -14,7 +14,6 @@ import { graphReducer } from './store/reducers/graph.reducer';
 import { scheduleReducer } from './store/reducers/schedule.reducer';
 import { ScheduleModule } from './modules/schedule/schedule.module';
 import { HeaderComponent } from './components/header/header.component';
-import { BlockComponent } from './components/block/block.component';
 import { separateNodesReducer } from './store/reducers/separate-nodes.reducer';
 import { NodeListModule } from './modules/node-list/node-list.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
@@ -22,9 +21,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { ScheduleEffects } from './effects/schedule.effects';
 import { GraphChartModule } from './modules/graph-chart/graph-chart.module';
+import { BasicComponentsModule } from './modules/basic-components/basic-components.module';
 
 @NgModule({
-    declarations: [AppComponent, HeaderComponent, BlockComponent],
+    declarations: [AppComponent, HeaderComponent],
     imports: [
         BrowserModule,
         FormsModule,
@@ -42,6 +42,7 @@ import { GraphChartModule } from './modules/graph-chart/graph-chart.module';
             maxAge: 25,
             logOnly: environment.production,
         }),
+        BasicComponentsModule,
         GraphChartModule,
         ScheduleModule,
         NodeListModule,

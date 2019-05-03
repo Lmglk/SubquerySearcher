@@ -12,6 +12,7 @@ export enum ActionTypes {
     RejectOptimizeScheduleAction = '[Schedule] Reject optimization',
     LoadScheduleAction = '[Schedule] Load',
     RejectLoadSchedule = '[Schedule] Reject load',
+    ResetGroupsAction = '[Schedule] Reset groups',
 }
 
 export class SetScheduleAction implements Action {
@@ -52,6 +53,10 @@ export class RejectLoadSchedule implements Action {
     readonly type = ActionTypes.RejectLoadSchedule;
 }
 
+export class ResetGroupsAction implements Action {
+    readonly type = ActionTypes.ResetGroupsAction;
+}
+
 export type ActionUnion =
     | SetScheduleAction
     | ResetScheduleAction
@@ -59,4 +64,5 @@ export type ActionUnion =
     | OptimizeScheduleWithoutTimeStep
     | RejectOptimizeSchedule
     | LoadScheduleAction
-    | RejectLoadSchedule;
+    | RejectLoadSchedule
+    | ResetGroupsAction;

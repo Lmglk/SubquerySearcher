@@ -47,8 +47,8 @@ export class GcCanvasComponent {
         }
 
         return (
-            edge.target.id === this.selectedNodeId ||
-            edge.source.id === this.selectedNodeId
+            (edge.target && edge.target.id === this.selectedNodeId) ||
+            (edge.source && edge.source.id === this.selectedNodeId)
         );
     }
 

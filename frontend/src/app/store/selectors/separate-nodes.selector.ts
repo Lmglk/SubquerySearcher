@@ -1,14 +1,16 @@
 import { createSelector } from '@ngrx/store';
 import { AppState } from '../../types/AppState';
+import { SeparateNodesState } from '../reducers/separate-nodes.reducer';
+import { InfoSeparate } from '../../types/InfoSeparate';
 
 export const selectSeparateNodes = createSelector(
     (state: AppState) => state.separateNodesState,
-    separateNodes => separateNodes.separateNodes
+    (separateNodes: SeparateNodesState) => separateNodes.separateNodes
 );
 
 export const selectCountNode = createSelector(
     selectSeparateNodes,
-    (separateNodes, prop: { id: string }) => {
+    (separateNodes: InfoSeparate[], prop: { id: string }) => {
         const node = separateNodes.filter(
             infoSeparate => infoSeparate.nodeId === prop.id
         )[0];

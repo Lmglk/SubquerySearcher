@@ -20,8 +20,6 @@ import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { selectGraph } from '../store/selectors/graph.selector';
 import { selectSeparateNodes } from '../store/selectors/separate-nodes.selector';
-import { Graph } from '../types/Graph';
-import { InfoSeparate } from '../types/InfoSeparate';
 import { Store } from '@ngrx/store';
 import { AppState } from '../types/AppState';
 
@@ -48,34 +46,26 @@ export class GraphEffects {
 
     @Effect()
     public calculateGraph$ = this.actions$.pipe(
-        ofType(ActionTypes.CalculateGraphAction),
+        ofType<CalculateGraphAction>(ActionTypes.CalculateGraphAction),
         withLatestFrom(
             this.store.select(selectGraph),
             this.store.select(selectSeparateNodes)
         ),
-        mergeMap(
-            ([action, graph, separateNodes]: [
-                CalculateGraphAction,
-                Graph,
-                InfoSeparate[]
-            ]) => {
-                return this.httpService
-                    .separateNodes(graph, separateNodes)
-                    .pipe(
-                        mergeMap(modifiedGraph => [
-                            new LoadScheduleAction({
-                                graph: modifiedGraph,
-                                option: action.payload,
-                            }),
-                            new SetModifiedGraphAction(modifiedGraph),
-                        ]),
-                        catchError(() => {
-                            this.toastr.error('Node splitting failed');
-                            return of(new RejectOptimizeSchedule());
-                        })
-                    );
-            }
-        )
+        mergeMap(([action, graph, separateNodes]) => {
+            return this.httpService.separateNodes(graph, separateNodes).pipe(
+                mergeMap(modifiedGraph => [
+                    new LoadScheduleAction({
+                        graph: modifiedGraph,
+                        option: action.payload,
+                    }),
+                    new SetModifiedGraphAction(modifiedGraph),
+                ]),
+                catchError(() => {
+                    this.toastr.error('Node splitting failed');
+                    return of(new RejectOptimizeSchedule());
+                })
+            );
+        })
     );
 
     constructor(

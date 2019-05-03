@@ -7,6 +7,7 @@ export enum ActionTypes {
     SetModifiedGraphAction = '[Graph] Set modified graph',
     UploadGraphAction = '[Graph] Upload graph',
     RejectUploadGraphAction = '[Graph] Reject upload graph',
+    ResetModifiedGraphAction = '[Graph] Reset modified graph',
     CalculateGraphAction = '[Schedule] Calculate graph',
 }
 
@@ -32,6 +33,10 @@ export class RejectUploadGraphAction implements Action {
     readonly type = ActionTypes.RejectUploadGraphAction;
 }
 
+export class ResetModifiedGraphAction implements Action {
+    readonly type = ActionTypes.ResetModifiedGraphAction;
+}
+
 export class CalculateGraphAction implements Action {
     readonly type = ActionTypes.CalculateGraphAction;
 
@@ -43,4 +48,5 @@ export type ActionsUnion =
     | SetModifiedGraphAction
     | UploadGraphAction
     | RejectUploadGraphAction
+    | ResetModifiedGraphAction
     | CalculateGraphAction;

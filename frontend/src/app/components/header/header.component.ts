@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import {
     CalculateGraphAction,
+    ResetModifiedGraphAction,
     UploadGraphAction,
 } from '../../store/actions/graph.actions';
 import { HttpService } from '../../services/http.service';
@@ -12,6 +13,7 @@ import {
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
 import { Subscription } from 'rxjs';
+import { ResetGroupsAction } from '../../store/actions/schedule.actions';
 
 @Component({
     selector: 'app-header',
@@ -55,6 +57,8 @@ export class HeaderComponent implements OnDestroy {
     }
 
     public async calculateGraph(): Promise<void> {
+        this.store.dispatch(new ResetModifiedGraphAction());
+        this.store.dispatch(new ResetGroupsAction());
         this.store.dispatch(
             new CalculateGraphAction(this.selectedOptimizationOption)
         );

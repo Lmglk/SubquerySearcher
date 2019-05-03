@@ -34,6 +34,15 @@ export function graphReducer(
                 modifiedGraph: action.payload,
             };
 
+        case GraphAction.ActionTypes.ResetModifiedGraphAction:
+            return {
+                ...state,
+                modifiedGraph: {
+                    nodes: [],
+                    edges: []
+                }
+            }
+
         default:
             return state;
     }
