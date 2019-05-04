@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
-import { HttpService } from '../services/http.service';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -17,6 +16,7 @@ import { ResetScheduleAction } from '../store/actions/ResetScheduleAction';
 import { LoadScheduleAction } from '../store/actions/LoadScheduleAction';
 import { RejectOptimizeScheduleAction } from '../store/actions/RejectOptimizeScheduleAction';
 import { SetNodesListAction } from '../store/actions/SetNodesListAction';
+import { ApiGraphService } from '../services/api-graph.service';
 
 @Injectable()
 export class GraphEffects {
@@ -24,7 +24,7 @@ export class GraphEffects {
     public uploadGraph$ = this.actions$.pipe(
         ofType<UploadGraphAction>(UploadGraphAction.type),
         mergeMap(action =>
-            this.httpService.uploadFile(action.payload).pipe(
+            this.apiGraphService.uploadFile(action.payload).pipe(
                 mergeMap(graph => [
                     new ResetScheduleAction(),
                     new SetInitialGraphAction(graph),
@@ -47,7 +47,7 @@ export class GraphEffects {
             this.store.select(selectSeparateNodes)
         ),
         mergeMap(([action, graph, separateNodes]) =>
-            this.httpService.separateNodes(graph, separateNodes).pipe(
+            this.apiGraphService.separateNodes(graph, separateNodes).pipe(
                 mergeMap(modifiedGraph => [
                     new LoadScheduleAction({
                         graph: modifiedGraph,
@@ -66,7 +66,7 @@ export class GraphEffects {
     constructor(
         private readonly actions$: Actions,
         private readonly store: Store<AppState>,
-        private readonly httpService: HttpService,
+        private readonly apiGraphService: ApiGraphService,
         private readonly toastr: ToastrService
     ) {}
 }

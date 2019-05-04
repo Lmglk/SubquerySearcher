@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './components/app/app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpService } from './services/http.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
@@ -51,7 +50,6 @@ import { modifiedGraphReducer } from './store/reducers/modifiedGraphReducer';
         MetricsModule,
         EffectsModule.forRoot([GraphEffects, ScheduleEffects]),
     ],
-    providers: [HttpService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

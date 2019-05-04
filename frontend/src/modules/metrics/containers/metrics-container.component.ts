@@ -3,7 +3,7 @@ import { AppState } from '../../app/types/AppState';
 import { select, Store } from '@ngrx/store';
 import { Metrics } from '../../app/types/Metrics';
 import { Observable } from 'rxjs';
-import { selectMetrics } from '../../app/store/selectors/selectMetrics';
+import { selectMetrics } from '../selectors/selectMetrics';
 
 @Component({
     selector: 'app-metrics-container',

@@ -9,12 +9,21 @@ import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize
 @Component({
     selector: 'app-schedule-container',
     template: `
-        <app-schedule
-            *ngIf="(groups$ | async).length > 0"
-            [data]="groups$ | async"
-            [maxGroupSize]="maxGroupSize$ | async"
-        ></app-schedule>
+        <app-block name="Schedule">
+            <app-schedule
+                *ngIf="(groups$ | async).length > 0"
+                [data]="groups$ | async"
+                [maxGroupSize]="maxGroupSize$ | async"
+            ></app-schedule>
+        </app-block>
     `,
+    styles: [
+        `
+            :host {
+                overflow: hidden;
+            }
+        `,
+    ],
 })
 export class ScheduleContainerComponent {
     public groups$: Observable<Group[]>;

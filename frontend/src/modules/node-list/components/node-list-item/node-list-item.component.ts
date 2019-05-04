@@ -3,7 +3,7 @@ import { GraphNode } from '../../../app/types/GraphNode';
 import { Observable } from 'rxjs';
 import { AppState } from '../../../app/types/AppState';
 import { select, Store } from '@ngrx/store';
-import { selectCountNodes } from '../../../app/store/selectors/selectCountNodes';
+import { selectCountNodes } from '../../selectors/selectCountNodes';
 import { UpdateNodeAction } from '../../../app/store/actions/UpdateNodeAction';
 
 @Component({

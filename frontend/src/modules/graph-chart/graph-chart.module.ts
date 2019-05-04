@@ -6,6 +6,7 @@ import { GcContainerComponent } from './containers/gc-container.component';
 import { GcEdgeComponent } from './components/gc-edge/gc-edge.component';
 import { GcFreePlacementContainerComponent } from './containers/gc-free-placement-container.component';
 import { GcSequencePlacementContainerComponent } from './containers/gc-sequence-placement-container.component';
+import { BasicComponentsModule } from '../basic-components/basic-components.module';
 
 @NgModule({
     declarations: [
@@ -16,7 +17,7 @@ import { GcSequencePlacementContainerComponent } from './containers/gc-sequence-
         GcFreePlacementContainerComponent,
         GcSequencePlacementContainerComponent,
     ],
-    imports: [CommonModule],
+    imports: [CommonModule, BasicComponentsModule],
     exports: [GcContainerComponent],
 })
 export class GraphChartModule {}

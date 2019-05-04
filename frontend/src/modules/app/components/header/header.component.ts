@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { HttpService } from '../../services/http.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../types/AppState';
 import { ToastrService } from 'ngx-toastr';
@@ -28,11 +27,7 @@ export class HeaderComponent implements OnDestroy {
     private graphSubscription: Subscription;
     private separateNodeInfoSubscription: Subscription;
 
-    constructor(
-        private toastr: ToastrService,
-        private httpService: HttpService,
-        private store: Store<AppState>
-    ) {
+    constructor(private toastr: ToastrService, private store: Store<AppState>) {
         this.selectedOptimizationOption = OptimizationOption.NO_OPTIMIZATION;
     }
 
