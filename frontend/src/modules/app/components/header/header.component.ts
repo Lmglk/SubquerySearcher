@@ -11,6 +11,8 @@ import { UploadGraphAction } from '../../store/actions/UploadGraphAction';
 import { ResetModifiedGraphAction } from '../../store/actions/ResetModifiedGraphAction';
 import { CalculateGraphAction } from '../../store/actions/CalculateGraphAction';
 import { ResetGroupsAction } from '../../store/actions/ResetGroupsAction';
+import * as FileSaver from 'file-saver';
+import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
 
 @Component({
     selector: 'app-header',
@@ -27,7 +29,11 @@ export class HeaderComponent implements OnDestroy {
     private graphSubscription: Subscription;
     private separateNodeInfoSubscription: Subscription;
 
-    constructor(private toastr: ToastrService, private store: Store<AppState>) {
+    constructor(
+        private readonly toastr: ToastrService,
+        private readonly store: Store<AppState>,
+        private readonly graphChartService: GraphChartService
+    ) {
         this.selectedOptimizationOption = OptimizationOption.NO_OPTIMIZATION;
     }
 
@@ -36,7 +42,7 @@ export class HeaderComponent implements OnDestroy {
         this.file = fileBrowser.files[0];
     }
 
-    public async uploadFile(): Promise<void> {
+    public uploadFile(): void {
         if (this.file) {
             this.store.dispatch(new UploadGraphAction(this.file));
         } else {
@@ -49,12 +55,28 @@ export class HeaderComponent implements OnDestroy {
             .value as OptimizationOption;
     }
 
-    public async calculateGraph(): Promise<void> {
+    public calculateGraph(): void {
         this.store.dispatch(new ResetModifiedGraphAction());
         this.store.dispatch(new ResetGroupsAction());
         this.store.dispatch(
             new CalculateGraphAction(this.selectedOptimizationOption)
         );
+    }
+
+    public exportToFile() {
+        const source = this.graphChartService.getSVGText('chart');
+        const fileName = 'chart.svg';
+        const mimeType = 'image/svg+xml;charset=utf-8';
+
+        const file = new File([source], fileName, {
+            type: mimeType,
+        });
+
+        try {
+            FileSaver.saveAs(file);
+        } catch (e) {
+            this.toastr.error('Export file failed');
+        }
     }
 
     public ngOnDestroy(): void {

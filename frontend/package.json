@@ -27,6 +27,7 @@
         "autobind-decorator": "^2.4.0",
         "core-js": "^2.5.4",
         "d3": "^5.7.0",
+        "file-saver": "^2.0.1",
         "ngx-toastr": "^9.1.1",
         "rxjs": "^6.3.3",
         "zone.js": "~0.8.26"
@@ -38,6 +39,7 @@
         "@angular/language-service": "^7.0.4",
         "@ngrx/schematics": "^7.2.0",
         "@types/d3": "^5.7.1",
+        "@types/file-saver": "^2.0.0",
         "@types/jasmine": "~2.8.6",
         "@types/jasminewd2": "~2.0.3",
         "@types/node": "~8.9.4",

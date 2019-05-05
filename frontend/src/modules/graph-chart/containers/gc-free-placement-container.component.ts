@@ -54,6 +54,7 @@ export class GcFreePlacementContainerComponent implements OnChanges {
                 x: Math.random(),
                 y: Math.random(),
             }));
+
             this.edges = this.graph.edges.map(edge => ({
                 id: edge.id,
                 source: this.nodes.find(node => node.id === edge.source.id),
@@ -68,12 +69,14 @@ export class GcFreePlacementContainerComponent implements OnChanges {
         this.scaleX = d3
             .scaleLinear()
             .domain([0, 1])
-            .range([this.nodeRadius, this.width - this.nodeRadius * 2]);
+            .range([this.nodeRadius, this.width - this.nodeRadius * 2])
+            .interpolate(d3.interpolateRound);
 
         this.scaleY = d3
             .scaleLinear()
             .domain([0, 1])
-            .range([this.nodeRadius, this.height - this.nodeRadius * 2]);
+            .range([this.nodeRadius, this.height - this.nodeRadius * 2])
+            .interpolate(d3.interpolateRound);
     }
 
     private calculateNodeTicks() {
