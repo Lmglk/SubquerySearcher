@@ -20,8 +20,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { ScheduleEffects } from './effects/schedule.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
-import { BasicComponentsModule } from '../basic-components/basic-components.module';
 import { modifiedGraphReducer } from './store/reducers/modifiedGraphReducer';
+import { ControlsModule } from '@ssw/controls';
 
 @NgModule({
     declarations: [AppComponent, HeaderComponent],
@@ -43,12 +43,12 @@ import { modifiedGraphReducer } from './store/reducers/modifiedGraphReducer';
             maxAge: 25,
             logOnly: environment.production,
         }),
-        BasicComponentsModule,
         GraphChartModule,
         ScheduleModule,
         NodeListModule,
         MetricsModule,
         EffectsModule.forRoot([GraphEffects, ScheduleEffects]),
+        ControlsModule,
     ],
     bootstrap: [AppComponent],
 })

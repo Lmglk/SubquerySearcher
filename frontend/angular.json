@@ -7,7 +7,7 @@
             "root": "",
             "sourceRoot": "src",
             "projectType": "application",
-            "prefix": "app",
+            "prefix": "ssw",
             "schematics": {},
             "architect": {
                 "build": {
@@ -107,6 +107,39 @@
                     "builder": "@angular-devkit/build-angular:tslint",
                     "options": {
                         "tsConfig": "e2e/tsconfig.e2e.json",
+                        "exclude": ["**/node_modules/**"]
+                    }
+                }
+            }
+        },
+        "@ssw/controls": {
+            "root": "projects/ssw/controls",
+            "sourceRoot": "projects/ssw/controls/src",
+            "projectType": "library",
+            "prefix": "ssw",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-ng-packagr:build",
+                    "options": {
+                        "tsConfig": "projects/ssw/controls/tsconfig.lib.json",
+                        "project": "projects/ssw/controls/ng-package.json"
+                    }
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "main": "projects/ssw/controls/src/test.ts",
+                        "tsConfig": "projects/ssw/controls/tsconfig.spec.json",
+                        "karmaConfig": "projects/ssw/controls/karma.conf.js"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-devkit/build-angular:tslint",
+                    "options": {
+                        "tsConfig": [
+                            "projects/ssw/controls/tsconfig.lib.json",
+                            "projects/ssw/controls/tsconfig.spec.json"
+                        ],
                         "exclude": ["**/node_modules/**"]
                     }
                 }

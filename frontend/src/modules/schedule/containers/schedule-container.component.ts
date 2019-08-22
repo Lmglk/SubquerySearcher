@@ -7,20 +7,21 @@ import { selectGroups } from '../../app/store/selectors/selectGroups';
 import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize';
 
 @Component({
-    selector: 'app-schedule-container',
+    selector: 'ssw-schedule-container',
     template: `
-        <app-block name="Schedule">
-            <app-schedule
+        <ssw-block class="block">
+            <ssw-schedule
                 *ngIf="(groups$ | async).length > 0"
                 [data]="groups$ | async"
                 [maxGroupSize]="maxGroupSize$ | async"
-            ></app-schedule>
-        </app-block>
+            ></ssw-schedule>
+        </ssw-block>
     `,
     styles: [
         `
-            :host {
-                overflow: hidden;
+            .block {
+                height: 100%;
+                width: 100%;
             }
         `,
     ],

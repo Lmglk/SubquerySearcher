@@ -5,9 +5,9 @@ import * as d3 from 'd3';
 import { Graph } from '../../app/types/Graph';
 
 @Component({
-    selector: 'app-free-placement-container',
+    selector: 'ssw-free-placement-container',
     template: `
-        <app-gc-canvas
+        <ssw-gc-canvas
             [nodes]="scaledNodes"
             [edges]="scaledEdges"
             [height]="height"
@@ -15,7 +15,7 @@ import { Graph } from '../../app/types/Graph';
             [nodeRadius]="nodeRadius"
             [verticalDragging]="true"
             [horizontalDragging]="true"
-        ></app-gc-canvas>
+        ></ssw-gc-canvas>
     `,
     styles: [
         `

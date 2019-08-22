@@ -1,0 +1,98 @@
+:host {
+    --color-button-basic-text: #109cf1;
+    --color-button-basic-hover: #f2f9ff;
+    --color-button-basic-hover-text: #34aff9;
+    --color-button-basic-pressed: #dfefff;
+    --color-button-basic-pressed-text: #098edf;
+
+    --color-button-secondary: #109cf1;
+    --color-button-secondary-hover: #34aff9;
+    --color-button-secondary-pressed: #098edf;
+
+    --color-button-filled: #109cf1;
+    --color-button-filled-shadow: rgba(16, 156, 241, 0.24);
+    --color-button-filled-text: #fff;
+    --color-button-filled-hover: #34aff9;
+    --color-button-filled-hover-shadow: rgba(52, 175, 249, 0.2);
+    --color-button-filled-pressed: #098edf;
+    --color-button-filled-pressed-shadow: rgba(9, 142, 223, 0.3);
+
+    --color-disabled: #c2cfe0;
+}
+
+.button {
+    height: 3.2rem;
+    width: inherit;
+    border-radius: 0.4rem;
+    padding: 0.4rem 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    transition: color, background-color 0.2s ease;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.button.basic {
+    color: var(--color-button-basic-text);
+}
+
+.button.basic:hover,
+.button.basic:focus {
+    color: var(--color-button-basic-hover-text);
+    background-color: var(--color-button-basic-hover);
+}
+
+.button.basic:active {
+    color: var(--color-button-basic-pressed-text);
+    background-color: var(--color-button-basic-pressed);
+}
+
+.button.basic:disabled {
+    color: var(--color-disabled);
+    background-color: transparent;
+}
+
+.button.stroked {
+    background-color: transparent;
+    border: 0.1rem solid var(--color-button-secondary);
+    color: var(--color-button-secondary);
+}
+
+.button.stroked:hover,
+.button.stroked:focus {
+    border-color: var(--color-button-secondary-hover);
+    color: var(--color-button-secondary-hover);
+}
+
+.button.stroked:active {
+    border-color: var(--color-button-secondary-pressed);
+    color: var(--color-button-secondary-pressed);
+}
+
+.button.stroked:disabled {
+    border-color: var(--color-disabled);
+    color: var(--color-disabled);
+}
+
+.button.filled {
+    background-color: var(--color-button-filled);
+    box-shadow: 0rem 0.4rem 1rem var(--color-button-filled-shadow);
+    color: var(--color-button-filled-text);
+}
+
+.button.filled:hover,
+.button.filled:focus {
+    background-color: var(--color-button-filled-hover);
+    box-shadow: 0rem 0.6rem 1.2rem var(--color-button-filled-hover-shadow);
+}
+
+.button.filled:active {
+    background-color: var(--color-button-filled-pressed);
+    box-shadow: 0rem 0.2rem 0.6rem var(--color-button-filled-pressed-shadow);
+}
+
+.button.filled:disabled {
+    background-color: var(--color-disabled);
+    box-shadow: none;
+}

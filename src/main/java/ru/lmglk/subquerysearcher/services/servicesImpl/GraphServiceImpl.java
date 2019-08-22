@@ -54,7 +54,7 @@ public class GraphServiceImpl implements GraphService {
                     sourceEdges.forEach(newGraph::removeEdge);
 
                     for (int i = 1; i <= item.getCount(); i++) {
-                        Node newNode = new Node(node.getName() + "." + i, node.getTime());
+                        Node newNode = new Node(node.getName() + "." + i, (int) Math.ceil((double) node.getTime() / item.getCount()));
                         newGraph.addNode(newNode);
 
                         Edge newEdge = new Edge(newNode, node);
@@ -65,6 +65,8 @@ public class GraphServiceImpl implements GraphService {
                             newGraph.addEdge(newSourceEdge);
                         });
                     }
+
+                    node.setTime(1);
                 });
 
         return newGraph;

@@ -3,7 +3,7 @@ import { GraphChartNode } from '../../types/GraphChartNode';
 import { GraphChartEdge } from '../../types/GraphChartEdge';
 
 @Component({
-    selector: 'app-gc-canvas',
+    selector: 'ssw-gc-canvas',
     templateUrl: './gc-canvas.component.html',
     styleUrls: ['./gc-canvas.component.css'],
 })

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-metrics-item',
+    selector: 'ssw-metrics-item',
     templateUrl: './metrics-item.component.html',
     styleUrls: ['./metrics-item.component.css'],
 })

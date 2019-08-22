@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Group } from '../../../app/types/Group';
 
 @Component({
-    selector: 'app-schedule',
+    selector: 'ssw-schedule',
     templateUrl: './schedule.component.html',
     styleUrls: ['./schedule.component.css'],
 })

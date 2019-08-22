@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
+import { ButtonComponent } from './components/button/button.component';
 import { CommonModule } from '@angular/common';
 import { BlockComponent } from './components/block/block.component';
 
 @NgModule({
-    declarations: [BlockComponent],
+    declarations: [ButtonComponent, BlockComponent],
     imports: [CommonModule],
-    exports: [BlockComponent],
+    exports: [ButtonComponent, BlockComponent],
 })
-export class BasicComponentsModule {}
+export class ControlsModule {}

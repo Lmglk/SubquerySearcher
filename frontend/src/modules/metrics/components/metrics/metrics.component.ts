@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Metrics } from '../../../app/types/Metrics';
 
 @Component({
-    selector: 'app-metrics',
+    selector: 'ssw-metrics',
     templateUrl: './metrics.component.html',
     styleUrls: ['./metrics.component.css'],
 })

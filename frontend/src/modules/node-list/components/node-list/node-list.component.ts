@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { GraphNode } from '../../../app/types/GraphNode';
 
 @Component({
-    selector: 'app-node-list',
+    selector: 'ssw-node-list',
     templateUrl: './node-list.component.html',
     styleUrls: ['./node-list.component.css'],
 })

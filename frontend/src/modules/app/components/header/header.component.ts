@@ -15,9 +15,48 @@ import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
 
 @Component({
-    selector: 'app-header',
-    templateUrl: './header.component.html',
-    styleUrls: ['./header.component.css'],
+    selector: 'ssw-header',
+    template: `
+        <div class="header">
+            <div class="content">
+                <input type="file" #fileUpload (change)="changeFile()" />
+                <button (click)="uploadFile()">Upload file</button>
+                <select (change)="changeOptimizationOption($event)">
+                    <option
+                        *ngFor="let option of optimizationOptions"
+                        [value]="option"
+                    >
+                        {{ option }}
+                    </option>
+                </select>
+                <button (click)="calculateGraph()">Calculate</button>
+                <button (click)="exportToFile()">Export</button>
+            </div>
+        </div>
+    `,
+    styles: [
+        `
+            .header {
+                display: grid;
+                height: 4.8rem;
+                padding-left: 1.6rem;
+                padding-right: 1.6rem;
+                grid-gap: 1.6rem;
+                grid-auto-flow: column;
+                align-items: center;
+                box-shadow: 0 0.1rem 0.1rem var(--color-shadow);
+                background-color: var(--color-surface);
+            }
+
+            .content {
+                display: grid;
+                grid-gap: 1.6rem;
+                grid-auto-flow: column;
+                justify-content: left;
+                align-items: center;
+            }
+        `,
+    ],
 })
 export class HeaderComponent implements OnDestroy {
     @ViewChild('fileUpload') inputFile: ElementRef;

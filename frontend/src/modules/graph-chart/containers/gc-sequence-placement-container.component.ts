@@ -6,9 +6,9 @@ import { GraphChartEdge } from '../types/GraphChartEdge';
 import { Graph } from '../../app/types/Graph';
 
 @Component({
-    selector: 'app-gc-sequence-placement-container',
+    selector: 'ssw-gc-sequence-placement-container',
     template: `
-        <app-gc-canvas
+        <ssw-gc-canvas
             [nodes]="scaledNodes"
             [edges]="scaledEdges"
             [height]="height"
@@ -16,7 +16,7 @@ import { Graph } from '../../app/types/Graph';
             [nodeRadius]="nodeRadius"
             [verticalDragging]="true"
             [horizontalDragging]="!groups"
-        ></app-gc-canvas>
+        ></ssw-gc-canvas>
     `,
     styles: [
         `

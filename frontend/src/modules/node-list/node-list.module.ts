@@ -4,7 +4,7 @@ import { NodeListComponent } from './components/node-list/node-list.component';
 import { NodeListItemComponent } from './components/node-list-item/node-list-item.component';
 import { NodeListContainerComponent } from './containers/node-list-container.component';
 import { OrderNodePipe } from './pipes/order-node.pipe';
-import { BasicComponentsModule } from '../basic-components/basic-components.module';
+import { ControlsModule } from '@ssw/controls';
 
 @NgModule({
     declarations: [
@@ -13,7 +13,7 @@ import { BasicComponentsModule } from '../basic-components/basic-components.modu
         NodeListContainerComponent,
         OrderNodePipe,
     ],
-    imports: [CommonModule, BasicComponentsModule],
+    imports: [CommonModule, ControlsModule],
     exports: [NodeListContainerComponent],
 })
 export class NodeListModule {}

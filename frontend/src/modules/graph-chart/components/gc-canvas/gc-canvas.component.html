@@ -1,6 +1,6 @@
 <svg id="chart">
     <g
-        app-gc-edge
+        ssw-gc-edge
         *ngFor="let edge of edges; trackBy: trackByFnEdge"
         [x1]="edge.source.x"
         [y1]="edge.source.y"
@@ -10,7 +10,7 @@
         [nodeRadius]="nodeRadius"
     ></g>
     <g
-        app-gc-node
+        ssw-gc-node
         *ngFor="let node of nodes; trackBy: trackByFnNode"
         [node]="node"
         [radius]="nodeRadius"

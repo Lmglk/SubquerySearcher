@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 import { selectMetrics } from '../selectors/selectMetrics';
 
 @Component({
-    selector: 'app-metrics-container',
+    selector: 'ssw-metrics-container',
     template: `
-        <app-metrics [metrics]="metrics$ | async"></app-metrics>
+        <ssw-metrics [metrics]="metrics$ | async"></ssw-metrics>
     `,
 })
 export class MetricsContainerComponent {

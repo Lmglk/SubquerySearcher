@@ -15,19 +15,19 @@ import { selectGroups } from '../../app/store/selectors/selectGroups';
 import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize';
 
 @Component({
-    selector: 'app-gc-container',
+    selector: 'ssw-gc-container',
     template: `
-        <app-block name="Graph">
+        <ssw-block class="block">
             <div class="content" #content>
-                <app-free-placement-container
+                <ssw-free-placement-container
                     *ngIf="(groups$ | async).length === 0"
                     [graph]="graph$ | async"
                     [nodeRadius]="nodeRadius"
                     [height]="height"
                     [width]="width"
-                ></app-free-placement-container>
+                ></ssw-free-placement-container>
 
-                <app-gc-sequence-placement-container
+                <ssw-gc-sequence-placement-container
                     *ngIf="(groups$ | async).length !== 0"
                     [graph]="graph$ | async"
                     [nodeRadius]="nodeRadius"
@@ -35,12 +35,17 @@ import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize
                     [width]="width"
                     [groups]="groups$ | async"
                     [maxGroupSize]="maxGroupSize$ | async"
-                ></app-gc-sequence-placement-container>
+                ></ssw-gc-sequence-placement-container>
             </div>
-        </app-block>
+        </ssw-block>
     `,
     styles: [
         `
+            .block {
+                height: 100%;
+                width: 100%;
+            }
+
             .content {
                 height: 100%;
             }

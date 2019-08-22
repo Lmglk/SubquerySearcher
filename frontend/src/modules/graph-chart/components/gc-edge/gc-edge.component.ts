@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: '[app-gc-edge]',
+    selector: '[ssw-gc-edge]',
     templateUrl: './gc-edge.component.html',
     styleUrls: ['./gc-edge.component.css'],
 })

@@ -7,7 +7,7 @@ import { selectCountNodes } from '../../selectors/selectCountNodes';
 import { UpdateNodeAction } from '../../../app/store/actions/UpdateNodeAction';
 
 @Component({
-    selector: '[app-node-list-item]',
+    selector: '[ssw-node-list-item]',
     templateUrl: './node-list-item.component.html',
     styleUrls: ['./node-list-item.component.css'],
 })

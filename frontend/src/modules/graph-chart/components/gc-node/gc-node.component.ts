@@ -11,7 +11,7 @@ import autobind from 'autobind-decorator';
 import { GraphChartNode } from '../../types/GraphChartNode';
 
 @Component({
-    selector: '[app-gc-node]',
+    selector: '[ssw-gc-node]',
     templateUrl: './gc-node.component.html',
     styleUrls: ['./gc-node.component.css'],
 })

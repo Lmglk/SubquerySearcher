@@ -6,12 +6,20 @@ import { GraphNode } from '../../app/types/GraphNode';
 import { selectNodes } from '../selectors/selectNodes';
 
 @Component({
-    selector: 'app-node-list-container',
+    selector: 'ssw-node-list-container',
     template: `
-        <app-block class="grid" name="Nodes">
-            <app-node-list [nodes]="nodes$ | async"></app-node-list>
-        </app-block>
+        <ssw-block class="block">
+            <ssw-node-list [nodes]="nodes$ | async"></ssw-node-list>
+        </ssw-block>
     `,
+    styles: [
+        `
+            .block {
+                height: 100%;
+                width: 100%;
+            }
+        `,
+    ],
 })
 export class NodeListContainerComponent implements OnInit {
     public nodes$: Observable<GraphNode[]>;

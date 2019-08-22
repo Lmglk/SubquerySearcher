@@ -4,7 +4,7 @@ import { ScheduleGroupComponent } from './components/schedule-group/schedule-gro
 import { ScheduleComponent } from './components/schedule/schedule.component';
 import { ScheduleRowHeaderComponent } from './components/schedule-row-header/schedule-row-header.component';
 import { ScheduleContainerComponent } from './containers/schedule-container.component';
-import { BasicComponentsModule } from '../basic-components/basic-components.module';
+import { ControlsModule } from '@ssw/controls';
 
 @NgModule({
     declarations: [
@@ -13,7 +13,7 @@ import { BasicComponentsModule } from '../basic-components/basic-components.modu
         ScheduleRowHeaderComponent,
         ScheduleContainerComponent,
     ],
-    imports: [CommonModule, BasicComponentsModule],
+    imports: [CommonModule, ControlsModule],
     exports: [ScheduleContainerComponent],
 })
 export class ScheduleModule {}

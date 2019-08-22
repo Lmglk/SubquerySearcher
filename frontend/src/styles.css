@@ -8,6 +8,8 @@
     --color-accent-hover: #ffcdd2;
 
     --color-shadow: rgba(0, 0, 0, 0.1);
+
+    --color-overlay: rgba(0, 0, 0, 0.7);
 }
 
 @font-face {
