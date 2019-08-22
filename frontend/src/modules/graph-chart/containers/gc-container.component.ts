@@ -53,7 +53,7 @@ import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize
     ],
 })
 export class GcContainerComponent implements AfterViewInit {
-    @ViewChild('content') element: ElementRef;
+    @ViewChild('content', { static: false }) element: ElementRef;
 
     public readonly nodeRadius = 15;
 
@@ -75,7 +75,7 @@ export class GcContainerComponent implements AfterViewInit {
     }
 
     @HostListener('window:resize')
-    private handleResize() {
+    public handleResize() {
         this.getContentSize();
     }
 

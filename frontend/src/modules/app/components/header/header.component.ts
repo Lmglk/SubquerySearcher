@@ -59,7 +59,7 @@ import { GraphChartService } from '../../../graph-chart/services/graph-chart.ser
     ],
 })
 export class HeaderComponent implements OnDestroy {
-    @ViewChild('fileUpload') inputFile: ElementRef;
+    @ViewChild('fileUpload', { static: false }) inputFile: ElementRef;
 
     public readonly optimizationOptions = OptimizationOptions;
     public selectedOptimizationOption: OptimizationOption;

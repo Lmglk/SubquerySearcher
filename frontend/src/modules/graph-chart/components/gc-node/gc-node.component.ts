@@ -42,7 +42,7 @@ export class GcNodeComponent {
     }
 
     @HostListener('mousedown', ['$event'])
-    private handleMouseDown(event: MouseEvent) {
+    public handleMouseDown(event: MouseEvent) {
         if (this.horizontalDragging || this.verticalDragging) {
             this.startLayoutX = event.pageX - event.offsetX;
             this.startLayoutY = event.pageY - event.offsetY;

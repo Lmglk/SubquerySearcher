@@ -63,7 +63,7 @@ export class GraphChartService {
     }
 
     private getAllCSSClasses(node: HTMLElement): Set<string> {
-        const classes = new Set();
+        const classes = new Set<string>();
 
         const childNodes = node.querySelectorAll('*');
         childNodes.forEach(child =>
