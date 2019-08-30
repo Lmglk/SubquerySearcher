@@ -1,5 +1,4 @@
 import { GraphData } from './types/GraphData';
-import { LineDirection } from '../Line/enums/LineDirection';
 
 export const graphData: GraphData = {
     nodes: [
@@ -28,27 +27,18 @@ export const graphData: GraphData = {
     links: [
         {
             id: 1,
-            sourceX: 500,
-            sourceY: 200,
-            targetX: 1000,
-            targetY: 200,
-            direction: LineDirection.FORWARD,
+            sourceId: 1,
+            targetId: 2,
         },
         {
             id: 2,
-            sourceX: 500,
-            sourceY: 200,
-            targetX: 850,
-            targetY: 400,
-            direction: LineDirection.BACK,
+            sourceId: 1,
+            targetId: 3,
         },
         {
             id: 3,
-            sourceX: 850,
-            sourceY: 400,
-            targetX: 1000,
-            targetY: 200,
-            direction: LineDirection.BIDIRECTIONAL,
+            sourceId: 3,
+            targetId: 2,
         },
     ],
 };

@@ -1,20 +1,21 @@
 import React, { ReactNode } from 'react';
 import { Line } from '../../Line';
 import { DragHandler } from '../../DragHandler';
-import { Node } from '../../Node';
+import { GraphNode } from '../../GraphNode';
 import { Canvas } from '../../Canvas';
 import { ArrowMarkerDefs } from '../../ArrowMarkerDefs';
-import { GraphNode } from '../types/GraphNode';
-import { GraphLink } from '../types/GraphLink';
+import { GraphNodeType } from '../types/GraphNodeType';
+import { GraphEdgeType } from '../types/GraphEdgeType';
+import { LineDirection } from '../../Line/enums/LineDirection';
 
 export type GraphChartProps = {
-    nodes: GraphNode[];
-    links: GraphLink[];
+    nodes: GraphNodeType[];
+    links: GraphEdgeType[];
 };
 
 type GraphChartState = {
-    nodes: GraphNode[];
-    links: GraphLink[];
+    nodes: GraphNodeType[];
+    links: GraphEdgeType[];
 };
 
 export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartState> {
@@ -41,7 +42,7 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
         );
     }
 
-    private handleMove(event: MouseEvent, id: GraphNode['id']): void {
+    private handleMove(event: MouseEvent, id: GraphNodeType['id']): void {
         const nodes = this.state.nodes.map(originNode =>
             originNode.id === id ? { ...originNode, x: event.clientX, y: event.clientY } : originNode
         );
@@ -54,12 +55,32 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     private getNodeElements(): ReactNode[] {
         return this.state.nodes.map(node => (
             <DragHandler key={node.id} onMouseMove={event => this.handleMove(event, node.id)}>
-                <Node {...node} />
+                <GraphNode {...node} />
             </DragHandler>
         ));
     }
 
     private getLinkElements(): ReactNode[] {
-        return this.state.links.map(link => <Line key={link.id} {...link} />);
+        const { nodes, links } = this.state;
+
+        return links.map(link => {
+            const sourceNode = nodes.find(node => node.id === link.sourceId);
+            const targetNode = nodes.find(node => node.id === link.targetId);
+
+            if (sourceNode == null || targetNode == null) {
+                throw Error('Node does not exist');
+            }
+
+            return (
+                <Line
+                    key={link.id}
+                    sourceX={sourceNode.x}
+                    sourceY={sourceNode.y}
+                    targetX={targetNode.x}
+                    targetY={targetNode.y}
+                    direction={LineDirection.FORWARD}
+                />
+            );
+        });
     }
 }

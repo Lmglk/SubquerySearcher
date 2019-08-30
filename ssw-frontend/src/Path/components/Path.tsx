@@ -1,7 +1,7 @@
 import React, { ReactNode, SVGProps } from 'react';
-import { LineDirection } from '../enums/LineDirection';
+import { LineDirection } from '../../Line/enums/LineDirection';
 
-export type LineProps = SVGProps<SVGLineElement> & {
+type PathProps = SVGProps<SVGPathElement> & {
     sourceX: number;
     sourceY: number;
     targetX: number;
@@ -9,34 +9,28 @@ export type LineProps = SVGProps<SVGLineElement> & {
     direction: LineDirection;
 };
 
-type LineState = {};
+type PathState = {};
 
-export class Line extends React.PureComponent<LineProps, LineState> {
-    static readonly defaultProps: LineProps = {
-        sourceX: 0,
-        sourceY: 0,
-        targetX: 0,
-        targetY: 0,
-        stroke: '#000000',
-        strokeWidth: 1,
+export class Path extends React.PureComponent<PathProps, PathState> {
+    static readonly defaultProps = {
         direction: LineDirection.NONE,
+        fill: 'none',
+        stroke: '#000000',
     };
 
     public render(): ReactNode {
-        const { sourceX, sourceY, targetX, targetY, direction, ...attributes } = this.props;
+        const { direction, sourceX, sourceY, targetX, targetY, ...attributes } = this.props;
 
         const showEndMarker = this.isShowEndMarker();
         const showStartMarker = this.isShowStartMarker();
+        const path = this.getPath();
 
         return (
-            <line
-                x1={sourceX}
-                y1={sourceY}
-                x2={targetX}
-                y2={targetY}
+            <path
+                {...attributes}
+                d={path}
                 markerStart={showStartMarker ? 'url(#markerStart)' : ''}
                 markerEnd={showEndMarker ? 'url(#markerEnd)' : ''}
-                {...attributes}
             />
         );
     }
@@ -51,5 +45,15 @@ export class Line extends React.PureComponent<LineProps, LineState> {
         const { direction } = this.props;
 
         return direction === LineDirection.BACK || direction === LineDirection.BIDIRECTIONAL;
+    }
+
+    private getPath(): string {
+        const { sourceX, sourceY, targetX, targetY } = this.props;
+
+        const dx = targetX - sourceX;
+        const dy = targetY - sourceY;
+        const dr = Math.sqrt(dx * dx + dy * dy);
+
+        return 'M' + sourceX + ',' + sourceY + 'A' + dr + ',' + dr + ' 0 0,1 ' + targetX + ',' + targetY;
     }
 }

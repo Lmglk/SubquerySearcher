@@ -1,4 +1,4 @@
-export type GraphNode = {
+export type GraphNodeType = {
     id: number;
     x: number;
     y: number;

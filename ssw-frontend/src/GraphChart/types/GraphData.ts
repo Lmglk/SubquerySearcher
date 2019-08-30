@@ -1,7 +1,7 @@
-import { GraphNode } from './GraphNode';
-import { GraphLink } from './GraphLink';
+import { GraphNodeType } from './GraphNodeType';
+import { GraphEdgeType } from './GraphEdgeType';
 
 export type GraphData = {
-    nodes: GraphNode[];
-    links: GraphLink[];
+    nodes: GraphNodeType[];
+    links: GraphEdgeType[];
 };

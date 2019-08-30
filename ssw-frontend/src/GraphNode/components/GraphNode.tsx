@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 
-import styles from './Node.module.css';
+import styles from './GraphNode.module.css';
 
-export type NodeProps = {
+export type GraphNodeProps = {
     id: number;
     x: number;
     y: number;
@@ -14,8 +14,8 @@ export type NodeProps = {
 
 type State = {};
 
-export class Node extends React.PureComponent<NodeProps, State> {
-    static readonly defaultProps: NodeProps = {
+export class GraphNode extends React.PureComponent<GraphNodeProps, State> {
+    static readonly defaultProps: GraphNodeProps = {
         id: 0,
         x: 0,
         y: 0,

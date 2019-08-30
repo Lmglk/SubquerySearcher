@@ -1,6 +1,6 @@
 import { LineDirection } from '../../Line/enums/LineDirection';
 
-export type GraphLink = {
+export type GraphLinkType = {
     id: number;
     sourceX: number;
     sourceY: number;
