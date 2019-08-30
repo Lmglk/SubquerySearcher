@@ -7,7 +7,7 @@
 }
 
 .marker {
-    transition: 0.2s ease;
+    transition: transform 0.2s ease;
     transform-box: fill-box;
     transform-origin: 50%;
 }
