@@ -34,6 +34,8 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
 
     private scaleX = scaleLinear();
     private scaleY = scaleLinear();
+    private canvasWidth: number = 0;
+    private canvasHeight: number = 0;
 
     public render(): ReactNode {
         const { nodeSize } = this.props;
@@ -41,7 +43,7 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
         const linkElements = this.getLinkElements();
         const nodeElements = this.getNodeElements();
 
-        const delta = nodeSize === 0 ? 0 : nodeSize / 2;
+        const delta = nodeSize / 2;
 
         return (
             <Canvas reference={this.reference}>
@@ -55,12 +57,21 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
         );
     }
 
+    public componentDidMount(): void {
+        this.scaleNodes();
+    }
+
     @autobind
     private reference(element: SVGSVGElement | null): void {
         if (element === null) {
-            return;
+            throw Error('Canvas reference does not exist');
         }
 
+        this.canvasWidth = element.clientWidth;
+        this.canvasHeight = element.clientHeight;
+    }
+
+    private scaleNodes(): void {
         const { nodes } = this.state;
         const { nodeSize: delta } = this.props;
 
@@ -70,8 +81,8 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
         const domainX = this.getMinMax(valuesX);
         const domainY = this.getMinMax(valuesY);
 
-        this.scaleX = this.scaleX.domain(domainX).range([delta, element.clientWidth - delta]);
-        this.scaleY = this.scaleY.domain(domainY).range([delta, element.clientHeight - delta]);
+        this.scaleX = this.scaleX.domain(domainX).range([delta, this.canvasWidth - delta]);
+        this.scaleY = this.scaleY.domain(domainY).range([delta, this.canvasHeight - delta]);
 
         const scaledNodes = nodes.map(node => ({
             ...node,
@@ -85,8 +96,28 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     }
 
     private handleMove(event: MouseEvent, id: GraphNodeType['id']): void {
+        const { nodeSize } = this.props;
+
+        const delta = nodeSize / 2;
+
+        const clampX = scaleLinear()
+            .domain([delta, this.canvasWidth - delta])
+            .range([delta, this.canvasWidth - delta])
+            .clamp(true);
+
+        const clampY = scaleLinear()
+            .domain([delta, this.canvasHeight - delta])
+            .range([delta, this.canvasHeight - delta])
+            .clamp(true);
+
         const nodes = this.state.nodes.map(originNode =>
-            originNode.id === id ? { ...originNode, x: event.clientX, y: event.clientY } : originNode
+            originNode.id === id
+                ? {
+                      ...originNode,
+                      x: clampX(event.clientX),
+                      y: clampY(event.clientY),
+                  }
+                : originNode
         );
 
         this.setState({
