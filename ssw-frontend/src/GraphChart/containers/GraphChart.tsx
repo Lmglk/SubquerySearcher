@@ -1,16 +1,18 @@
 import React, { ReactNode } from 'react';
-import { Line } from '../../Line';
 import { DragHandler } from '../../DragHandler';
 import { GraphNode } from '../../GraphNode';
 import { Canvas } from '../../Canvas';
 import { ArrowMarkerDefs } from '../../ArrowMarkerDefs';
 import { GraphNodeType } from '../types/GraphNodeType';
 import { GraphEdgeType } from '../types/GraphEdgeType';
-import { LineDirection } from '../../Line/enums/LineDirection';
+import { GraphEdge } from '../../GraphEdge';
+import { scaleLinear } from 'd3-scale';
+import autobind from 'autobind-decorator';
 
 export type GraphChartProps = {
     nodes: GraphNodeType[];
     links: GraphEdgeType[];
+    nodeSize: number;
 };
 
 type GraphChartState = {
@@ -22,24 +24,64 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     static readonly defaultProps: GraphChartProps = {
         nodes: [],
         links: [],
+        nodeSize: 20,
     };
 
-    public readonly state: GraphChartState = { nodes: this.props.nodes, links: this.props.links };
+    public readonly state: GraphChartState = {
+        nodes: this.props.nodes,
+        links: this.props.links,
+    };
+
+    private scaleX = scaleLinear();
+    private scaleY = scaleLinear();
 
     public render(): ReactNode {
+        const { nodeSize } = this.props;
+
         const linkElements = this.getLinkElements();
         const nodeElements = this.getNodeElements();
 
+        const delta = nodeSize === 0 ? 0 : nodeSize / 2;
+
         return (
-            <Canvas>
+            <Canvas reference={this.reference}>
                 <defs>
-                    <ArrowMarkerDefs offsetStartMarker={15} offsetEndMarker={15} />
+                    <ArrowMarkerDefs offsetStartMarker={delta} offsetEndMarker={delta} />
                 </defs>
 
                 {linkElements}
                 {nodeElements}
             </Canvas>
         );
+    }
+
+    @autobind
+    private reference(element: SVGSVGElement | null): void {
+        if (element === null) {
+            return;
+        }
+
+        const { nodes } = this.state;
+        const { nodeSize: delta } = this.props;
+
+        const valuesX = nodes.map(node => node.x);
+        const valuesY = nodes.map(node => node.y);
+
+        const domainX = this.getMinMax(valuesX);
+        const domainY = this.getMinMax(valuesY);
+
+        this.scaleX = this.scaleX.domain(domainX).range([delta, element.clientWidth - delta]);
+        this.scaleY = this.scaleY.domain(domainY).range([delta, element.clientHeight - delta]);
+
+        const scaledNodes = nodes.map(node => ({
+            ...node,
+            x: this.scaleX(node.x),
+            y: this.scaleY(node.y),
+        }));
+
+        this.setState({
+            nodes: scaledNodes,
+        });
     }
 
     private handleMove(event: MouseEvent, id: GraphNodeType['id']): void {
@@ -53,9 +95,11 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     }
 
     private getNodeElements(): ReactNode[] {
+        const { nodeSize } = this.props;
+
         return this.state.nodes.map(node => (
             <DragHandler key={node.id} onMouseMove={event => this.handleMove(event, node.id)}>
-                <GraphNode {...node} />
+                <GraphNode {...node} size={nodeSize} />
             </DragHandler>
         ));
     }
@@ -71,16 +115,18 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
                 throw Error('Node does not exist');
             }
 
-            return (
-                <Line
-                    key={link.id}
-                    sourceX={sourceNode.x}
-                    sourceY={sourceNode.y}
-                    targetX={targetNode.x}
-                    targetY={targetNode.y}
-                    direction={LineDirection.FORWARD}
-                />
-            );
+            return <GraphEdge key={link.id} source={sourceNode} target={targetNode} />;
         });
+    }
+
+    private getMinMax(series: number[]): [number, number] {
+        return series.reduce(
+            (acc, prev) => {
+                const min = Math.min(acc[0], prev);
+                const max = Math.max(acc[1], prev);
+                return [min, max];
+            },
+            [Infinity, -Infinity]
+        );
     }
 }

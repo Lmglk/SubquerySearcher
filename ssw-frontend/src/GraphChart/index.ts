@@ -1,1 +1,1 @@
-export * from './components/GraphChart';
+export * from './containers/GraphChart';
