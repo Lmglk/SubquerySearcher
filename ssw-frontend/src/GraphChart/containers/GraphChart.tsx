@@ -1,4 +1,7 @@
 import React, { ReactNode } from 'react';
+import { scaleLinear } from 'd3-scale';
+import autobind from 'autobind-decorator';
+
 import { DragHandler } from '../../DragHandler';
 import { GraphNode } from '../../GraphNode';
 import { Canvas } from '../../Canvas';
@@ -6,8 +9,7 @@ import { ArrowMarkerDefs } from '../../ArrowMarkerDefs';
 import { GraphNodeType } from '../types/GraphNodeType';
 import { GraphEdgeType } from '../types/GraphEdgeType';
 import { GraphEdge } from '../../GraphEdge';
-import { scaleLinear } from 'd3-scale';
-import autobind from 'autobind-decorator';
+import { ResizeHandler, ResizeHandlerState } from '../../ResizeHandler';
 
 export type GraphChartProps = {
     nodes: GraphNodeType[];
@@ -18,6 +20,8 @@ export type GraphChartProps = {
 type GraphChartState = {
     nodes: GraphNodeType[];
     links: GraphEdgeType[];
+    height: number;
+    width: number;
 };
 
 export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartState> {
@@ -30,12 +34,12 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     public readonly state: GraphChartState = {
         nodes: this.props.nodes,
         links: this.props.links,
+        height: 0,
+        width: 0,
     };
 
     private scaleX = scaleLinear();
     private scaleY = scaleLinear();
-    private canvasWidth: number = 0;
-    private canvasHeight: number = 0;
 
     public render(): ReactNode {
         const { nodeSize } = this.props;
@@ -46,33 +50,33 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
         const delta = nodeSize / 2;
 
         return (
-            <Canvas reference={this.reference}>
-                <defs>
-                    <ArrowMarkerDefs offsetStartMarker={delta} offsetEndMarker={delta} />
-                </defs>
+            <ResizeHandler onResize={this.handleResize}>
+                {({ height, width }) => (
+                    <Canvas width={width} height={height}>
+                        <defs>
+                            <ArrowMarkerDefs offsetStartMarker={delta} offsetEndMarker={delta} />
+                        </defs>
 
-                {linkElements}
-                {nodeElements}
-            </Canvas>
+                        {linkElements}
+                        {nodeElements}
+                    </Canvas>
+                )}
+            </ResizeHandler>
         );
     }
 
-    public componentDidMount(): void {
+    @autobind
+    private handleResize({ width, height }: ResizeHandlerState) {
+        this.setState({
+            height: height,
+            width: width,
+        });
+
         this.scaleNodes();
     }
 
-    @autobind
-    private reference(element: SVGSVGElement | null): void {
-        if (element === null) {
-            throw Error('Canvas reference does not exist');
-        }
-
-        this.canvasWidth = element.clientWidth;
-        this.canvasHeight = element.clientHeight;
-    }
-
     private scaleNodes(): void {
-        const { nodes } = this.state;
+        const { nodes, height, width } = this.state;
         const { nodeSize: delta } = this.props;
 
         const valuesX = nodes.map(node => node.x);
@@ -81,8 +85,8 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
         const domainX = this.getMinMax(valuesX);
         const domainY = this.getMinMax(valuesY);
 
-        this.scaleX = this.scaleX.domain(domainX).range([delta, this.canvasWidth - delta]);
-        this.scaleY = this.scaleY.domain(domainY).range([delta, this.canvasHeight - delta]);
+        this.scaleX = this.scaleX.domain(domainX).range([delta, width - delta]);
+        this.scaleY = this.scaleY.domain(domainY).range([delta, height - delta]);
 
         const scaledNodes = nodes.map(node => ({
             ...node,
@@ -97,17 +101,18 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
 
     private handleMove(event: MouseEvent, id: GraphNodeType['id']): void {
         const { nodeSize } = this.props;
+        const { height, width } = this.state;
 
         const delta = nodeSize / 2;
 
         const clampX = scaleLinear()
-            .domain([delta, this.canvasWidth - delta])
-            .range([delta, this.canvasWidth - delta])
+            .domain([delta, width - delta])
+            .range([delta, width - delta])
             .clamp(true);
 
         const clampY = scaleLinear()
-            .domain([delta, this.canvasHeight - delta])
-            .range([delta, this.canvasHeight - delta])
+            .domain([delta, height - delta])
+            .range([delta, height - delta])
             .clamp(true);
 
         const nodes = this.state.nodes.map(originNode =>

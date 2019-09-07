@@ -1,19 +1,19 @@
 import React, { ReactNode } from 'react';
-import styles from './Canvas.module.css';
 
 export type CanvasProps = {
-    children: ReactNode[];
-    reference?: (element: SVGSVGElement | null) => void;
+    width: number;
+    height: number;
+    children: ReactNode;
 };
 
 type CanvasState = {};
 
 export class Canvas extends React.PureComponent<CanvasProps, CanvasState> {
     public render(): ReactNode {
-        const { children, reference } = this.props;
+        const { width, height, children } = this.props;
 
         return (
-            <svg className={styles.canvas} ref={reference}>
+            <svg width={width} height={height}>
                 {children}
             </svg>
         );

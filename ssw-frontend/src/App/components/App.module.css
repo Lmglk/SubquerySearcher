@@ -1,6 +1,6 @@
 .resizeBlock {
     resize: both;
-    overflow: auto;
+    overflow: hidden;
     height: 75%;
     width: 75%;
     border: 0.1rem solid #999;
