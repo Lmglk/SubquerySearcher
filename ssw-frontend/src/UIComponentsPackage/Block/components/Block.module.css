@@ -1,0 +1,7 @@
+.block {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    box-shadow: 0 0.6rem 1.8rem var(--color-block-shadow);
+    border-radius: 0.4rem;
+    box-sizing: border-box;
+}

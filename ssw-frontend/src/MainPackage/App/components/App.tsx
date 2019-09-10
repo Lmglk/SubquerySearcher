@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react';
-import { GraphChart } from '../../GraphChart';
+
+import { GraphChart, GraphData } from '../../../ChartPackage';
 
 import styles from './App.module.css';
-
-import { graphData } from '../../GraphChart/graphData';
-import { GraphData } from '../../GraphChart/types/GraphData';
+import { graphData } from './graphData';
 
 type AppProps = {};
 type AppState = {};
