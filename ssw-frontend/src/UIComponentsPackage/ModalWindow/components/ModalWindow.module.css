@@ -1,0 +1,25 @@
+.overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    transition: background-color 0.2s ease;
+}
+
+.overlayStartTransition {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.modalWrapper {
+    transition: transform 0.2s ease;
+    transform: scale(1);
+}
+
+.startTransition {
+    transform: scale(0);
+}

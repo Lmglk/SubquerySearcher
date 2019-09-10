@@ -1,0 +1,53 @@
+.checkboxContainer {
+    position: relative;
+    height: 1.6rem;
+    width: 1.6rem;
+}
+
+.checkbox {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    width: 0;
+}
+
+.checkboxLabel {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0.2rem solid var(--color-checkbox-empty);
+    box-sizing: border-box;
+    border-radius: 0.4rem;
+}
+
+.checkboxLabel.checked {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+}
+
+.checkboxLabel.checked.disabled {
+    background-color: transparent;
+    color: var(--color-disabled);
+}
+
+.checkboxLabel.disabled {
+    border: 0.2rem solid var(--color-disabled);
+}
+
+.checkboxLabel.checked::after {
+    position: absolute;
+    content: '';
+    left: 0.3rem;
+    top: 0.7rem;
+    background: currentColor;
+    width: 0.2rem;
+    height: 0.2rem;
+    box-shadow: 0.2rem 0 0 currentColor, 0.4rem 0 0 currentColor, 0.4rem -0.2rem 0 currentColor,
+        0.4rem -0.4rem 0 currentColor, 0.4rem -0.6rem 0 currentColor, 0.4rem -0.8rem 0 currentColor;
+    transform: rotate(45deg);
+}
+
+.checkboxLabel:focus-within {
+    outline: var(--color-accent) auto 0.1rem;
+}

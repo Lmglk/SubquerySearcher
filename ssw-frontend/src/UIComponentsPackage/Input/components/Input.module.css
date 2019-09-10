@@ -1,0 +1,43 @@
+.container {
+    position: relative;
+    height: max-content;
+    border-bottom: 0.1rem solid var(--color-text-line);
+    box-sizing: border-box;
+}
+
+.label {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    color: var(--color-text-help);
+    transition: color 0.2s ease;
+}
+
+.inputContainer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.input {
+    font-size: 1.3rem;
+    border: none;
+    outline: none;
+    color: var(--color-text);
+    margin-bottom: 0.6em;
+}
+
+.icon {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.4rem;
+    margin-left: 1.4rem;
+    color: var(--color-icon);
+    transition: color 0.2s ease;
+}
+
+.container:focus-within .label {
+    color: var(--color-accent);
+}
+
+.container:focus-within .icon {
+    color: var(--color-accent);
+}

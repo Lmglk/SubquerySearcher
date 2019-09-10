@@ -1,0 +1,19 @@
+.item {
+    color: var(--color-text);
+    height: 2rem;
+    padding: 1rem 1.2rem;
+    user-select: none;
+    transition: 0.2s ease;
+}
+
+.item:hover {
+    background-color: var(--color-list-item-hover);
+}
+
+.item:active {
+    color: var(--color-accent);
+}
+
+.active {
+    color: var(--color-accent);
+}

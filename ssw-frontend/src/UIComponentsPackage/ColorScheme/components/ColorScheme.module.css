@@ -1,0 +1,39 @@
+.colorScheme {
+    display: contents;
+}
+
+.blue {
+    --color-accent: #109cf1;
+
+    --color-background: #e5e5e5;
+    --color-surface: #fff;
+
+    --color-disabled: #c2cfe0;
+
+    --color-button-accent: #109cf1;
+    --color-button-accent-shadow: rgba(16, 156, 241, 0.24);
+    --color-button-accent-text: #fff;
+    --color-button-accent-hover: #34aff9;
+    --color-button-accent-hover-shadow: rgba(52, 175, 249, 0.2);
+    --color-button-accent-pressed: #098edf;
+    --color-button-accent-pressed-shadow: rgba(9, 142, 223, 0.3);
+    --color-button-secondary: #109cf1;
+    --color-button-secondary-hover: #34aff9;
+    --color-button-secondary-pressed: #098edf;
+
+    --color-button-tertiary-text: #109cf1;
+    --color-button-tertiary-hover-text: #34aff9;
+    --color-button-tertiary-pressed-text: #098edf;
+
+    --color-text: #192a3e;
+    --color-text-help: #818e9b;
+    --color-text-line: #d3d8dd;
+
+    --color-icon: #c2cfe0;
+
+    --color-block-shadow: rgba(0, 0, 0, 0.06);
+
+    --color-checkbox-empty: #d5d5d5;
+
+    --color-list-item-hover: #f2f9ff;
+}
