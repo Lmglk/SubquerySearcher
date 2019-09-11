@@ -1,0 +1,33 @@
+.grid {
+    display: grid;
+    grid-template-areas:
+        'header header'
+        'chart nodes'
+        'schedule schedule'
+        'metrics metrics';
+    grid-template-rows: auto 2fr 1fr auto;
+    grid-template-columns: 3fr 1fr;
+    grid-gap: 1.6rem;
+    height: 100%;
+    padding-bottom: 1.6rem;
+}
+
+.header {
+    grid-area: header;
+}
+
+.chart {
+    grid-area: chart;
+}
+
+.nodes {
+    grid-area: nodes;
+}
+
+.schedule {
+    grid-area: schedule;
+}
+
+.metrics {
+    grid-area: metrics;
+}

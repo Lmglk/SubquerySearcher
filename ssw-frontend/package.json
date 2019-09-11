@@ -7,7 +7,7 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "precommit": "pretty-quick --staged"
+        "precommit": "npm run build && pretty-quick --staged"
     },
     "dependencies": {
         "autobind-decorator": "^2.4.0",

@@ -24,7 +24,7 @@ export class ResizeHandler extends React.PureComponent<ResizeHandlerProps, Resiz
         const { children } = this.props;
 
         return (
-            <div ref={this.reference} style={{ width: '100%', height: '100%' }}>
+            <div ref={this.reference} style={{ display: 'flex', width: '100%', height: '100%' }}>
                 {children(this.state)}
             </div>
         );
