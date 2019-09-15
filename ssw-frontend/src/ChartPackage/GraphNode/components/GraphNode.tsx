@@ -32,7 +32,7 @@ export class GraphNode extends React.PureComponent<GraphNodeProps, State> {
 
         return (
             <g className={styles.node}>
-                <circle className={styles.marker} cx={x} cy={y} r={nodeRadius} fill={color} />
+                <circle cx={x} cy={y} r={nodeRadius} fill={color} />
                 <text className={styles.label} x={x} y={y} fill={colorLabel}>
                     {label}
                 </text>

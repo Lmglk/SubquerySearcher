@@ -1,15 +1,12 @@
 .node {
-    user-select: none;
-}
-
-.node:hover .marker {
-    transform: scale(1.1);
-}
-
-.marker {
     transition: transform 0.2s ease;
     transform-box: fill-box;
     transform-origin: 50%;
+    user-select: none;
+}
+
+.node:hover {
+    transform: scale(1.15);
 }
 
 .label {
