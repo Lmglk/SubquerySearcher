@@ -1,4 +1,4 @@
-import { GraphData } from '../../../ChartPackage/GraphChart/types/GraphData';
+import { GraphData } from '../../../ChartPackage/GraphChart';
 
 export const graphData: GraphData = {
     nodes: [
