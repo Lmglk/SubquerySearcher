@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { Header } from '../../Header';
 import { ColorScheme } from '../../../UIComponentsPackage/ColorScheme';
-import { GraphChartLayout } from '../../GraphChartLayout';
 import { NodesLayout } from '../../NodesLayout';
 import { ScheduleLayout } from '../../ScheduleLayout';
+import { MetricsLayout } from '../../MetricsLayout';
+import { GraphChartContainer } from '../../GraphChartLayout/containers/GraphChartContainer';
+import { HeaderContainer } from '../../Header/containers/HeaderContainer';
 
 import styles from './Layout.module.css';
-import { MetricsLayout } from '../../MetricsLayout';
 
 type Props = {};
 
@@ -19,10 +19,10 @@ export class Layout extends React.PureComponent<Props, State> {
             <ColorScheme>
                 <div className={styles.grid}>
                     <div className={styles.header}>
-                        <Header />
+                        <HeaderContainer />
                     </div>
                     <div className={styles.chart}>
-                        <GraphChartLayout />
+                        <GraphChartContainer />
                     </div>
                     <div className={styles.nodes}>
                         <NodesLayout />
