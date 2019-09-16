@@ -20,6 +20,7 @@ export type GraphChartProps = {
 type GraphChartState = {
     height: number;
     width: number;
+    scaledNodes: GraphNodeType[];
 };
 
 export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartState> {
@@ -32,6 +33,7 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     public readonly state: GraphChartState = {
         height: 0,
         width: 0,
+        scaledNodes: [],
     };
 
     private scaleX = scaleLinear();
@@ -39,23 +41,33 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     private clampX = scaleLinear();
     private clampY = scaleLinear();
 
-    private scaledNodes: GraphNodeType[] = [];
+    public componentDidUpdate(prevProps: Readonly<GraphChartProps>, prevState: Readonly<GraphChartState>): void {
+        const { nodes } = this.props;
 
-    public render(): ReactNode {
-        const { nodes, nodeSize } = this.props;
+        if (
+            this.props !== prevProps ||
+            this.state.height !== prevState.height ||
+            this.state.width !== prevState.width
+        ) {
+            this.calculateScales();
 
-        this.calculateScales();
-
-        if (this.scaledNodes.length === 0) {
-            this.scaledNodes = nodes.map(node => ({
+            const scaledNodes = nodes.map(node => ({
                 ...node,
                 x: this.scaleX(node.x),
                 y: this.scaleY(node.y),
             }));
-        }
 
-        const linkElements = this.getLinkElements();
+            this.setState({
+                scaledNodes: scaledNodes,
+            });
+        }
+    }
+
+    public render(): ReactNode {
+        const { nodeSize } = this.props;
+
         const nodeElements = this.getNodeElements();
+        const linkElements = this.getLinkElements();
 
         const delta = nodeSize / 2;
 
@@ -108,7 +120,9 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
     }
 
     private handleMove(event: MouseEvent, id: GraphNodeType['id']): void {
-        this.scaledNodes = this.scaledNodes.map(originNode =>
+        const { scaledNodes } = this.state;
+
+        const nodes = scaledNodes.map(originNode =>
             originNode.id === id
                 ? {
                       ...originNode,
@@ -118,25 +132,37 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
                 : originNode
         );
 
-        this.forceUpdate();
+        this.setState({
+            scaledNodes: nodes,
+        });
     }
 
-    private getNodeElements(): ReactNode[] {
+    private getNodeElements(): ReactNode[] | null {
         const { nodeSize } = this.props;
+        const { scaledNodes } = this.state;
 
-        return this.scaledNodes.map(node => (
+        if (scaledNodes.length === 0) {
+            return null;
+        }
+
+        return scaledNodes.map(node => (
             <DragHandler key={node.id} onMouseMove={event => this.handleMove(event, node.id)}>
                 <GraphNode {...node} size={nodeSize} />
             </DragHandler>
         ));
     }
 
-    private getLinkElements(): ReactNode[] {
+    private getLinkElements(): ReactNode[] | null {
         const { links } = this.props;
+        const { scaledNodes } = this.state;
+
+        if (scaledNodes.length === 0) {
+            return null;
+        }
 
         return links.map(link => {
-            const sourceNode = this.scaledNodes.find(node => node.id === link.sourceId);
-            const targetNode = this.scaledNodes.find(node => node.id === link.targetId);
+            const sourceNode = scaledNodes.find(node => node.id === link.sourceId);
+            const targetNode = scaledNodes.find(node => node.id === link.targetId);
 
             if (sourceNode == null || targetNode == null) {
                 throw Error('Node does not exist');
