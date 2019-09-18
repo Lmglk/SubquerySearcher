@@ -1,6 +1,6 @@
-import { GraphEdgeType, GraphNodeType } from '../../ChartPackage/GraphChart';
+import { Link, Node } from '../../ChartPackage/GraphChart';
 
 export type GraphState = {
-    nodes: GraphNodeType[];
-    links: GraphEdgeType[];
+    nodes: Node[];
+    links: Link[];
 };

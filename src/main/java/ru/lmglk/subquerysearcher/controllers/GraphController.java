@@ -12,7 +12,7 @@ import ru.lmglk.subquerysearcher.services.WidthOptimizationAlgorithm;
 
 @Controller
 @RequestMapping(value = "api/graph")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
 public class GraphController {
 
     @Autowired

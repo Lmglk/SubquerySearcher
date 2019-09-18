@@ -1,6 +1,6 @@
-export type GraphNodeType = {
+export type Node = {
     id: number;
     x: number;
     y: number;
-    label: string;
+    name: string;
 };

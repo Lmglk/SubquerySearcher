@@ -9,7 +9,7 @@ export type GraphNodeProps = {
     size: number;
     color: string;
     colorLabel: string;
-    label: string;
+    name: string;
 };
 
 type State = {};
@@ -22,11 +22,11 @@ export class GraphNode extends React.PureComponent<GraphNodeProps, State> {
         size: 0,
         color: '#000000',
         colorLabel: '#FFFFFF',
-        label: '',
+        name: '',
     };
 
     public render(): ReactNode {
-        const { x, y, size, color, colorLabel, label } = this.props;
+        const { x, y, size, color, colorLabel, name } = this.props;
 
         const nodeRadius = size === 0 ? 0 : size / 2;
 
@@ -34,7 +34,7 @@ export class GraphNode extends React.PureComponent<GraphNodeProps, State> {
             <g className={styles.node}>
                 <circle cx={x} cy={y} r={nodeRadius} fill={color} />
                 <text className={styles.label} x={x} y={y} fill={colorLabel}>
-                    {label}
+                    {name}
                 </text>
             </g>
         );

@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { GraphChart, GraphEdgeType, GraphNodeType } from '../../../ChartPackage';
+import { GraphChart, Link, Node } from '../../../ChartPackage';
 import { Block } from '../../../UIComponentsPackage';
 
 import styles from './GraphChartLayout.module.css';
 
 type Props = {
-    nodes: GraphNodeType[];
-    links: GraphEdgeType[];
+    nodes: Node[];
+    links: Link[];
 };
 
 type State = {};

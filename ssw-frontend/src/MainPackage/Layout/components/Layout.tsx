@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { ColorScheme } from '../../../UIComponentsPackage/ColorScheme';
+import { GraphChartContainer } from '../../GraphChartLayout/containers/GraphChartContainer';
 import { NodesLayout } from '../../NodesLayout';
 import { ScheduleLayout } from '../../ScheduleLayout';
 import { MetricsLayout } from '../../MetricsLayout';
-import { GraphChartContainer } from '../../GraphChartLayout/containers/GraphChartContainer';
-import { HeaderContainer } from '../../Header/containers/HeaderContainer';
+import HeaderContainer from '../../Header/containers/HeaderContainer';
 
 import styles from './Layout.module.css';
 
