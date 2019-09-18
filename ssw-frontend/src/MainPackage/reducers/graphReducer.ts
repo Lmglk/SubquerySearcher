@@ -13,7 +13,7 @@ export default function graphReducer(state = initialState, action: Actions): Gra
         case SetGraphAction.type:
             return {
                 ...state,
-                ...(action as any).payload,
+                ...action.payload,
             };
 
         default:

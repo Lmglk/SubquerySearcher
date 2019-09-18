@@ -6,21 +6,21 @@ import { DragHandler } from '../../DragHandler';
 import { GraphNode } from '../../GraphNode';
 import { Canvas } from '../../Canvas';
 import { ArrowMarkerDefs } from '../../ArrowMarkerDefs';
-import { GraphNodeType } from '../types/GraphNodeType';
-import { GraphEdgeType } from '../types/GraphEdgeType';
+import { Node } from '../types/Node';
+import { Link } from '../types/Link';
 import { GraphEdge } from '../../GraphEdge';
 import { ResizeHandler, ResizeHandlerState } from '../../ResizeHandler';
 
 export type GraphChartProps = {
-    nodes: GraphNodeType[];
-    links: GraphEdgeType[];
+    nodes: Node[];
+    links: Link[];
     nodeSize: number;
 };
 
 type GraphChartState = {
     height: number;
     width: number;
-    scaledNodes: GraphNodeType[];
+    scaledNodes: Node[];
 };
 
 export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartState> {
@@ -119,7 +119,7 @@ export class GraphChart extends React.PureComponent<GraphChartProps, GraphChartS
             .clamp(true);
     }
 
-    private handleMove(event: MouseEvent, id: GraphNodeType['id']): void {
+    private handleMove(event: MouseEvent, id: Node['id']): void {
         const { scaledNodes } = this.state;
 
         const nodes = scaledNodes.map(originNode =>

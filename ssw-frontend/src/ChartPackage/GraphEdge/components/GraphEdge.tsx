@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 import { LineDirection } from '../../Line/enums/LineDirection';
 import { Line } from '../../Line';
-import { GraphNodeType } from '../../GraphChart/types/GraphNodeType';
+import { Node } from '../../GraphChart/types/Node';
 
 export type GraphEdgeProps = {
-    source: GraphNodeType;
-    target: GraphNodeType;
+    source: Node;
+    target: Node;
 };
 
 type State = {};
