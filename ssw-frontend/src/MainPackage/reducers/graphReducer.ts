@@ -1,5 +1,5 @@
 import { GraphState } from '../types/GraphState';
-import { SetGraphAction } from '../Header/actions/setGraphAction';
+import { SetGraphAction } from '../Header/actions/SetGraphAction';
 
 const initialState: GraphState = {
     nodes: [],
@@ -13,7 +13,8 @@ export default function graphReducer(state = initialState, action: Actions): Gra
         case SetGraphAction.type:
             return {
                 ...state,
-                ...action.payload,
+                nodes: action.payload.nodes,
+                links: action.payload.links,
             };
 
         default:

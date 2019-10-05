@@ -8,6 +8,7 @@ import styles from './Header.module.css';
 
 type Props = {
     uploadFile: (file: File) => void;
+    calculateGraph: () => void;
 };
 
 type State = {};
@@ -21,6 +22,7 @@ export class Header extends React.PureComponent<Props, State> {
                 <div className={styles.grid}>
                     <input type="file" ref={this.inputRef} />
                     <Button onClick={this.handleUploadFile}>Upload file</Button>
+                    <Button onClick={this.calculateGraph}>Calculate</Button>
                 </div>
             </Block>
         );
@@ -38,5 +40,10 @@ export class Header extends React.PureComponent<Props, State> {
 
         const file: File = inputElement.files[0];
         uploadFile(file);
+    }
+
+    @autobind
+    private calculateGraph(): void {
+        this.props.calculateGraph();
     }
 }

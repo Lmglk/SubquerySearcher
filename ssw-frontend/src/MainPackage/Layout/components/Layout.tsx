@@ -3,7 +3,7 @@ import React from 'react';
 import { ColorScheme } from '../../../UIComponentsPackage/ColorScheme';
 import { GraphChartContainer } from '../../GraphChartLayout/containers/GraphChartContainer';
 import { NodesLayout } from '../../NodesLayout';
-import { ScheduleLayout } from '../../ScheduleLayout';
+import { ScheduleLayout } from '../../Schedule';
 import { MetricsLayout } from '../../MetricsLayout';
 import HeaderContainer from '../../Header/containers/HeaderContainer';
 

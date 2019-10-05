@@ -1,0 +1,9 @@
+.item {
+    text-align: center;
+    border-right: 0.1rem solid var(--color-border);
+    border-bottom: 0.1rem solid var(--color-border);
+}
+
+.item:first-child {
+    border-top: 0.1rem solid var(--color-border);
+}
