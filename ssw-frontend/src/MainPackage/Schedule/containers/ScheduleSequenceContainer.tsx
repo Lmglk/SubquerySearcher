@@ -7,7 +7,7 @@ import { ScheduleSequence } from '../components/ScheduleSequence';
 
 type Props = {
     nodeIds: GraphNode['id'][];
-    nodeNames: GraphNode['name'][];
+    nodeNames: string[];
 };
 
 type State = {};
