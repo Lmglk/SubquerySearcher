@@ -9,7 +9,7 @@ export type GraphAdapter = Omit<Graph, 'links'> & {
     }[];
 };
 
-export function graphDataAdapter(data: GraphAdapter) {
+export function responseGraphDataAdapter(data: GraphAdapter) {
     return {
         nodes: data.nodes,
         links: data.edges.map((edge: any) => ({

@@ -1,0 +1,5 @@
+.schedule {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: end;
+}

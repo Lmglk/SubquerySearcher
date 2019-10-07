@@ -1,6 +1,7 @@
-import { Link, Node } from '../../ChartPackage/GraphChart';
+import { GraphNode } from '../GraphChartLayout/types/GraphNode';
+import { GraphLink } from '../GraphChartLayout/types/GraphLink';
 
 export type GraphState = {
-    nodes: Node[];
-    links: Link[];
+    nodes: GraphNode[];
+    links: GraphLink[];
 };
