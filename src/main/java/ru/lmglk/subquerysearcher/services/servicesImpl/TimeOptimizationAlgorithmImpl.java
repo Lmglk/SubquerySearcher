@@ -87,7 +87,7 @@ public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm 
 
         ArrayList<Edge> subGraphEdges = edges
                 .stream()
-                .filter(edge -> isExistNodeInArray(sourceNodes, edge.getSource()) && isExistNodeInArray(targetNodes, edge.getTarget()))
+                .filter(edge -> isExistNodeInArray(sourceNodes, edge.getSourceId()) && isExistNodeInArray(targetNodes, edge.getTargetId()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
         ArrayList<Node> subGraphNodes = new ArrayList<>();
@@ -118,10 +118,10 @@ public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm 
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isExistNodeInArray(ArrayList<Node> nodeList, Node node) {
+    private boolean isExistNodeInArray(ArrayList<Node> nodeList, String nodeId) {
         return nodeList
                 .stream()
-                .anyMatch(item -> item.getId().equals(node.getId()));
+                .anyMatch(item -> item.getId().equals(nodeId));
     }
 
     private ArrayList<Node> subtractSet(ArrayList<Node> source, ArrayList<Node> target) {

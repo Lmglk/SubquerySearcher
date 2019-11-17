@@ -24,11 +24,13 @@ public class GraphServiceImpl implements GraphService {
             while ((str = bufferedReader.readLine()) != null) {
                 String[] arr = str.split(" ");
                 int time = (arr.length == 3) ? Integer.parseInt(arr[2]) : 1;
-                graph.addNode(arr[0], time);
-                if (!graph.isExistNode(arr[1])) {
-                    graph.addNode(arr[1], 1);
+                Node sourceNode = graph.addNode(arr[0], time);
+                Node targetNode = graph.getNodeByName(arr[1]);
+
+                if (targetNode == null) {
+                    targetNode = graph.addNode(arr[1], 1);
                 }
-                graph.addEdge(arr[0], arr[1]);
+                graph.addEdge(sourceNode, targetNode);
             }
             bufferedReader.close();
             inputStream.close();
@@ -57,11 +59,11 @@ public class GraphServiceImpl implements GraphService {
                         Node newNode = new Node(node.getName() + "." + i, (int) Math.ceil((double) node.getTime() / item.getCount()));
                         newGraph.addNode(newNode);
 
-                        Edge newEdge = new Edge(newNode, node);
+                        Edge newEdge = new Edge(newNode.getId(), node.getId());
                         newGraph.addEdge(newEdge);
 
                         sourceNodes.forEach(sourceNode -> {
-                            Edge newSourceEdge = new Edge(sourceNode, newNode);
+                            Edge newSourceEdge = new Edge(sourceNode.getId(), newNode.getId());
                             newGraph.addEdge(newSourceEdge);
                         });
                     }
