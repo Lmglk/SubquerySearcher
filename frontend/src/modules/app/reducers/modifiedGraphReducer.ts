@@ -1,6 +1,6 @@
-import { ModifiedGraphState } from '../../types/ModifiedGraphState';
 import { SetModifiedGraphAction } from '../actions/SetModifiedGraphAction';
 import { ResetModifiedGraphAction } from '../actions/ResetModifiedGraphAction';
+import { ModifiedGraphState } from '../interfaces/ModifiedGraphState';
 
 const initialState: ModifiedGraphState = {
     modifiedGraph: {

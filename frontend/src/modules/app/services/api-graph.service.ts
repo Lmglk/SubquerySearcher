@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Graph } from '../types/Graph';
-import { InfoSeparate } from '../types/InfoSeparate';
+import { Graph } from '../interfaces/Graph';
+import { InfoSeparate } from '../interfaces/InfoSeparate';
 
 @Injectable({
     providedIn: 'root',

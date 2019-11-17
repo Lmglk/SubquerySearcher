@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Sequence } from '../../../app/types/Sequence';
+import { Sequence } from '../../../app/interfaces/Sequence';
 
 @Component({
     selector: 'ssw-schedule-group',

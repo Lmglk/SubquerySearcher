@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../../types/AppState';
-import { SeparateNodesState } from '../../types/SeparateNodesState';
+import { AppState } from '../interfaces/AppState';
+import { SeparateNodesState } from '../interfaces/SeparateNodesState';
 
 export const selectSeparateNodes = createSelector(
     (state: AppState) => state.separateNodesState,

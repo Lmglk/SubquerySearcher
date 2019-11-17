@@ -1,18 +1,18 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../types/AppState';
 import { ToastrService } from 'ngx-toastr';
 import {
     OptimizationOption,
     OptimizationOptions,
 } from '../../enums/OptimizationOptions';
 import { Subscription } from 'rxjs';
-import { UploadGraphAction } from '../../store/actions/UploadGraphAction';
-import { ResetModifiedGraphAction } from '../../store/actions/ResetModifiedGraphAction';
-import { CalculateGraphAction } from '../../store/actions/CalculateGraphAction';
-import { ResetGroupsAction } from '../../store/actions/ResetGroupsAction';
 import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
+import { AppState } from '../../interfaces/AppState';
+import { UploadGraphAction } from '../../actions/UploadGraphAction';
+import { ResetModifiedGraphAction } from '../../actions/ResetModifiedGraphAction';
+import { ResetGroupsAction } from '../../actions/ResetGroupsAction';
+import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
 
 @Component({
     selector: 'ssw-header',

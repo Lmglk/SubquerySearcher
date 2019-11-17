@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Metrics } from '../../../app/types/Metrics';
+import { Metrics } from '../../../app/interfaces/Metrics';
 
 @Component({
     selector: 'ssw-metrics',

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { GraphChartNode } from '../../types/GraphChartNode';
-import { GraphChartEdge } from '../../types/GraphChartEdge';
+import { GraphChartNode } from '../../interfaces/GraphChartNode';
+import { GraphChartEdge } from '../../interfaces/GraphChartEdge';
 
 @Component({
     selector: 'ssw-gc-canvas',

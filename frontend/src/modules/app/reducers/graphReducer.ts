@@ -1,5 +1,5 @@
 import { SetInitialGraphAction } from '../actions/SetInitialGraphActions';
-import { GraphState } from '../../types/GraphState';
+import { GraphState } from '../interfaces/GraphState';
 
 const initialState: GraphState = {
     initialGraph: {

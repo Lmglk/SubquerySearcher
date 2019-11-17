@@ -4,15 +4,15 @@ import { of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngrx/store';
-import { AppState } from '../types/AppState';
 import { OptimizationOption } from '../enums/OptimizationOptions';
-import { LoadScheduleAction } from '../store/actions/LoadScheduleAction';
-import { OptimizeScheduleWithTimeStepAction } from '../store/actions/OptimizeScheduleWithTimeStepAction';
-import { OptimizeScheduleWithoutTimeStepAction } from '../store/actions/OptimizeScheduleWithoutTimeStepAction';
-import { SetScheduleAction } from '../store/actions/SetScheduleAction';
-import { RejectLoadScheduleAction } from '../store/actions/RejectLoadScheduleAction';
-import { RejectOptimizeScheduleAction } from '../store/actions/RejectOptimizeScheduleAction';
 import { ApiScheduleService } from '../services/api-schedule.service';
+import { AppState } from '../interfaces/AppState';
+import { LoadScheduleAction } from '../actions/LoadScheduleAction';
+import { OptimizeScheduleWithTimeStepAction } from '../actions/OptimizeScheduleWithTimeStepAction';
+import { OptimizeScheduleWithoutTimeStepAction } from '../actions/OptimizeScheduleWithoutTimeStepAction';
+import { SetScheduleAction } from '../actions/SetScheduleAction';
+import { RejectLoadScheduleAction } from '../actions/RejectLoadScheduleAction';
+import { RejectOptimizeScheduleAction } from '../actions/RejectOptimizeScheduleAction';
 
 @Injectable()
 export class ScheduleEffects {

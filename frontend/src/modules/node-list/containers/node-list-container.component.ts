@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { AppState } from '../../app/types/AppState';
 import { Observable } from 'rxjs';
-import { GraphNode } from '../../app/types/GraphNode';
 import { selectNodes } from '../selectors/selectNodes';
+import { GraphNode } from '../../app/interfaces/GraphNode';
+import { AppState } from '../../app/interfaces/AppState';
 
 @Component({
     selector: 'ssw-node-list-container',

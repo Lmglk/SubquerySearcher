@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { AppState } from '../../app/types/AppState';
 import { select, Store } from '@ngrx/store';
-import { Group } from '../../app/types/Group';
 import { Observable } from 'rxjs';
-import { selectGroups } from '../../app/store/selectors/selectGroups';
-import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize';
+import { Group } from '../../app/interfaces/Group';
+import { AppState } from '../../app/interfaces/AppState';
+import { selectGroups } from '../../app/selectors/selectGroups';
+import { selectMaxGroupSize } from '../../app/selectors/selectMaxGroupSize';
 
 @Component({
     selector: 'ssw-schedule-container',

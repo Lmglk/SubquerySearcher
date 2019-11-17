@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { selectGraph } from '../../app/store/selectors/selectInitialGraph';
+import { selectGraph } from '../../app/selectors/selectInitialGraph';
 
 export const selectNodes = createSelector(
     selectGraph,

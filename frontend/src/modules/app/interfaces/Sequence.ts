@@ -1,6 +1,6 @@
 import { GraphNode } from './GraphNode';
 
-export class Sequence {
+export interface Sequence {
     id: string;
     nodes: GraphNode[];
     time: number;

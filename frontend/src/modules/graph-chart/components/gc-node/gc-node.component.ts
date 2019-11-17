@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import autobind from 'autobind-decorator';
-import { GraphChartNode } from '../../types/GraphChartNode';
+import { GraphChartNode } from '../../interfaces/GraphChartNode';
 
 @Component({
     selector: '[ssw-gc-node]',

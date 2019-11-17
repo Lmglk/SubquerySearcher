@@ -1,7 +1,7 @@
-import { ScheduleState } from '../../types/ScheduleState';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { ResetScheduleAction } from '../actions/ResetScheduleAction';
 import { ResetGroupsAction } from '../actions/ResetGroupsAction';
+import { ScheduleState } from '../interfaces/ScheduleState';
 
 const initialState: ScheduleState = {
     groups: [],

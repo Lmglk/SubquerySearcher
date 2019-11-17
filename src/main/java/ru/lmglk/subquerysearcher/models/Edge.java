@@ -9,33 +9,25 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Edge extends Entity {
 
-    private Node source;
+    private String sourceId;
 
-    private Node target;
+    private String targetId;
 
-    public Edge(Node source, Node target) {
-        this.source = source;
-        this.target = target;
+    public Edge(String sourceId, String targetId) {
+        this.sourceId = sourceId;
+        this.targetId = targetId;
     }
 
     public Edge(Edge edge) {
-        this.source = edge.getSource();
-        this.target = edge.getTarget();
+        this.sourceId = edge.getSourceId();
+        this.targetId = edge.getTargetId();
     }
 
-    String getSourceName() {
-        return source.getName();
+    public String getSourceId() {
+        return sourceId;
     }
 
-    String getTargetName() {
-        return target.getName();
-    }
-
-    String getSourceId() {
-        return source.getId();
-    }
-
-    String getTargetId() {
-        return target.getId();
+    public String getTargetId() {
+        return targetId;
     }
 }
