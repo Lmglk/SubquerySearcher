@@ -6,13 +6,13 @@ import {
     ViewChild,
 } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { AppState } from '../../app/types/AppState';
 import { Observable } from 'rxjs';
-import { Group } from '../../app/types/Group';
-import { Graph } from '../../app/types/Graph';
 import { selectModifiedGraph } from '../selectors/selectModifiedGraph';
 import { selectGroups } from '../../app/store/selectors/selectGroups';
 import { selectMaxGroupSize } from '../../app/store/selectors/selectMaxGroupSize';
+import { Graph } from '../../app/interfaces/Graph';
+import { Group } from '../../app/interfaces/Group';
+import { AppState } from '../../app/interfaces/AppState';
 
 @Component({
     selector: 'ssw-gc-container',

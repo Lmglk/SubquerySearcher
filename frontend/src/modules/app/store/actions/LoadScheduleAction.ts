@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
-import { Graph } from '../../types/Graph';
 import { OptimizationOption } from '../../enums/OptimizationOptions';
+import { Graph } from '../../interfaces/Graph';
 
 export class LoadScheduleAction implements Action {
     public static readonly type = '[Schedule] Load';

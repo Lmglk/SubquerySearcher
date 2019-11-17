@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { GraphNode } from '../../types/GraphNode';
+import { GraphNode } from '../../interfaces/GraphNode';
 
 export class SetNodesListAction implements Action {
     public static readonly type = '[Separate nodes] Set';

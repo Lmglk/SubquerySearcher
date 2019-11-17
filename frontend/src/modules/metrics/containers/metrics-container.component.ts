@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { AppState } from '../../app/types/AppState';
 import { select, Store } from '@ngrx/store';
-import { Metrics } from '../../app/types/Metrics';
 import { Observable } from 'rxjs';
 import { selectMetrics } from '../selectors/selectMetrics';
+import { Metrics } from '../../app/interfaces/Metrics';
+import { AppState } from '../../app/interfaces/AppState';
 
 @Component({
     selector: 'ssw-metrics-container',

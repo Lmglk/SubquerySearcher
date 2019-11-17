@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { GraphChartNode } from '../types/GraphChartNode';
-import { GraphChartEdge } from '../types/GraphChartEdge';
 import * as d3 from 'd3';
-import { Graph } from '../../app/types/Graph';
+import { Graph } from '../../app/interfaces/Graph';
+import { GraphChartNode } from '../interfaces/GraphChartNode';
+import { GraphChartEdge } from '../interfaces/GraphChartEdge';
 
 @Component({
     selector: 'ssw-free-placement-container',
@@ -57,8 +57,8 @@ export class GcFreePlacementContainerComponent implements OnChanges {
 
             this.edges = this.graph.edges.map(edge => ({
                 id: edge.id,
-                source: this.nodes.find(node => node.id === edge.source.id),
-                target: this.nodes.find(node => node.id === edge.target.id),
+                source: this.nodes.find(node => node.id === edge.sourceId),
+                target: this.nodes.find(node => node.id === edge.targetId),
             }));
             this.calculateNodeTicks();
             this.calculateEdgeTicks();

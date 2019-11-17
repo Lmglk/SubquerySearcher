@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 import { selectSeparateNodes } from '../../app/store/selectors/selectSeparateNodes';
-import { InfoSeparate } from '../../app/types/InfoSeparate';
+import { InfoSeparate } from '../../app/interfaces/InfoSeparate';
 
 export const selectCountNodes = createSelector(
     selectSeparateNodes,

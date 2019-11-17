@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { InfoSeparate } from '../../types/InfoSeparate';
+import { InfoSeparate } from '../../interfaces/InfoSeparate';
 
 export class UpdateNodeAction implements Action {
     public static readonly type = '[Separate nodes] Update';

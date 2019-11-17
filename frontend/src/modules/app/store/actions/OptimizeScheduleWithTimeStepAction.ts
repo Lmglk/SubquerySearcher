@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { OptimizationData } from '../../types/OptimizationData';
+import { OptimizationData } from '../../interfaces/OptimizationData';
 
 export class OptimizeScheduleWithTimeStepAction implements Action {
     public static readonly type = '[Schedule] Optimize schedule with time step';

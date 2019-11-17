@@ -4,7 +4,6 @@ import { catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { AppState } from '../types/AppState';
 import { UploadGraphAction } from '../store/actions/UploadGraphAction';
 import { SetInitialGraphAction } from '../store/actions/SetInitialGraphActions';
 import { SetModifiedGraphAction } from '../store/actions/SetModifiedGraphAction';
@@ -17,6 +16,7 @@ import { LoadScheduleAction } from '../store/actions/LoadScheduleAction';
 import { RejectOptimizeScheduleAction } from '../store/actions/RejectOptimizeScheduleAction';
 import { SetNodesListAction } from '../store/actions/SetNodesListAction';
 import { ApiGraphService } from '../services/api-graph.service';
+import { AppState } from '../interfaces/AppState';
 
 @Injectable()
 export class GraphEffects {

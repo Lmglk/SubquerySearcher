@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GraphNode } from '../../app/types/GraphNode';
+import { GraphNode } from '../../app/interfaces/GraphNode';
 
 @Pipe({
     name: 'orderNode',

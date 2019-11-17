@@ -1,7 +1,7 @@
 import { GraphEdge } from './GraphEdge';
 import { GraphNode } from './GraphNode';
 
-export class Graph {
-    public edges: GraphEdge[];
-    public nodes: GraphNode[];
+export interface Graph {
+    edges: GraphEdge[];
+    nodes: GraphNode[];
 }

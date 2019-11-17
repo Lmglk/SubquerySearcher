@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Graph } from '../types/Graph';
 import { Observable } from 'rxjs';
-import { Schedule } from '../types/Schedule';
-import { OptimizationData } from '../types/OptimizationData';
 import { HttpClient } from '@angular/common/http';
+import { Graph } from '../interfaces/Graph';
+import { Schedule } from '../interfaces/Schedule';
+import { OptimizationData } from '../interfaces/OptimizationData';
 
 @Injectable({
     providedIn: 'root',

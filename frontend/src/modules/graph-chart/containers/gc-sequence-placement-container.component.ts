@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Group } from '../../app/types/Group';
 import * as d3 from 'd3';
-import { GraphChartNode } from '../types/GraphChartNode';
-import { GraphChartEdge } from '../types/GraphChartEdge';
-import { Graph } from '../../app/types/Graph';
+import { Graph } from '../../app/interfaces/Graph';
+import { Group } from '../../app/interfaces/Group';
+import { GraphChartNode } from '../interfaces/GraphChartNode';
+import { GraphChartEdge } from '../interfaces/GraphChartEdge';
 
 @Component({
     selector: 'ssw-gc-sequence-placement-container',
@@ -91,10 +91,10 @@ export class GcSequencePlacementContainerComponent implements OnChanges {
             return {
                 id: edge.id,
                 source: this.scaledNodes.find(
-                    node => !!edge.source && node.id === edge.source.id
+                    node => node.id === edge.sourceId
                 ),
                 target: this.scaledNodes.find(
-                    node => !!edge.target && node.id === edge.target.id
+                    node => node.id === edge.targetId
                 ),
             };
         });

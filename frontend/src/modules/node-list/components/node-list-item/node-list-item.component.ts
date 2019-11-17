@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GraphNode } from '../../../app/types/GraphNode';
 import { Observable } from 'rxjs';
-import { AppState } from '../../../app/types/AppState';
 import { select, Store } from '@ngrx/store';
 import { selectCountNodes } from '../../selectors/selectCountNodes';
 import { UpdateNodeAction } from '../../../app/store/actions/UpdateNodeAction';
+import { GraphNode } from '../../../app/interfaces/GraphNode';
+import { AppState } from '../../../app/interfaces/AppState';
 
 @Component({
     selector: '[ssw-node-list-item]',
