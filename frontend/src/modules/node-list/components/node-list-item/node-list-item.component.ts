@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { selectCountNodes } from '../../selectors/selectCountNodes';
-import { UpdateNodeAction } from '../../../app/store/actions/UpdateNodeAction';
 import { GraphNode } from '../../../app/interfaces/GraphNode';
 import { AppState } from '../../../app/interfaces/AppState';
+import { UpdateNodeAction } from '../../../app/actions/UpdateNodeAction';
 
 @Component({
     selector: '[ssw-node-list-item]',

@@ -9,18 +9,18 @@ import { ToastrModule } from 'ngx-toastr';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../../environments/environment';
 import { StoreModule } from '@ngrx/store';
-import { graphReducer } from './store/reducers/graphReducer';
-import { scheduleReducer } from './store/reducers/scheduleReducer';
 import { ScheduleModule } from '../schedule/schedule.module';
 import { HeaderComponent } from './components/header/header.component';
-import { separateNodesReducer } from './store/reducers/separateNodesReducer';
 import { NodeListModule } from '../node-list/node-list.module';
 import { MetricsModule } from '../metrics/metrics.module';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { ScheduleEffects } from './effects/schedule.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
-import { modifiedGraphReducer } from './store/reducers/modifiedGraphReducer';
+import { graphReducer } from './reducers/graphReducer';
+import { modifiedGraphReducer } from './reducers/modifiedGraphReducer';
+import { scheduleReducer } from './reducers/scheduleReducer';
+import { separateNodesReducer } from './reducers/separateNodesReducer';
 import { ControlsModule } from '@ssw/controls';
 
 @NgModule({

@@ -4,19 +4,19 @@ import { catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { UploadGraphAction } from '../store/actions/UploadGraphAction';
-import { SetInitialGraphAction } from '../store/actions/SetInitialGraphActions';
-import { SetModifiedGraphAction } from '../store/actions/SetModifiedGraphAction';
-import { RejectUploadGraphAction } from '../store/actions/RejectUploadGraphAction';
-import { CalculateGraphAction } from '../store/actions/CalculateGraphAction';
-import { selectGraph } from '../store/selectors/selectInitialGraph';
-import { selectSeparateNodes } from '../store/selectors/selectSeparateNodes';
-import { ResetScheduleAction } from '../store/actions/ResetScheduleAction';
-import { LoadScheduleAction } from '../store/actions/LoadScheduleAction';
-import { RejectOptimizeScheduleAction } from '../store/actions/RejectOptimizeScheduleAction';
-import { SetNodesListAction } from '../store/actions/SetNodesListAction';
 import { ApiGraphService } from '../services/api-graph.service';
 import { AppState } from '../interfaces/AppState';
+import { UploadGraphAction } from '../actions/UploadGraphAction';
+import { ResetScheduleAction } from '../actions/ResetScheduleAction';
+import { SetInitialGraphAction } from '../actions/SetInitialGraphActions';
+import { SetNodesListAction } from '../actions/SetNodesListAction';
+import { SetModifiedGraphAction } from '../actions/SetModifiedGraphAction';
+import { RejectUploadGraphAction } from '../actions/RejectUploadGraphAction';
+import { CalculateGraphAction } from '../actions/CalculateGraphAction';
+import { selectGraph } from '../selectors/selectInitialGraph';
+import { selectSeparateNodes } from '../selectors/selectSeparateNodes';
+import { LoadScheduleAction } from '../actions/LoadScheduleAction';
+import { RejectOptimizeScheduleAction } from '../actions/RejectOptimizeScheduleAction';
 
 @Injectable()
 export class GraphEffects {
