@@ -1,7 +1,7 @@
 import { SetNodesListAction } from '../actions/SetNodesListAction';
 import { ResetNodesListAction } from '../actions/ResetNodesListAction';
 import { UpdateNodeAction } from '../actions/UpdateNodeAction';
-import { SeparateNodesState } from '../../interfaces/SeparateNodesState';
+import { SeparateNodesState } from '../interfaces/SeparateNodesState';
 
 const initialState: SeparateNodesState = {
     separateNodes: [],
