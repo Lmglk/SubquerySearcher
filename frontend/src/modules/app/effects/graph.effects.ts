@@ -1,41 +1,42 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
+import {
+    catchError,
+    mergeMap,
+    switchMap,
+    withLatestFrom,
+} from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ApiGraphService } from '../services/api-graph.service';
 import { AppState } from '../interfaces/AppState';
 import { UploadGraphAction } from '../actions/UploadGraphAction';
 import { ResetScheduleAction } from '../actions/ResetScheduleAction';
-import { SetInitialGraphAction } from '../actions/SetInitialGraphActions';
 import { SetNodesListAction } from '../actions/SetNodesListAction';
-import { SetModifiedGraphAction } from '../actions/SetModifiedGraphAction';
-import { RejectUploadGraphAction } from '../actions/RejectUploadGraphAction';
+import { SetGraphAction } from '../actions/SetGraphAction';
 import { CalculateGraphAction } from '../actions/CalculateGraphAction';
-import { selectGraph } from '../selectors/selectInitialGraph';
+import { selectOriginalGraph } from '../selectors/selectOriginalGraph';
 import { selectSeparateNodes } from '../selectors/selectSeparateNodes';
 import { LoadScheduleAction } from '../actions/LoadScheduleAction';
-import { RejectOptimizeScheduleAction } from '../actions/RejectOptimizeScheduleAction';
 import { FileService } from '../services/file.service';
+import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
+import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
 
 @Injectable()
 export class GraphEffects {
     @Effect()
     public uploadGraph$ = this.actions$.pipe(
         ofType<UploadGraphAction>(UploadGraphAction.type),
-        mergeMap(action => {
+        switchMap(action => {
             return this.fileService.parseFileToGraph(action.payload).pipe(
                 mergeMap(graph => [
                     new ResetScheduleAction(),
-                    new SetInitialGraphAction(graph),
+                    new SuccessfulGraphUploadAction(graph),
                     new SetNodesListAction(graph.nodes),
-                    new SetModifiedGraphAction(graph),
                 ]),
-                catchError(error => {
-                    this.toastr.error(error.message);
-                    return of(new RejectUploadGraphAction());
-                })
+                catchError(error =>
+                    of(new ErrorNotificationAction(error.message))
+                )
             );
         })
     );
@@ -44,23 +45,24 @@ export class GraphEffects {
     public calculateGraph$ = this.actions$.pipe(
         ofType<CalculateGraphAction>(CalculateGraphAction.type),
         withLatestFrom(
-            this.store.select(selectGraph),
+            this.store.select(selectOriginalGraph),
             this.store.select(selectSeparateNodes)
         ),
-        mergeMap(([action, graph, separateNodes]) =>
-            this.apiGraphService.separateNodes(graph, separateNodes).pipe(
-                mergeMap(modifiedGraph => [
-                    new LoadScheduleAction({
-                        graph: modifiedGraph,
-                        option: action.payload,
-                    }),
-                    new SetModifiedGraphAction(modifiedGraph),
-                ]),
-                catchError(() => {
-                    this.toastr.error('Node splitting failed');
-                    return of(new RejectOptimizeScheduleAction());
-                })
-            )
+        switchMap(([action, originalGraph, separateNodes]) =>
+            this.apiGraphService
+                .separateNodes(originalGraph, separateNodes)
+                .pipe(
+                    mergeMap(graph => [
+                        new LoadScheduleAction({
+                            graph: graph,
+                            option: action.payload,
+                        }),
+                        new SetGraphAction(graph),
+                    ]),
+                    catchError(() =>
+                        of(new ErrorNotificationAction('Node splitting failed'))
+                    )
+                )
         )
     );
 
@@ -68,7 +70,6 @@ export class GraphEffects {
         private readonly actions$: Actions,
         private readonly store: Store<AppState>,
         private readonly apiGraphService: ApiGraphService,
-        private readonly fileService: FileService,
-        private readonly toastr: ToastrService
+        private readonly fileService: FileService
     ) {}
 }

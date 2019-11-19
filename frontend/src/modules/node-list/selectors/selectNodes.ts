@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
-import { selectGraph } from '../../app/selectors/selectInitialGraph';
+import { selectOriginalGraph } from '../../app/selectors/selectOriginalGraph';
 
 export const selectNodes = createSelector(
-    selectGraph,
+    selectOriginalGraph,
     graph => graph && graph.nodes
 );

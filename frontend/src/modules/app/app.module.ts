@@ -18,10 +18,10 @@ import { GraphEffects } from './effects/graph.effects';
 import { ScheduleEffects } from './effects/schedule.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
 import { graphReducer } from './reducers/graphReducer';
-import { modifiedGraphReducer } from './reducers/modifiedGraphReducer';
 import { scheduleReducer } from './reducers/scheduleReducer';
 import { separateNodesReducer } from './reducers/separateNodesReducer';
 import { ControlsModule } from '@ssw/controls';
+import { NotificationEffects } from './effects/notification.effects';
 
 @NgModule({
     declarations: [AppComponent, HeaderComponent],
@@ -35,7 +35,6 @@ import { ControlsModule } from '@ssw/controls';
         }),
         StoreModule.forRoot({
             graphState: graphReducer,
-            modifiedGraphState: modifiedGraphReducer,
             scheduleState: scheduleReducer,
             separateNodesState: separateNodesReducer,
         }),
@@ -47,7 +46,11 @@ import { ControlsModule } from '@ssw/controls';
         ScheduleModule,
         NodeListModule,
         MetricsModule,
-        EffectsModule.forRoot([GraphEffects, ScheduleEffects]),
+        EffectsModule.forRoot([
+            GraphEffects,
+            ScheduleEffects,
+            NotificationEffects,
+        ]),
         ControlsModule,
     ],
     bootstrap: [AppComponent],

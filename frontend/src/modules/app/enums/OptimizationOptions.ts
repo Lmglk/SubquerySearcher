@@ -1,7 +1,5 @@
 export enum OptimizationOption {
-    NO_OPTIMIZATION = 'No optimization',
-    OPTIMIZATION_WITH_TIMESTAMP = 'Optimization with timestamp',
-    OPTIMIZATION_WITHOUT_TIMESTAMP = 'Optimization without timestamp',
+    NO_OPTIMIZATION,
+    OPTIMIZATION_WITH_TIMESTAMP,
+    OPTIMIZATION_WITHOUT_TIMESTAMP,
 }
-
-export const OptimizationOptions = Object.values(OptimizationOption);

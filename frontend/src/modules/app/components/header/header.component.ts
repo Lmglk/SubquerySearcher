@@ -1,10 +1,7 @@
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import {
-    OptimizationOption,
-    OptimizationOptions,
-} from '../../enums/OptimizationOptions';
+import { OptimizationOption } from '../../enums/OptimizationOptions';
 import { Subscription } from 'rxjs';
 import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
@@ -22,12 +19,9 @@ import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
                 <input type="file" #fileUpload (change)="changeFile()" />
                 <button (click)="uploadFile()">Upload file</button>
                 <select (change)="changeOptimizationOption($event)">
-                    <option
-                        *ngFor="let option of optimizationOptions"
-                        [value]="option"
-                    >
-                        {{ option }}
-                    </option>
+                    <option [value]="0">No optimization</option>
+                    <option [value]="1">Optimization with timestamp</option>
+                    <option [value]="2">Optimization without timestamp</option>
                 </select>
                 <button (click)="calculateGraph()">Calculate</button>
                 <button (click)="exportToFile()">Export</button>
@@ -61,7 +55,6 @@ import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
 export class HeaderComponent implements OnDestroy {
     @ViewChild('fileUpload', { static: false }) inputFile: ElementRef;
 
-    public readonly optimizationOptions = OptimizationOptions;
     public selectedOptimizationOption: OptimizationOption;
 
     private file: File;
@@ -90,8 +83,8 @@ export class HeaderComponent implements OnDestroy {
     }
 
     public changeOptimizationOption(event: Event) {
-        this.selectedOptimizationOption = (event.target as HTMLSelectElement)
-            .value as OptimizationOption;
+        const element = event.target as HTMLSelectElement;
+        this.selectedOptimizationOption = Number(element.value);
     }
 
     public calculateGraph(): void {
