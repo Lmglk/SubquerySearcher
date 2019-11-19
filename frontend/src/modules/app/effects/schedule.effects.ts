@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { OptimizationOption } from '../enums/OptimizationOptions';
 import { ApiScheduleService } from '../services/api-schedule.service';
 import { AppState } from '../interfaces/AppState';
 import { LoadScheduleAction } from '../actions/LoadScheduleAction';
-import { OptimizeScheduleWithTimeStepAction } from '../actions/OptimizeScheduleWithTimeStepAction';
-import { OptimizeScheduleWithoutTimeStepAction } from '../actions/OptimizeScheduleWithoutTimeStepAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
-import { RejectLoadScheduleAction } from '../actions/RejectLoadScheduleAction';
-import { RejectOptimizeScheduleAction } from '../actions/RejectOptimizeScheduleAction';
+import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
+import { OptimizationOption } from '../enums/OptimizationOptions';
 
 @Injectable()
 export class ScheduleEffects {
@@ -21,72 +17,36 @@ export class ScheduleEffects {
         ofType<LoadScheduleAction>(LoadScheduleAction.type),
         mergeMap(action =>
             this.apiScheduleService.getSchedule(action.payload.graph).pipe(
-                map(schedule => {
-                    switch (action.payload.option) {
-                        case OptimizationOption.OPTIMIZATION_WITH_TIMESTAMP:
-                            return new OptimizeScheduleWithTimeStepAction({
-                                graph: action.payload.graph,
-                                schedule: schedule,
-                            });
-
-                        case OptimizationOption.OPTIMIZATION_WITHOUT_TIMESTAMP:
-                            return new OptimizeScheduleWithoutTimeStepAction({
-                                graph: action.payload.graph,
-                                schedule: schedule,
-                            });
-
-                        default:
-                            return new SetScheduleAction(schedule);
+                switchMap(originalSchedule => {
+                    if (
+                        action.payload.option ===
+                        OptimizationOption.NO_OPTIMIZATION
+                    ) {
+                        return of(new SetScheduleAction(originalSchedule));
                     }
+
+                    return this.apiScheduleService
+                        .optimizeSchedule(
+                            action.payload.graph,
+                            originalSchedule,
+                            action.payload.option
+                        )
+                        .pipe(map(schedule => new SetScheduleAction(schedule)));
                 }),
-                catchError(() => {
-                    this.toastr.error('Optimize schedule is failed');
-                    return of(new RejectLoadScheduleAction());
-                })
+                catchError(() =>
+                    of(
+                        new ErrorNotificationAction(
+                            'Optimize schedule is failed'
+                        )
+                    )
+                )
             )
-        )
-    );
-
-    @Effect()
-    public optimizeScheduleWithTimeStep$ = this.actions$.pipe(
-        ofType<OptimizeScheduleWithTimeStepAction>(
-            OptimizeScheduleWithTimeStepAction.type
-        ),
-        mergeMap(action =>
-            this.apiScheduleService
-                .optimizeScheduleWithTimestamp(action.payload)
-                .pipe(
-                    map(schedule => new SetScheduleAction(schedule)),
-                    catchError(() => {
-                        this.toastr.error('Optimize schedule is failed');
-                        return of(new RejectOptimizeScheduleAction());
-                    })
-                )
-        )
-    );
-
-    @Effect()
-    public optimizeScheduleWithoutTimeStep$ = this.actions$.pipe(
-        ofType<OptimizeScheduleWithoutTimeStepAction>(
-            OptimizeScheduleWithoutTimeStepAction.type
-        ),
-        mergeMap(action =>
-            this.apiScheduleService
-                .optimizeScheduleWithoutTimestamp(action.payload)
-                .pipe(
-                    map(schedule => new SetScheduleAction(schedule)),
-                    catchError(() => {
-                        this.toastr.error('Optimize schedule is failed');
-                        return of(new RejectOptimizeScheduleAction());
-                    })
-                )
         )
     );
 
     constructor(
         private readonly actions$: Actions,
         private readonly store: Store<AppState>,
-        private readonly apiScheduleService: ApiScheduleService,
-        private readonly toastr: ToastrService
+        private readonly apiScheduleService: ApiScheduleService
     ) {}
 }

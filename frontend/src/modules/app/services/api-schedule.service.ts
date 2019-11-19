@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Graph } from '../interfaces/Graph';
 import { Schedule } from '../interfaces/Schedule';
-import { OptimizationData } from '../interfaces/OptimizationData';
 
 @Injectable({
     providedIn: 'root',
@@ -15,21 +14,17 @@ export class ApiScheduleService {
         return this.http.post<Schedule>('api/graph/getSchedule', graph);
     }
 
-    public optimizeScheduleWithoutTimestamp(
-        optimizationData: OptimizationData
+    public optimizeSchedule(
+        graph: Graph,
+        schedule: Schedule,
+        mode: number
     ): Observable<Schedule> {
         return this.http.post<Schedule>(
-            'api/graph/optimizeScheduleWithoutTimestamp',
-            optimizationData
-        );
-    }
-
-    public optimizeScheduleWithTimestamp(
-        optimizationData: OptimizationData
-    ): Observable<Schedule> {
-        return this.http.post<Schedule>(
-            'api/graph/optimizeScheduleWithTimestamp',
-            optimizationData
+            'api/graph/optimizeSchedule',
+            { graph: graph, schedule: schedule },
+            {
+                params: new HttpParams().set('mode', mode.toString()),
+            }
         );
     }
 }

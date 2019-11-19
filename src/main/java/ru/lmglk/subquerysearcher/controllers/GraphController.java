@@ -39,14 +39,16 @@ public class GraphController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/optimizeScheduleWithoutTimestamp", method = RequestMethod.POST)
-    public Schedule optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData data) {
-        return this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(data);
-    }
+    @RequestMapping(value = "/optimizeSchedule", method = RequestMethod.POST)
+    public ResponseEntity optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData data, @RequestParam int mode) {
+        switch (mode) {
+            case 1:
+                return ResponseEntity.ok(this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(data));
+            case 2:
+                return ResponseEntity.ok(this.timeOptimizationAlgorithm.scheduleOptimizationByTime(data));
 
-    @ResponseBody
-    @RequestMapping(value = "/optimizeScheduleWithTimestamp", method = RequestMethod.POST)
-    public Schedule optimizeScheduleWithTimestamp(@RequestBody OptimizationData data) {
-        return this.timeOptimizationAlgorithm.scheduleOptimizationByTime(data);
+            default:
+                return ResponseEntity.badRequest().body("Incorrect schedule optimization mode.");
+        }
     }
 }

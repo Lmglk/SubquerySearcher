@@ -1,21 +1,46 @@
-import { SetInitialGraphAction } from '../actions/SetInitialGraphActions';
 import { GraphState } from '../interfaces/GraphState';
+import { SetGraphAction } from '../actions/SetGraphAction';
+import { ResetModifiedGraphAction } from '../actions/ResetModifiedGraphAction';
+import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
 
 const initialState: GraphState = {
-    initialGraph: {
+    originalGraph: {
+        nodes: [],
+        edges: [],
+    },
+    graph: {
         nodes: [],
         edges: [],
     },
 };
 
-export type Action = SetInitialGraphAction;
+export type Action =
+    | SuccessfulGraphUploadAction
+    | SetGraphAction
+    | ResetModifiedGraphAction;
 
 export function graphReducer(state = initialState, action: Action): GraphState {
     switch (action.type) {
-        case SetInitialGraphAction.type:
+        case SuccessfulGraphUploadAction.type:
             return {
                 ...state,
-                initialGraph: action.payload,
+                originalGraph: action.graph,
+                graph: action.graph,
+            };
+
+        case SetGraphAction.type:
+            return {
+                ...state,
+                graph: action.payload,
+            };
+
+        case ResetModifiedGraphAction.type:
+            return {
+                ...state,
+                graph: {
+                    nodes: [],
+                    edges: [],
+                },
             };
 
         default:
