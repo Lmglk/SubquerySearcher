@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { catchError, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, mergeMap, tap, withLatestFrom } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -17,26 +17,27 @@ import { selectGraph } from '../selectors/selectInitialGraph';
 import { selectSeparateNodes } from '../selectors/selectSeparateNodes';
 import { LoadScheduleAction } from '../actions/LoadScheduleAction';
 import { RejectOptimizeScheduleAction } from '../actions/RejectOptimizeScheduleAction';
+import { FileService } from '../services/file.service';
 
 @Injectable()
 export class GraphEffects {
     @Effect()
     public uploadGraph$ = this.actions$.pipe(
         ofType<UploadGraphAction>(UploadGraphAction.type),
-        mergeMap(action =>
-            this.apiGraphService.uploadFile(action.payload).pipe(
+        mergeMap(action => {
+            return this.fileService.parseFileToGraph(action.payload).pipe(
                 mergeMap(graph => [
                     new ResetScheduleAction(),
                     new SetInitialGraphAction(graph),
                     new SetNodesListAction(graph.nodes),
                     new SetModifiedGraphAction(graph),
                 ]),
-                catchError(() => {
-                    this.toastr.error('Uploading file is failed');
+                catchError(error => {
+                    this.toastr.error(error.message);
                     return of(new RejectUploadGraphAction());
                 })
-            )
-        )
+            );
+        })
     );
 
     @Effect()
@@ -67,6 +68,7 @@ export class GraphEffects {
         private readonly actions$: Actions,
         private readonly store: Store<AppState>,
         private readonly apiGraphService: ApiGraphService,
+        private readonly fileService: FileService,
         private readonly toastr: ToastrService
     ) {}
 }

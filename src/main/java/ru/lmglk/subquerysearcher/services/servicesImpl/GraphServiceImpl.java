@@ -1,45 +1,14 @@
 package ru.lmglk.subquerysearcher.services.servicesImpl;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.GraphService;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class GraphServiceImpl implements GraphService {
-
-    @Override
-    public Graph readFile(MultipartFile file) {
-        Graph graph = new Graph();
-        try {
-            InputStream inputStream = file.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String str;
-            while ((str = bufferedReader.readLine()) != null) {
-                String[] arr = str.split(" ");
-                int time = (arr.length == 3) ? Integer.parseInt(arr[2]) : 1;
-                Node sourceNode = graph.addNode(arr[0], time);
-                Node targetNode = graph.getNodeByName(arr[1]);
-
-                if (targetNode == null) {
-                    targetNode = graph.addNode(arr[1], 1);
-                }
-                graph.addEdge(sourceNode, targetNode);
-            }
-            bufferedReader.close();
-            inputStream.close();
-        } catch (Exception e) {
-            return null;
-        }
-
-        return graph;
-    }
 
     @Override
     public Graph separateNodes(Graph graph, ArrayList<InfoSeparate> separateNodesInfo) {

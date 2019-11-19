@@ -8,13 +8,7 @@ import { InfoSeparate } from '../interfaces/InfoSeparate';
     providedIn: 'root',
 })
 export class ApiGraphService {
-    constructor(private http: HttpClient) {}
-
-    public uploadFile(file: File): Observable<Graph> {
-        const formData = new FormData();
-        formData.append('file', file);
-        return this.http.post<Graph>('api/graph/loadGraph', formData);
-    }
+    constructor(private readonly http: HttpClient) {}
 
     public separateNodes(
         graph: Graph,
