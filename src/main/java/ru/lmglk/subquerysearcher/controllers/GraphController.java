@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.GraphService;
 import ru.lmglk.subquerysearcher.services.TimeOptimizationAlgorithm;
@@ -23,15 +22,6 @@ public class GraphController {
 
     @Autowired
     private WidthOptimizationAlgorithm widthOptimizationAlgorithm;
-
-    @ResponseBody
-    @RequestMapping(value = "/loadGraph", method = RequestMethod.POST)
-    public ResponseEntity uploadFile(@RequestParam("file") MultipartFile file) {
-        Graph graph = this.graphService.readFile(file);
-        return (graph != null)
-                ? ResponseEntity.ok(graph)
-                : ResponseEntity.badRequest().body("Incorrect file.");
-    }
 
     @ResponseBody
     @RequestMapping(value = "/separateNodes", method = RequestMethod.POST)
