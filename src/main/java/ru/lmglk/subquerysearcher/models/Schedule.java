@@ -15,8 +15,6 @@ public class Schedule {
 
     private ArrayList<Group> groups;
 
-    private Metrics metrics;
-
     public Schedule() {
         groups = new ArrayList<>();
     }
@@ -26,11 +24,6 @@ public class Schedule {
                 .stream()
                 .map(Group::new)
                 .collect(Collectors.toCollection(ArrayList::new));
-        metrics = new Metrics(schedule.getMetrics());
-    }
-
-    public void createMetrics() {
-        metrics = new Metrics(this.groups);
     }
 
     public void addGroup(Group group) {

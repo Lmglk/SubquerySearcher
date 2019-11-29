@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Group } from '../../app/interfaces/Group';
 import { AppState } from '../../app/interfaces/AppState';
 import { selectGroups } from '../../app/selectors/selectGroups';
-import { selectMaxGroupSize } from '../../app/selectors/selectMaxGroupSize';
+import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 
 @Component({
     selector: 'ssw-schedule-container',
@@ -32,6 +32,6 @@ export class ScheduleContainerComponent {
 
     constructor(private readonly store: Store<AppState>) {
         this.groups$ = this.store.pipe(select(selectGroups));
-        this.maxGroupSize$ = this.store.pipe(select(selectMaxGroupSize));
+        this.maxGroupSize$ = this.store.pipe(select(getMetricWidth));
     }
 }

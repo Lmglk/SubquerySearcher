@@ -5,7 +5,6 @@ import { ScheduleState } from '../interfaces/ScheduleState';
 
 const initialState: ScheduleState = {
     groups: [],
-    metrics: null,
 };
 
 export type Action =

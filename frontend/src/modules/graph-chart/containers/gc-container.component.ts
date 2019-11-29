@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectModifiedGraph } from '../selectors/selectModifiedGraph';
+import { selectGraph } from '../selectors/selectGraph';
 import { Graph } from '../../app/interfaces/Graph';
 import { Group } from '../../app/interfaces/Group';
 import { AppState } from '../../app/interfaces/AppState';
 import { selectGroups } from '../../app/selectors/selectGroups';
-import { selectMaxGroupSize } from '../../app/selectors/selectMaxGroupSize';
+import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 
 @Component({
     selector: 'ssw-gc-container',
@@ -65,9 +65,9 @@ export class GcContainerComponent implements AfterViewInit {
     public maxGroupSize$: Observable<number>;
 
     constructor(private readonly store: Store<AppState>) {
-        this.graph$ = this.store.pipe(select(selectModifiedGraph));
+        this.graph$ = this.store.pipe(select(selectGraph));
         this.groups$ = this.store.pipe(select(selectGroups));
-        this.maxGroupSize$ = this.store.pipe(select(selectMaxGroupSize));
+        this.maxGroupSize$ = this.store.pipe(select(getMetricWidth));
     }
 
     public ngAfterViewInit(): void {
