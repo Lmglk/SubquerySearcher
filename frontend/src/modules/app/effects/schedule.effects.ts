@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { ApiScheduleService } from '../services/api-schedule.service';
 import { AppState } from '../interfaces/AppState';
@@ -15,7 +15,7 @@ export class ScheduleEffects {
     @Effect()
     public loadSchedule$ = this.actions$.pipe(
         ofType<LoadScheduleAction>(LoadScheduleAction.type),
-        mergeMap(action =>
+        switchMap(action =>
             this.apiScheduleService.getSchedule(action.payload.graph).pipe(
                 switchMap(originalSchedule => {
                     if (
