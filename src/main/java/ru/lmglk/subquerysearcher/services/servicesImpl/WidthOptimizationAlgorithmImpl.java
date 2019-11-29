@@ -9,27 +9,33 @@ import ru.lmglk.subquerysearcher.services.WidthOptimizationAlgorithm;
 public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorithm {
 
     @Override
-    public Schedule scheduleOptimizationByWidth (OptimizationData data) {
+    public Schedule scheduleOptimizationByWidth(OptimizationData data) {
         Graph graph = data.getGraph();
         Schedule schedule = data.getSchedule();
-        Metrics metrics = schedule.getMetrics();
 
-        int theoryGroupSize = calcTheoryGroupSize(metrics.getNodes(), metrics.getHeight());
-        int maxSizeGroup = metrics.getWidth();
+        int numberOfNodes = schedule.getGroups().stream()
+                .mapToInt(group -> (int) group.getSequences()
+                        .stream()
+                        .mapToInt(sequence -> sequence.getNodes().size())
+                        .count()
+                ).sum();
 
-        if (maxSizeGroup == theoryGroupSize) return schedule;
+        int graphHeight = schedule.getGroups().size();
+        int graphWidth = schedule.getGroups().stream().mapToInt(Group::size).max().orElse(0);
+        int theoryGroupSize = calcTheoryGroupSize(numberOfNodes, graphHeight);
 
-        for (int i = metrics.getHeight() - 1; i > 0; i--) {
+        if (graphWidth == theoryGroupSize) return schedule;
+
+        for (int i = graphHeight - 1; i > 0; i--) {
             if (theoryGroupSize - schedule.getGroup(i).size() == 0) continue;
             schedule = moveIndependentSequences(i, i - 1, theoryGroupSize, schedule, graph, Direction.RIGHT);
         }
 
-        for (int i = 0; i < metrics.getHeight() - 1; i++) {
+        for (int i = 0; i < graphHeight - 1; i++) {
             if (theoryGroupSize - schedule.getGroup(i).size() == 0) continue;
             schedule = moveIndependentSequences(i, i + 1, theoryGroupSize, schedule, graph, Direction.LEFT);
         }
 
-        schedule.createMetrics();
         return schedule;
     }
 

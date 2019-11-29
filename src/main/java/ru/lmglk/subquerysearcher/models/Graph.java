@@ -55,11 +55,6 @@ public class Graph {
         nodes.add(node);
     }
 
-    public void addEdge(Node source, Node target) {
-        Edge edge = new Edge(source.getId(), target.getId());
-        edges.add(edge);
-    }
-
     public void addEdge(Edge edge) {
         boolean isExist = edges.stream().anyMatch(item -> edge.getId().equals(item.getId()));
 
@@ -164,15 +159,6 @@ public class Graph {
                 .stream()
                 .filter(edge -> edge.getTargetId().equals(node.getId()))
                 .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @JsonIgnore
-    public Node getNodeByName(String nodeName) {
-        return nodes
-                .stream()
-                .filter(node -> nodeName.equals(node.getName()))
-                .findFirst()
-                .orElse(null);
     }
 
     private Node findNode(String nodeName) {
