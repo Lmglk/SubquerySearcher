@@ -1,9 +1,11 @@
 package ru.lmglk.subquerysearcher.services;
 
+import ru.lmglk.subquerysearcher.models.Group;
 import ru.lmglk.subquerysearcher.models.OptimizationData;
-import ru.lmglk.subquerysearcher.models.Schedule;
+
+import java.util.ArrayList;
 
 public interface TimeOptimizationAlgorithm {
 
-    Schedule scheduleOptimizationByTime(OptimizationData data);
+    ArrayList<Group> scheduleOptimizationByTime(OptimizationData data);
 }

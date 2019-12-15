@@ -12,20 +12,20 @@ import java.util.stream.Stream;
 public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm {
 
     @Override
-    public Schedule scheduleOptimizationByTime(OptimizationData data) {
-        Schedule schedule = data.getSchedule();
+    public ArrayList<Group> scheduleOptimizationByTime(OptimizationData data) {
+        ArrayList<Group> schedule = data.getSchedule();
         Graph graph = data.getGraph();
 
-        for (int i = 0; i < schedule.getGroups().size() - 1; i++) {
-            Group sourceGroup = schedule.getGroup(i);
-            Group targetGroup = schedule.getGroup(i + 1);
+        for (int i = 0; i < schedule.size() - 1; i++) {
+            Group sourceGroup = schedule.get(i);
+            Group targetGroup = schedule.get(i + 1);
 
             boolean isCanMove = true;
             while (isCanMove) {
                 if (isAlignGroup(sourceGroup)) break;
 
                 if (targetGroup.size() == 0)
-                    targetGroup = schedule.getGroup(i + 1);
+                    targetGroup = schedule.get(i + 1);
 
                 ArrayList<Sequence> minSequenceList = sourceGroup.getSequenceWithMinTime();
 
@@ -35,7 +35,11 @@ public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm 
                     for (Node targetNode : allowedNodesToAttach) {
                         isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, sourceGroup, graph);
                         if (isCanMove) {
-                            schedule.removeNode(targetNode, targetGroup);
+                            targetGroup.removeNode(targetNode);
+
+                            if (targetGroup.size() == 0) {
+                                schedule.remove(targetGroup);
+                            }
                             sourceGroup.addNodeToSequence(minSequence, targetNode);
                             break;
                         }

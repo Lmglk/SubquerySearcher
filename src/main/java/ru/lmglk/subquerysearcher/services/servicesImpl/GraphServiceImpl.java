@@ -44,8 +44,8 @@ public class GraphServiceImpl implements GraphService {
     }
 
     @Override
-    public Schedule generateSchedule(Graph graph) {
-        Schedule schedule = new Schedule();
+    public ArrayList<Group> generateSchedule(Graph graph) {
+        ArrayList<Group> schedule = new ArrayList<>();
 
         while (!graph.getNodes().isEmpty()) {
             ArrayList<Node> sourceNodes = graph.getSourceNodeList();
@@ -65,7 +65,7 @@ public class GraphServiceImpl implements GraphService {
 
             if (group.getNodes().isEmpty()) return null;
 
-            schedule.addGroup(group);
+            schedule.add(group);
         }
 
         return schedule;
