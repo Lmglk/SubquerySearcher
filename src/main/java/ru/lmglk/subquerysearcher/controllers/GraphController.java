@@ -9,6 +9,8 @@ import ru.lmglk.subquerysearcher.services.GraphService;
 import ru.lmglk.subquerysearcher.services.TimeOptimizationAlgorithm;
 import ru.lmglk.subquerysearcher.services.WidthOptimizationAlgorithm;
 
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping(value = "api/graph")
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"})
@@ -32,7 +34,7 @@ public class GraphController {
     @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
     public ResponseEntity getSchedule(@RequestBody Graph graph) {
-        Schedule schedule = this.graphService.generateSchedule(graph);
+        ArrayList<Group> schedule = this.graphService.generateSchedule(graph);
         return (schedule != null)
                 ? ResponseEntity.ok(schedule)
                 : ResponseEntity.badRequest().body("Calculation error. The graph may contain loops.");

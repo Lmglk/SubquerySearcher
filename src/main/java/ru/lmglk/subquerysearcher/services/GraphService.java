@@ -8,5 +8,5 @@ public interface GraphService {
 
     Graph separateNodes(Graph graph, ArrayList<InfoSeparate> info);
 
-    Schedule generateSchedule(Graph graph);
+    ArrayList<Group> generateSchedule(Graph graph);
 }

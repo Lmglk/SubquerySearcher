@@ -5,34 +5,36 @@ import ru.lmglk.subquerysearcher.enums.Direction;
 import ru.lmglk.subquerysearcher.models.*;
 import ru.lmglk.subquerysearcher.services.WidthOptimizationAlgorithm;
 
+import java.util.ArrayList;
+
 @Service
 public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorithm {
 
     @Override
-    public Schedule scheduleOptimizationByWidth(OptimizationData data) {
+    public ArrayList<Group> scheduleOptimizationByWidth(OptimizationData data) {
         Graph graph = data.getGraph();
-        Schedule schedule = data.getSchedule();
+        ArrayList<Group> schedule = data.getSchedule();
 
-        int numberOfNodes = schedule.getGroups().stream()
+        int numberOfNodes = schedule.stream()
                 .mapToInt(group -> (int) group.getSequences()
                         .stream()
                         .mapToInt(sequence -> sequence.getNodes().size())
                         .count()
                 ).sum();
 
-        int graphHeight = schedule.getGroups().size();
-        int graphWidth = schedule.getGroups().stream().mapToInt(Group::size).max().orElse(0);
+        int graphHeight = schedule.size();
+        int graphWidth = schedule.stream().mapToInt(Group::size).max().orElse(0);
         int theoryGroupSize = calcTheoryGroupSize(numberOfNodes, graphHeight);
 
         if (graphWidth == theoryGroupSize) return schedule;
 
         for (int i = graphHeight - 1; i > 0; i--) {
-            if (theoryGroupSize - schedule.getGroup(i).size() == 0) continue;
+            if (theoryGroupSize - schedule.get(i).size() == 0) continue;
             schedule = moveIndependentSequences(i, i - 1, theoryGroupSize, schedule, graph, Direction.RIGHT);
         }
 
         for (int i = 0; i < graphHeight - 1; i++) {
-            if (theoryGroupSize - schedule.getGroup(i).size() == 0) continue;
+            if (theoryGroupSize - schedule.get(i).size() == 0) continue;
             schedule = moveIndependentSequences(i, i + 1, theoryGroupSize, schedule, graph, Direction.LEFT);
         }
 
@@ -43,10 +45,10 @@ public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorith
         return (int) Math.ceil((double) countNodes / maxGroupSize);
     }
 
-    private Schedule moveIndependentSequences(int groupIndex, int secondGroupIndex, int theoryGroupSize, Schedule s, Graph graph, Direction optimizationDirection) {
-        Schedule schedule = new Schedule(s);
-        Group group = schedule.getGroup(groupIndex);
-        Group secondGroup = schedule.getGroup(secondGroupIndex);
+    private ArrayList<Group> moveIndependentSequences(int groupIndex, int secondGroupIndex, int theoryGroupSize, ArrayList<Group> s, Graph graph, Direction optimizationDirection) {
+        ArrayList<Group> schedule = new ArrayList<>(s);
+        Group group = schedule.get(groupIndex);
+        Group secondGroup = schedule.get(secondGroupIndex);
 
         int sequenceIndex = 0;
         while (sequenceIndex < secondGroup.size() && group.size() < theoryGroupSize) {

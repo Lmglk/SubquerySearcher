@@ -20,7 +20,7 @@ export function scheduleReducer(
         case SetScheduleAction.type:
             return {
                 ...state,
-                ...action.payload,
+                groups: action.payload,
             };
 
         case ResetScheduleAction.type:
