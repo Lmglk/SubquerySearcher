@@ -29,12 +29,17 @@ public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm 
 
                 ArrayList<Sequence> minSequenceList = sourceGroup.getSequenceWithMinTime();
 
-                for (Sequence minSequence: minSequenceList) {
-                    ArrayList<Node> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), sourceGroup, targetGroup, graph);
+                for (Sequence minSequence : minSequenceList) {
+                    ArrayList<String> allowedNodesToAttach = getAllowedNodesToAttach(minSequence.getLastNode(), sourceGroup, targetGroup, graph);
 
-                    for (Node targetNode : allowedNodesToAttach) {
-                        isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNode, sourceGroup, graph);
+                    for (String targetNodeId : allowedNodesToAttach) {
+                        isCanMove = isCanMoveNode(minSequence.getLastNode(), targetNodeId, sourceGroup, graph);
                         if (isCanMove) {
+                            Node targetNode = graph.getNodes()
+                                    .stream()
+                                    .filter(node -> node.getId().equals(targetNodeId))
+                                    .findFirst()
+                                    .orElse(null);
                             targetGroup.removeNode(targetNode);
 
                             if (targetGroup.size() == 0) {
@@ -59,78 +64,84 @@ public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm 
                 .allMatch(sequence -> sequence.getTime() == group.getTime());
     }
 
-    private ArrayList<Node> getAllowedNodesToAttach(Node sourceNode, Group sourceGroup, Group targetGroup, Graph graph) {
+    private ArrayList<String> getAllowedNodesToAttach(String sourceNodeId, Group sourceGroup, Group targetGroup, Graph graph) {
         return Stream
                 .concat(
-                        getTargetNodesBindedToNode(targetGroup, sourceNode, graph).stream(),
-                        getIndependentTargetNodesForSubGraph(sourceGroup, targetGroup, graph.getEdges()).stream()
+                        getTargetNodesBindedToNode(targetGroup, sourceNodeId, graph).stream(),
+                        getIndependentTargetNodesForSubGraph(sourceGroup, targetGroup, graph).stream()
                 )
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isCanMoveNode(Node sourceNode, Node targetNode, Group group, Graph graph) {
-        return getSourceNodesBindedToTargetNode(group, targetNode, graph)
+    private boolean isCanMoveNode(String sourceNodeId, String targetNodeId, Group group, Graph graph) {
+        return getSourceNodesBindedToTargetNode(group, targetNodeId, graph)
                 .stream()
-                .filter(node -> node != sourceNode)
+                .filter(node -> !node.equals(sourceNodeId))
                 .collect(Collectors.toCollection(ArrayList::new))
                 .isEmpty();
     }
 
-    private ArrayList<Node> getTargetNodesBindedToNode(Group group, Node node, Graph graph) {
+    private ArrayList<String> getTargetNodesBindedToNode(Group group, String nodeId, Graph graph) {
         return group.getNodes()
                 .stream()
-                .filter(targetNode -> graph.isExistEdge(node, targetNode))
+                .filter(targetNode -> graph.isExistEdge(nodeId, targetNode))
                 .collect(Collectors.toCollection(ArrayList::new));
 
     }
 
-    private ArrayList<Node> getIndependentTargetNodesForSubGraph(Group firstGroup, Group secondGroup, ArrayList<Edge> edges) {
-        ArrayList<Node> sourceNodes = getLastNodesFromGroup(firstGroup);
-        ArrayList<Node> targetNodes = getLastNodesFromGroup(secondGroup);
+    private ArrayList<String> getIndependentTargetNodesForSubGraph(Group firstGroup, Group secondGroup, Graph graph) {
+        ArrayList<Node> graphNodes = graph.getNodes();
 
-        ArrayList<Edge> subGraphEdges = edges
+        ArrayList<String> sourceNodes = getLastNodesFromGroup(firstGroup);
+        ArrayList<String> targetNodes = getLastNodesFromGroup(secondGroup);
+
+        ArrayList<Edge> subGraphEdges = graph.getEdges()
                 .stream()
                 .filter(edge -> isExistNodeInArray(sourceNodes, edge.getSourceId()) && isExistNodeInArray(targetNodes, edge.getTargetId()))
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        ArrayList<Node> subGraphNodes = new ArrayList<>();
-        subGraphNodes.addAll(sourceNodes);
-        subGraphNodes.addAll(targetNodes);
+        ArrayList<String> subGraphNodeIds = new ArrayList<>();
+        subGraphNodeIds.addAll(sourceNodes);
+        subGraphNodeIds.addAll(targetNodes);
+
+        ArrayList<Node> subGraphNodes = subGraphNodeIds.stream().map(nodeId ->
+                graphNodes.stream().filter(item -> item.getId().equals(nodeId)).findFirst().orElse(null)
+        ).collect(Collectors.toCollection(ArrayList::new));
 
         Graph subGraph = new Graph(subGraphNodes, subGraphEdges);
-        ArrayList<Node> independentNodes = subGraph.getIndependentNodes();
+        ArrayList<String> independentNodes = subGraph.getIndependentNodes().stream().map(Node::getId).collect(Collectors.toCollection(ArrayList::new));
         return subtractSet(independentNodes, sourceNodes);
     }
 
-    private ArrayList<Node> getSourceNodesBindedToTargetNode(Group group, Node targetNode, Graph graph) {
-        ArrayList<Node> lastNodes = group.getSequences()
+    private ArrayList<String> getSourceNodesBindedToTargetNode(Group group, String targetNodeId, Graph graph) {
+        ArrayList<String> lastNodes = group.getSequences()
                 .stream()
                 .map(Sequence::getLastNode)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         return lastNodes
                 .stream()
-                .filter(sourceNode -> graph.isExistEdge(sourceNode, targetNode))
+                .filter(sourceNode -> graph.isExistEdge(sourceNode, targetNodeId))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private ArrayList<Node> getLastNodesFromGroup(Group group) {
+    private ArrayList<String> getLastNodesFromGroup(Group group) {
         return group.getSequences()
                 .stream()
                 .map(Sequence::getLastNode)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isExistNodeInArray(ArrayList<Node> nodeList, String nodeId) {
+    private boolean isExistNodeInArray(ArrayList<String> nodeList, String nodeId) {
         return nodeList
                 .stream()
-                .anyMatch(item -> item.getId().equals(nodeId));
+                .anyMatch(item -> item.equals(nodeId));
     }
 
-    private ArrayList<Node> subtractSet(ArrayList<Node> source, ArrayList<Node> target) {
-        return source
+    private ArrayList<String> subtractSet(ArrayList<String> sourceIds, ArrayList<String> targetIds) {
+        return sourceIds
                 .stream()
-                .filter(e -> target.stream().noneMatch(item -> item.getId().equals(e.getId())))
+                .filter(e -> targetIds.stream().noneMatch(item -> item.equals(e)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

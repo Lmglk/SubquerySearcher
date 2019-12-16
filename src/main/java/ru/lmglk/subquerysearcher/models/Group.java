@@ -58,7 +58,7 @@ public class Group extends Entity {
     public void removeNode(Node node) {
         Sequence findSequence = sequences
                 .stream()
-                .filter(sequence -> sequence.getNodes().contains(node))
+                .filter(sequence -> sequence.getNodes().contains(node.getId()))
                 .findFirst()
                 .orElse(null);
 
@@ -71,7 +71,7 @@ public class Group extends Entity {
     }
 
     @JsonIgnore
-    public ArrayList<Node> getNodes() {
+    public ArrayList<String> getNodes() {
         return this.sequences
                 .stream()
                 .flatMap(sequence -> sequence.getNodes().stream())

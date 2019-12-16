@@ -5,6 +5,8 @@ import { Group } from '../../app/interfaces/Group';
 import { AppState } from '../../app/interfaces/AppState';
 import { selectGroups } from '../../app/selectors/selectGroups';
 import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
+import { GraphNode } from '../../app/interfaces/GraphNode';
+import { getNodes } from '../../app/selectors/getNodes';
 
 @Component({
     selector: 'ssw-schedule-container',
@@ -14,6 +16,7 @@ import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
                 *ngIf="(groups$ | async).length > 0"
                 [data]="groups$ | async"
                 [maxGroupSize]="maxGroupSize$ | async"
+                [nodes]="graphNodes$ | async"
             ></ssw-schedule>
         </ssw-block>
     `,
@@ -29,9 +32,11 @@ import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 export class ScheduleContainerComponent {
     public groups$: Observable<Group[]>;
     public maxGroupSize$: Observable<number>;
+    public graphNodes$: Observable<GraphNode[]>;
 
     constructor(private readonly store: Store<AppState>) {
         this.groups$ = this.store.pipe(select(selectGroups));
         this.maxGroupSize$ = this.store.pipe(select(getMetricWidth));
+        this.graphNodes$ = this.store.pipe(select(getNodes));
     }
 }

@@ -2,6 +2,6 @@ import { GraphNode } from './GraphNode';
 
 export interface Sequence {
     id: string;
-    nodes: GraphNode[];
+    nodes: GraphNode['id'][];
     time: number;
 }

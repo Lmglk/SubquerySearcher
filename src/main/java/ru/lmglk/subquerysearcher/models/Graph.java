@@ -87,8 +87,13 @@ public class Graph {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public void removeNode(ArrayList<Node> nodes) {
-        nodes.forEach(this::removeNode);
+    @JsonIgnore
+    public void removeNode(ArrayList<String> nodeIds) {
+        nodes.forEach(node -> {
+            if (nodeIds.contains(node.getId())) {
+                this.removeNode(node);
+            }
+        });
     }
 
     @JsonIgnore
@@ -131,10 +136,10 @@ public class Graph {
     }
 
     @JsonIgnore
-    public boolean isExistEdge(Node sourceNode, Node targetNode) {
+    public boolean isExistEdge(String sourceId, String targetId) {
         return this.edges
                 .stream()
-                .anyMatch(edge -> edge.getSourceId().equals(sourceNode.getId()) && edge.getTargetId().equals(targetNode.getId()));
+                .anyMatch(edge -> edge.getSourceId().equals(sourceId) && edge.getTargetId().equals(targetId));
     }
 
     @JsonIgnore
