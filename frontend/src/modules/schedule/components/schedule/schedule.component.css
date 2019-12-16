@@ -1,7 +1,0 @@
-.grid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: minmax(2rem, max-content);
-    overflow: auto;
-    height: 100%;
-}

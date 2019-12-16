@@ -69,7 +69,11 @@ export class GcSequencePlacementContainerComponent implements OnChanges {
         this.scaledNodes = [];
         groups.forEach((group, groupIndex) => {
             group.sequences.forEach((sequence, sequenceIndex) => {
-                sequence.nodes.forEach((node, nodeIndex) => {
+                sequence.nodes.forEach((nodeId, nodeIndex) => {
+                    const node = this.graph.nodes.filter(
+                        item => item.id === nodeId
+                    )[0];
+
                     this.scaledNodes = [
                         ...this.scaledNodes,
                         {

@@ -6,33 +6,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class Sequence extends Entity {
 
-    private ArrayList<Node> nodes;
+    private ArrayList<String> nodes;
 
     private int time;
 
     public Sequence(Node node) {
         nodes = new ArrayList<>();
-        nodes.add(node);
-        time = node.getTime();
+        nodes.add(node.getId());
+        this.time = node.getTime();
     }
 
     public Sequence(Sequence sequence) {
         super(sequence.getId());
-        nodes = sequence.getNodes()
-                .stream()
-                .map(Node::new)
-                .collect(Collectors.toCollection(ArrayList::new));
-        time = nodes
-                .stream()
-                .mapToInt(Node::getTime)
-                .sum();
+        nodes = new ArrayList<>(sequence.getNodes());
+        time = sequence.time;
     }
 
     public Sequence() {
@@ -40,19 +33,19 @@ public class Sequence extends Entity {
     }
 
     public void addNode(Node node) {
-        if (nodes.contains(node)) return;
+        if (nodes.contains(node.getId())) return;
 
-        nodes.add(node);
+        nodes.add(node.getId());
         time += node.getTime();
     }
 
     public void removeNode(Node node) {
-        nodes.remove(node);
+        nodes.remove(node.getId());
         time -= node.getTime();
     }
 
     @JsonIgnore
-    public Node getLastNode() {
+    public String getLastNode() {
         return nodes.get(nodes.size() - 1);
     }
 

@@ -70,7 +70,7 @@ public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorith
                 .allMatch(sourceNode -> isExistEdge(sourceNode, group, graph, sequencePlace));
     }
 
-    private boolean isExistEdge(Node node, Group group, Graph graph, Direction sequencePlace) {
+    private boolean isExistEdge(String node, Group group, Graph graph, Direction sequencePlace) {
         return group.getNodes()
                 .stream()
                 .noneMatch(targetNode -> sequencePlace == Direction.RIGHT
