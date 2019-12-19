@@ -12,6 +12,7 @@ import { ResetGroupsAction } from '../../actions/ResetGroupsAction';
 import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
 import { getOptimizationMode } from '../../selectors/getOptimizationMode';
 import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeAction';
+import { SetActiveTabAction } from '../../actions/SetActiveTabAction';
 
 @Component({
     selector: 'ssw-header',
@@ -96,7 +97,7 @@ export class HeaderComponent {
     }
 
     public handleSelectTab(tab: OptimizationMode): void {
-        this.store.dispatch(new SetOptimizationModeAction(tab));
+        this.store.dispatch(new SetActiveTabAction(tab));
     }
 
     public changeFile(): void {
