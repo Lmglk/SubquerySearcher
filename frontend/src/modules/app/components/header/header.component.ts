@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { ToastrService } from 'ngx-toastr';
-import { OptimizationOption } from '../../enums/OptimizationOptions';
-import { Subscription } from 'rxjs';
+import { OptimizationMode } from '../../enums/OptimizationOptions';
+import { Observable } from 'rxjs';
 import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
 import { AppState } from '../../interfaces/AppState';
@@ -10,19 +10,36 @@ import { UploadGraphAction } from '../../actions/UploadGraphAction';
 import { ResetModifiedGraphAction } from '../../actions/ResetModifiedGraphAction';
 import { ResetGroupsAction } from '../../actions/ResetGroupsAction';
 import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
+import { getOptimizationMode } from '../../selectors/getOptimizationMode';
+import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeAction';
 
 @Component({
     selector: 'ssw-header',
     template: `
         <div class="header">
+            <div class="navigation">
+                <ssw-tab
+                    [active]="(activeTab$ | async) === optimizationMode.DEFAULT"
+                    (onSelect)="handleSelectTab(optimizationMode.DEFAULT)"
+                >
+                    Default
+                </ssw-tab>
+                <ssw-tab
+                    [active]="(activeTab$ | async) === optimizationMode.TIME"
+                    (onSelect)="handleSelectTab(optimizationMode.TIME)"
+                >
+                    Time Optimization
+                </ssw-tab>
+                <ssw-tab
+                    [active]="(activeTab$ | async) === optimizationMode.WIDTH"
+                    (onSelect)="handleSelectTab(optimizationMode.WIDTH)"
+                >
+                    Width Optimization
+                </ssw-tab>
+            </div>
             <div class="content">
                 <input type="file" #fileUpload (change)="changeFile()" />
                 <button (click)="uploadFile()">Upload file</button>
-                <select (change)="changeOptimizationOption($event)">
-                    <option [value]="0">No optimization</option>
-                    <option [value]="1">Optimization with timestamp</option>
-                    <option [value]="2">Optimization without timestamp</option>
-                </select>
                 <button (click)="calculateGraph()">Calculate</button>
                 <button (click)="exportToFile()">Export</button>
             </div>
@@ -36,7 +53,7 @@ import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
                 padding-left: 1.6rem;
                 padding-right: 1.6rem;
                 grid-gap: 1.6rem;
-                grid-auto-flow: column;
+                grid-template-columns: auto 1fr;
                 align-items: center;
                 box-shadow: 0 0.1rem 0.1rem var(--color-shadow);
                 background-color: var(--color-surface);
@@ -49,24 +66,37 @@ import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
                 justify-content: left;
                 align-items: center;
             }
+
+            .navigation {
+                display: grid;
+                grid-auto-flow: column;
+                height: 100%;
+            }
         `,
     ],
 })
-export class HeaderComponent implements OnDestroy {
-    @ViewChild('fileUpload', { static: false }) inputFile: ElementRef;
+export class HeaderComponent {
+    public readonly optimizationMode = OptimizationMode;
 
-    public selectedOptimizationOption: OptimizationOption;
+    @ViewChild('fileUpload', { static: false }) public inputFile: ElementRef;
+
+    public activeTab$: Observable<OptimizationMode>;
+
+    public selectedOptimizationOption: OptimizationMode;
 
     private file: File;
-    private graphSubscription: Subscription;
-    private separateNodeInfoSubscription: Subscription;
 
     constructor(
         private readonly toastr: ToastrService,
         private readonly store: Store<AppState>,
         private readonly graphChartService: GraphChartService
     ) {
-        this.selectedOptimizationOption = OptimizationOption.NO_OPTIMIZATION;
+        this.selectedOptimizationOption = OptimizationMode.DEFAULT;
+        this.activeTab$ = this.store.pipe(select(getOptimizationMode));
+    }
+
+    public handleSelectTab(tab: OptimizationMode): void {
+        this.store.dispatch(new SetOptimizationModeAction(tab));
     }
 
     public changeFile(): void {
@@ -82,17 +112,10 @@ export class HeaderComponent implements OnDestroy {
         }
     }
 
-    public changeOptimizationOption(event: Event) {
-        const element = event.target as HTMLSelectElement;
-        this.selectedOptimizationOption = Number(element.value);
-    }
-
     public calculateGraph(): void {
         this.store.dispatch(new ResetModifiedGraphAction());
         this.store.dispatch(new ResetGroupsAction());
-        this.store.dispatch(
-            new CalculateGraphAction(this.selectedOptimizationOption)
-        );
+        this.store.dispatch(new CalculateGraphAction());
     }
 
     public exportToFile() {
@@ -109,10 +132,5 @@ export class HeaderComponent implements OnDestroy {
         } catch (e) {
             this.toastr.error('Export file failed');
         }
-    }
-
-    public ngOnDestroy(): void {
-        this.graphSubscription.unsubscribe();
-        this.separateNodeInfoSubscription.unsubscribe();
     }
 }

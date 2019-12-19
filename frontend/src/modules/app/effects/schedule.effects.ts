@@ -8,7 +8,7 @@ import { AppState } from '../interfaces/AppState';
 import { LoadScheduleAction } from '../actions/LoadScheduleAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
-import { OptimizationOption } from '../enums/OptimizationOptions';
+import { OptimizationMode } from '../enums/OptimizationOptions';
 
 @Injectable()
 export class ScheduleEffects {
@@ -18,10 +18,7 @@ export class ScheduleEffects {
         switchMap(action =>
             this.apiScheduleService.getSchedule(action.payload.graph).pipe(
                 switchMap(originalSchedule => {
-                    if (
-                        action.payload.option ===
-                        OptimizationOption.NO_OPTIMIZATION
-                    ) {
+                    if (action.payload.option === OptimizationMode.DEFAULT) {
                         return of(new SetScheduleAction(originalSchedule));
                     }
 

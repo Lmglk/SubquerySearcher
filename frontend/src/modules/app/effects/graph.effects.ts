@@ -21,18 +21,24 @@ import { LoadScheduleAction } from '../actions/LoadScheduleAction';
 import { FileService } from '../services/file.service';
 import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
 import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
+import { getOptimizationMode } from '../selectors/getOptimizationMode';
 
 @Injectable()
 export class GraphEffects {
     @Effect()
     public uploadGraph$ = this.actions$.pipe(
         ofType<UploadGraphAction>(UploadGraphAction.type),
-        switchMap(action => {
+        withLatestFrom(this.store.select(getOptimizationMode)),
+        switchMap(([action, optimizationMode]) => {
             return this.fileService.parseFileToGraph(action.payload).pipe(
                 mergeMap(graph => [
                     new ResetScheduleAction(),
                     new SuccessfulGraphUploadAction(graph),
                     new SetNodesListAction(graph.nodes),
+                    new LoadScheduleAction({
+                        graph: graph,
+                        option: optimizationMode,
+                    }),
                 ]),
                 catchError(error =>
                     of(new ErrorNotificationAction(error.message))
@@ -46,16 +52,17 @@ export class GraphEffects {
         ofType<CalculateGraphAction>(CalculateGraphAction.type),
         withLatestFrom(
             this.store.select(selectOriginalGraph),
-            this.store.select(selectSeparateNodes)
+            this.store.select(selectSeparateNodes),
+            this.store.select(getOptimizationMode)
         ),
-        switchMap(([action, originalGraph, separateNodes]) =>
+        switchMap(([action, originalGraph, separateNodes, optimizationMode]) =>
             this.apiGraphService
                 .separateNodes(originalGraph, separateNodes)
                 .pipe(
                     mergeMap(graph => [
                         new LoadScheduleAction({
                             graph: graph,
-                            option: action.payload,
+                            option: optimizationMode,
                         }),
                         new SetGraphAction(graph),
                     ]),
