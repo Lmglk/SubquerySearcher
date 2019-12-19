@@ -17,7 +17,7 @@ import { selectGroups } from '../../app/selectors/selectGroups';
 import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 import { GraphChartNode } from '../interfaces/GraphChartNode';
 import { GraphChartEdge } from '../interfaces/GraphChartEdge';
-import * as d3 from 'd3';
+import { scaleLinear } from 'd3-scale';
 
 @Component({
     selector: 'ssw-gc-container',
@@ -107,12 +107,10 @@ export class GcContainerComponent implements AfterViewInit, OnDestroy {
         groupCount: number,
         maxGroupSize: number
     ) {
-        this.scaleX = d3
-            .scaleLinear()
+        this.scaleX = scaleLinear()
             .domain([0, groupCount - 1])
             .range([this.nodeRadius, this.width - this.nodeRadius * 2]);
-        this.scaleY = d3
-            .scaleLinear()
+        this.scaleY = scaleLinear()
             .domain([0, maxGroupSize - 1])
             .range([this.nodeRadius, this.height - this.nodeRadius * 2]);
     }
