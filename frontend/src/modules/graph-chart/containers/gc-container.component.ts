@@ -1,5 +1,5 @@
 import {
-    AfterViewInit,
+    AfterContentInit,
     Component,
     ElementRef,
     HostListener,
@@ -49,7 +49,7 @@ import { scaleLinear } from 'd3-scale';
         `,
     ],
 })
-export class GcContainerComponent implements AfterViewInit, OnDestroy {
+export class GcContainerComponent implements AfterContentInit, OnDestroy {
     public readonly nodeRadius = 15;
 
     @ViewChild('content', { static: false }) element: ElementRef;
@@ -66,7 +66,7 @@ export class GcContainerComponent implements AfterViewInit, OnDestroy {
 
     constructor(private readonly store: Store<AppState>) {}
 
-    public ngAfterViewInit(): void {
+    public ngAfterContentInit(): void {
         setTimeout(() => this.getContentSize());
 
         this.storeSubscription = combineLatest(
