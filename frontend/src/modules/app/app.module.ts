@@ -17,14 +17,16 @@ import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { ScheduleEffects } from './effects/schedule.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
+import { commonReducer } from './reducers/commonReducer';
 import { graphReducer } from './reducers/graphReducer';
 import { scheduleReducer } from './reducers/scheduleReducer';
 import { separateNodesReducer } from './reducers/separateNodesReducer';
 import { ControlsModule } from '@ssw/controls';
 import { NotificationEffects } from './effects/notification.effects';
+import { TabComponent } from './components/tab/tab.component';
 
 @NgModule({
-    declarations: [AppComponent, HeaderComponent],
+    declarations: [AppComponent, HeaderComponent, TabComponent],
     imports: [
         BrowserModule,
         FormsModule,
@@ -34,6 +36,7 @@ import { NotificationEffects } from './effects/notification.effects';
             closeButton: true,
         }),
         StoreModule.forRoot({
+            commonState: commonReducer,
             graphState: graphReducer,
             scheduleState: scheduleReducer,
             separateNodesState: separateNodesReducer,

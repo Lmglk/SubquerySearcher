@@ -1,5 +1,5 @@
-export enum OptimizationOption {
-    NO_OPTIMIZATION,
-    OPTIMIZATION_WITH_TIMESTAMP,
-    OPTIMIZATION_WITHOUT_TIMESTAMP,
+export enum OptimizationMode {
+    DEFAULT,
+    TIME,
+    WIDTH,
 }
