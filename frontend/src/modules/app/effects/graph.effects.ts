@@ -22,6 +22,8 @@ import { FileService } from '../services/file.service';
 import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
 import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
 import { getOptimizationMode } from '../selectors/getOptimizationMode';
+import { SetActiveTabAction } from '../actions/SetActiveTabAction';
+import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction';
 
 @Injectable()
 export class GraphEffects {
@@ -71,6 +73,15 @@ export class GraphEffects {
                     )
                 )
         )
+    );
+
+    @Effect()
+    public setActiveTab$ = this.actions$.pipe(
+        ofType<SetActiveTabAction>(SetActiveTabAction.type),
+        mergeMap(action => [
+            new SetOptimizationModeAction(action.mode),
+            new CalculateGraphAction(),
+        ])
     );
 
     constructor(
