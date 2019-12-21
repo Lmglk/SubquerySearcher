@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import {
     catchError,
+    map,
     mergeMap,
     switchMap,
     withLatestFrom,
@@ -24,6 +25,7 @@ import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
 import { getOptimizationMode } from '../selectors/getOptimizationMode';
 import { SetActiveTabAction } from '../actions/SetActiveTabAction';
 import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction';
+import { SetScheduleAction } from '../actions/SetScheduleAction';
 
 @Injectable()
 export class GraphEffects {
@@ -82,6 +84,25 @@ export class GraphEffects {
             new SetOptimizationModeAction(action.mode),
             new CalculateGraphAction(),
         ])
+    );
+
+    @Effect()
+    public loadSchedule$ = this.actions$.pipe(
+        ofType<LoadScheduleAction>(LoadScheduleAction.type),
+        switchMap(action =>
+            this.apiGraphService
+                .getSchedule(action.payload.graph, action.payload.option)
+                .pipe(
+                    map(schedule => new SetScheduleAction(schedule)),
+                    catchError(() =>
+                        of(
+                            new ErrorNotificationAction(
+                                'Optimize schedule is failed'
+                            )
+                        )
+                    )
+                )
+        )
     );
 
     constructor(

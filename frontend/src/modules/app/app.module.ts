@@ -15,7 +15,6 @@ import { NodeListModule } from '../node-list/node-list.module';
 import { MetricsModule } from '../metrics/metrics.module';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
-import { ScheduleEffects } from './effects/schedule.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
 import { commonReducer } from './reducers/commonReducer';
 import { graphReducer } from './reducers/graphReducer';
@@ -49,11 +48,7 @@ import { TabComponent } from './components/tab/tab.component';
         ScheduleModule,
         NodeListModule,
         MetricsModule,
-        EffectsModule.forRoot([
-            GraphEffects,
-            ScheduleEffects,
-            NotificationEffects,
-        ]),
+        EffectsModule.forRoot([GraphEffects, NotificationEffects]),
         ControlsModule,
     ],
     bootstrap: [AppComponent],

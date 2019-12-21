@@ -33,21 +33,21 @@ public class GraphController {
 
     @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
-    public ResponseEntity getSchedule(@RequestBody Graph graph) {
+    public ResponseEntity getSchedule(@RequestBody Graph graph, @RequestParam int mode) {
+        Graph newGraph = new Graph(graph);
         ArrayList<Group> schedule = this.graphService.generateSchedule(graph);
-        return (schedule != null)
-                ? ResponseEntity.ok(schedule)
-                : ResponseEntity.badRequest().body("Calculation error. The graph may contain loops.");
-    }
 
-    @ResponseBody
-    @RequestMapping(value = "/optimizeSchedule", method = RequestMethod.POST)
-    public ResponseEntity optimizeScheduleWithoutTimestamp(@RequestBody OptimizationData data, @RequestParam int mode) {
+        if (schedule == null) {
+            return ResponseEntity.badRequest().body("Calculation error. The graph may contain loops.");
+        }
+
         switch (mode) {
+            case 0:
+                return ResponseEntity.ok(schedule);
             case 1:
-                return ResponseEntity.ok(this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(data));
+                return ResponseEntity.ok(this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(newGraph, schedule));
             case 2:
-                return ResponseEntity.ok(this.timeOptimizationAlgorithm.scheduleOptimizationByTime(data));
+                return ResponseEntity.ok(this.timeOptimizationAlgorithm.scheduleOptimizationByTime(newGraph, schedule));
 
             default:
                 return ResponseEntity.badRequest().body("Incorrect schedule optimization mode.");
