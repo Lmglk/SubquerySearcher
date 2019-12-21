@@ -12,10 +12,7 @@ import java.util.stream.Stream;
 public class TimeOptimizationAlgorithmImpl implements TimeOptimizationAlgorithm {
 
     @Override
-    public ArrayList<Group> scheduleOptimizationByTime(OptimizationData data) {
-        ArrayList<Group> schedule = data.getSchedule();
-        Graph graph = data.getGraph();
-
+    public ArrayList<Group> scheduleOptimizationByTime(Graph graph, ArrayList<Group> schedule) {
         for (int i = 0; i < schedule.size() - 1; i++) {
             Group sourceGroup = schedule.get(i);
             Group targetGroup = schedule.get(i + 1);

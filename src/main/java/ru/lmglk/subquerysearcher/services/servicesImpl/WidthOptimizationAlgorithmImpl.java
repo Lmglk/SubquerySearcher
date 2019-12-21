@@ -11,10 +11,7 @@ import java.util.ArrayList;
 public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorithm {
 
     @Override
-    public ArrayList<Group> scheduleOptimizationByWidth(OptimizationData data) {
-        Graph graph = data.getGraph();
-        ArrayList<Group> schedule = data.getSchedule();
-
+    public ArrayList<Group> scheduleOptimizationByWidth(Graph graph, ArrayList<Group> schedule) {
         int numberOfNodes = schedule.stream()
                 .mapToInt(group -> (int) group.getSequences()
                         .stream()
