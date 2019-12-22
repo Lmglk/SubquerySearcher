@@ -3,8 +3,9 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { selectCountNodes } from '../../selectors/selectCountNodes';
 import { GraphNode } from '../../../app/interfaces/GraphNode';
-import { AppState } from '../../../app/interfaces/AppState';
 import { UpdateNodeAction } from '../../../app/actions/UpdateNodeAction';
+import { CalculateGraphAction } from '../../../app/actions/CalculateGraphAction';
+import { IRootState } from '../../../app/interfaces/IRootState';
 
 @Component({
     selector: '[ssw-node-list-item]',
@@ -16,7 +17,7 @@ export class NodeListItemComponent implements OnInit {
 
     public nodeCount$: Observable<number>;
 
-    constructor(private readonly store: Store<AppState>) {}
+    constructor(private readonly store: Store<IRootState>) {}
 
     public ngOnInit(): void {
         this.nodeCount$ = this.store.pipe(
@@ -33,5 +34,6 @@ export class NodeListItemComponent implements OnInit {
                 count: value,
             })
         );
+        this.store.dispatch(new CalculateGraphAction());
     }
 }
