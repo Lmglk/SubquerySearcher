@@ -1,5 +1,5 @@
-import { InfoSeparate } from './InfoSeparate';
+import { PartitionItem } from './PartitionItem';
 
 export interface SeparateNodesState {
-    separateNodes: InfoSeparate[];
+    separateNodes: PartitionItem[];
 }

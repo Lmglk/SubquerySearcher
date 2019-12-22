@@ -21,12 +21,10 @@ import { AppState } from '../../app/interfaces/AppState';
         `,
     ],
 })
-export class NodeListContainerComponent implements OnInit {
+export class NodeListContainerComponent {
     public nodes$: Observable<GraphNode[]>;
 
-    constructor(private store: Store<AppState>) {}
-
-    ngOnInit() {
+    constructor(private store: Store<AppState>) {
         this.nodes$ = this.store.pipe(select(selectNodes));
     }
 }

@@ -1,4 +1,4 @@
-export interface InfoSeparate {
+export interface PartitionItem {
     nodeId: string;
     count: number;
 }
