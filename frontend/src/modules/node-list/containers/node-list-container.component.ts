@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectNodes } from '../selectors/selectNodes';
 import { GraphNode } from '../../app/interfaces/GraphNode';
-import { AppState } from '../../app/interfaces/AppState';
+import { IRootState } from '../../app/interfaces/IRootState';
 
 @Component({
     selector: 'ssw-node-list-container',
@@ -24,7 +24,7 @@ import { AppState } from '../../app/interfaces/AppState';
 export class NodeListContainerComponent {
     public nodes$: Observable<GraphNode[]>;
 
-    constructor(private store: Store<AppState>) {
+    constructor(private store: Store<IRootState>) {
         this.nodes$ = this.store.pipe(select(selectNodes));
     }
 }

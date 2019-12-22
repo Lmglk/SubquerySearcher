@@ -5,14 +5,10 @@ import { OptimizationMode } from '../../enums/OptimizationOptions';
 import { Observable } from 'rxjs';
 import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
-import { AppState } from '../../interfaces/AppState';
 import { UploadGraphAction } from '../../actions/UploadGraphAction';
-import { ResetModifiedGraphAction } from '../../actions/ResetModifiedGraphAction';
-import { ResetGroupsAction } from '../../actions/ResetGroupsAction';
-import { CalculateGraphAction } from '../../actions/CalculateGraphAction';
 import { getOptimizationMode } from '../../selectors/getOptimizationMode';
-import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeAction';
 import { SetActiveTabAction } from '../../actions/SetActiveTabAction';
+import { IRootState } from '../../interfaces/IRootState';
 
 @Component({
     selector: 'ssw-header',
@@ -41,7 +37,6 @@ import { SetActiveTabAction } from '../../actions/SetActiveTabAction';
             <div class="content">
                 <input type="file" #fileUpload (change)="changeFile()" />
                 <button (click)="uploadFile()">Upload file</button>
-                <button (click)="calculateGraph()">Calculate</button>
                 <button (click)="exportToFile()">Export</button>
             </div>
         </div>
@@ -89,7 +84,7 @@ export class HeaderComponent {
 
     constructor(
         private readonly toastr: ToastrService,
-        private readonly store: Store<AppState>,
+        private readonly store: Store<IRootState>,
         private readonly graphChartService: GraphChartService
     ) {
         this.selectedOptimizationOption = OptimizationMode.DEFAULT;
@@ -97,8 +92,6 @@ export class HeaderComponent {
     }
 
     public handleSelectTab(tab: OptimizationMode): void {
-        this.store.dispatch(new ResetModifiedGraphAction());
-        this.store.dispatch(new ResetGroupsAction());
         this.store.dispatch(new SetActiveTabAction(tab));
     }
 
@@ -113,12 +106,6 @@ export class HeaderComponent {
         } else {
             this.toastr.info('Please select a file');
         }
-    }
-
-    public calculateGraph(): void {
-        this.store.dispatch(new ResetModifiedGraphAction());
-        this.store.dispatch(new ResetGroupsAction());
-        this.store.dispatch(new CalculateGraphAction());
     }
 
     public exportToFile() {

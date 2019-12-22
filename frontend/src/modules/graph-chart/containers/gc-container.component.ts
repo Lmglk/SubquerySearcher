@@ -12,12 +12,13 @@ import { filter, tap } from 'rxjs/operators';
 import { selectGraph } from '../selectors/selectGraph';
 import { Graph } from '../../app/interfaces/Graph';
 import { Group } from '../../app/interfaces/Group';
-import { AppState } from '../../app/interfaces/AppState';
+import { IAppState } from '../../app/interfaces/IAppState';
 import { selectGroups } from '../../app/selectors/selectGroups';
 import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 import { GraphChartNode } from '../interfaces/GraphChartNode';
 import { GraphChartEdge } from '../interfaces/GraphChartEdge';
 import { scaleLinear } from 'd3-scale';
+import { IRootState } from '../../app/interfaces/IRootState';
 
 @Component({
     selector: 'ssw-gc-container',
@@ -64,7 +65,7 @@ export class GcContainerComponent implements AfterContentInit, OnDestroy {
     private scaleY: (value: number) => number;
     private storeSubscription: Subscription;
 
-    constructor(private readonly store: Store<AppState>) {}
+    constructor(private readonly store: Store<IRootState>) {}
 
     public ngAfterContentInit(): void {
         setTimeout(() => this.getContentSize());

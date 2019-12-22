@@ -16,10 +16,7 @@ import { MetricsModule } from '../metrics/metrics.module';
 import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
-import { commonReducer } from './reducers/commonReducer';
-import { graphReducer } from './reducers/graphReducer';
-import { scheduleReducer } from './reducers/scheduleReducer';
-import { separateNodesReducer } from './reducers/separateNodesReducer';
+import { reducer } from './reducers/reducer';
 import { ControlsModule } from '@ssw/controls';
 import { NotificationEffects } from './effects/notification.effects';
 import { TabComponent } from './components/tab/tab.component';
@@ -31,15 +28,8 @@ import { TabComponent } from './components/tab/tab.component';
         FormsModule,
         HttpClientModule,
         BrowserAnimationsModule,
-        ToastrModule.forRoot({
-            closeButton: true,
-        }),
-        StoreModule.forRoot({
-            commonState: commonReducer,
-            graphState: graphReducer,
-            scheduleState: scheduleReducer,
-            separateNodesState: separateNodesReducer,
-        }),
+        ToastrModule.forRoot({ closeButton: true }),
+        StoreModule.forRoot({ app: reducer }),
         StoreDevtoolsModule.instrument({
             maxAge: 25,
             logOnly: environment.production,

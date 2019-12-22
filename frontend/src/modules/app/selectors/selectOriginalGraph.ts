@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../interfaces/AppState';
+import { getAppState } from './getAppState';
 
 export const selectOriginalGraph = createSelector(
-    (state: AppState) => state.graphState,
+    getAppState,
     state => state.originalGraph
 );

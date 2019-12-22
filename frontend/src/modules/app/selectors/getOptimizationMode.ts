@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../interfaces/AppState';
+import { getAppState } from './getAppState';
 
 export const getOptimizationMode = createSelector(
-    (state: AppState) => state.commonState,
+    getAppState,
     state => state.optimizationMode
 );

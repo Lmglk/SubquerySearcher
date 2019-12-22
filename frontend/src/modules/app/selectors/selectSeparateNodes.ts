@@ -1,8 +1,7 @@
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../interfaces/AppState';
-import { SeparateNodesState } from '../interfaces/SeparateNodesState';
+import { getAppState } from './getAppState';
 
 export const selectSeparateNodes = createSelector(
-    (state: AppState) => state.separateNodesState,
-    (separateNodes: SeparateNodesState) => separateNodes.separateNodes
+    getAppState,
+    state => state.separateNodes
 );

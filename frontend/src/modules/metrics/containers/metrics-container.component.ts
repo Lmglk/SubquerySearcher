@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../../app/interfaces/AppState';
+import { IAppState } from '../../app/interfaces/IAppState';
 import { getMetricHeight } from '../selectors/getMetricHeight';
 import { getMetricWidth } from '../selectors/getMetricWidth';
 import { getMetricTotalBubbles } from '../selectors/getMetricTotalBubbles';
 import { getNumberOfGraphNodes } from '../selectors/getNumberOfGraphNodes';
 import { getMetricTime } from '../selectors/getMetricTime';
 import { getMetricHardBubbles } from '../selectors/getMetricHardBubbles';
+import { IRootState } from '../../app/interfaces/IRootState';
 
 @Component({
     selector: 'ssw-metrics-container',
@@ -30,7 +31,7 @@ export class MetricsContainerComponent {
     public width$: Observable<number>;
     public time$: Observable<number>;
 
-    constructor(private readonly store: Store<AppState>) {
+    constructor(private readonly store: Store<IRootState>) {
         this.totalBubbles$ = this.store.pipe(select(getMetricTotalBubbles));
         this.hardBubbles$ = this.store.pipe(select(getMetricHardBubbles));
         this.height$ = this.store.pipe(select(getMetricHeight));

@@ -10,7 +10,6 @@ import {
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ApiGraphService } from '../services/api-graph.service';
-import { AppState } from '../interfaces/AppState';
 import { UploadGraphAction } from '../actions/UploadGraphAction';
 import { ResetScheduleAction } from '../actions/ResetScheduleAction';
 import { SetNodesListAction } from '../actions/SetNodesListAction';
@@ -27,6 +26,7 @@ import { SetActiveTabAction } from '../actions/SetActiveTabAction';
 import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { NodePartitionService } from '../services/node-partition.service';
+import { IRootState } from '../interfaces/IRootState';
 
 @Injectable()
 export class GraphEffects {
@@ -96,7 +96,7 @@ export class GraphEffects {
 
     constructor(
         private readonly actions$: Actions,
-        private readonly store: Store<AppState>,
+        private readonly store: Store<IRootState>,
         private readonly fileService: FileService,
         private readonly apiGraphService: ApiGraphService,
         private readonly nodePartitionService: NodePartitionService
