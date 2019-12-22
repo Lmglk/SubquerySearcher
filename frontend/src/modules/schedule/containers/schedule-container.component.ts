@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Group } from '../../app/interfaces/Group';
-import { selectGroups } from '../../app/selectors/selectGroups';
+import { getSchedule } from '../../app/selectors/getSchedule';
 import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 import { GraphNode } from '../../app/interfaces/GraphNode';
 import { getNodes } from '../../app/selectors/getNodes';
@@ -35,7 +35,7 @@ export class ScheduleContainerComponent {
     public graphNodes$: Observable<GraphNode[]>;
 
     constructor(private readonly store: Store<IRootState>) {
-        this.groups$ = this.store.pipe(select(selectGroups));
+        this.groups$ = this.store.pipe(select(getSchedule));
         this.maxGroupSize$ = this.store.pipe(select(getMetricWidth));
         this.graphNodes$ = this.store.pipe(select(getNodes));
     }

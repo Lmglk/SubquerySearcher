@@ -1,8 +1,8 @@
 import { createSelector } from '@ngrx/store';
-import { selectGroups } from '../../app/selectors/selectGroups';
+import { getSchedule } from '../../app/selectors/getSchedule';
 
 export const getMetricWidth = createSelector(
-    selectGroups,
+    getSchedule,
     groups =>
         groups.length
             ? Math.max(...groups.map(group => group.sequences.length))

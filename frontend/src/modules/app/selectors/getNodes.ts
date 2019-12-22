@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
-import { selectGraph } from '../../graph-chart/selectors/selectGraph';
+import { getGraph } from '../../graph-chart/selectors/getGraph';
 
 export const getNodes = createSelector(
-    selectGraph,
+    getGraph,
     graph => graph.nodes
 );

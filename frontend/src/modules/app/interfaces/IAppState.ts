@@ -7,6 +7,6 @@ export interface IAppState {
     optimizationMode: OptimizationMode;
     originalGraph: Graph;
     graph: Graph;
-    groups: Group[];
+    schedule: Group[];
     separateNodes: PartitionItem[];
 }

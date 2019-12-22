@@ -9,11 +9,11 @@ import {
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { selectGraph } from '../selectors/selectGraph';
+import { getGraph } from '../selectors/getGraph';
 import { Graph } from '../../app/interfaces/Graph';
 import { Group } from '../../app/interfaces/Group';
 import { IAppState } from '../../app/interfaces/IAppState';
-import { selectGroups } from '../../app/selectors/selectGroups';
+import { getSchedule } from '../../app/selectors/getSchedule';
 import { getMetricWidth } from '../../metrics/selectors/getMetricWidth';
 import { GraphChartNode } from '../interfaces/GraphChartNode';
 import { GraphChartEdge } from '../interfaces/GraphChartEdge';
@@ -71,8 +71,8 @@ export class GcContainerComponent implements AfterContentInit, OnDestroy {
         setTimeout(() => this.getContentSize());
 
         this.storeSubscription = combineLatest(
-            this.store.pipe(select(selectGraph)),
-            this.store.pipe(select(selectGroups)),
+            this.store.pipe(select(getGraph)),
+            this.store.pipe(select(getSchedule)),
             this.store.pipe(select(getMetricWidth))
         )
             .pipe(

@@ -1,9 +1,9 @@
 import { createSelector } from '@ngrx/store';
 import { getMetricWidth } from './getMetricWidth';
-import { selectGroups } from '../../app/selectors/selectGroups';
+import { getSchedule } from '../../app/selectors/getSchedule';
 
 export const getMetricTotalBubbles = createSelector(
-    selectGroups,
+    getSchedule,
     getMetricWidth,
     (groups, width) => {
         if (groups.length === 0) {

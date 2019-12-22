@@ -3,9 +3,7 @@ import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction'
 import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
 import { SetGraphAction } from '../actions/SetGraphAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
-import { ResetScheduleAction } from '../actions/ResetScheduleAction';
-import { SetNodesListAction } from '../actions/SetNodesListAction';
-import { UpdateNodeAction } from '../actions/UpdateNodeAction';
+import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction';
 import { IAppState } from '../interfaces/IAppState';
 
 const initialState: IAppState = {
@@ -18,7 +16,7 @@ const initialState: IAppState = {
         nodes: [],
         edges: [],
     },
-    groups: [],
+    schedule: [],
     separateNodes: [],
 };
 
@@ -27,9 +25,7 @@ type Actions =
     | SuccessfulGraphUploadAction
     | SetGraphAction
     | SetScheduleAction
-    | ResetScheduleAction
-    | SetNodesListAction
-    | UpdateNodeAction;
+    | UpdatePartitionItemAction;
 
 export function reducer(state = initialState, action: Actions): IAppState {
     switch (action.type) {
@@ -41,7 +37,7 @@ export function reducer(state = initialState, action: Actions): IAppState {
                     nodes: [],
                     edges: [],
                 },
-                groups: [],
+                schedule: [],
             };
 
         case SuccessfulGraphUploadAction.type:
@@ -49,36 +45,27 @@ export function reducer(state = initialState, action: Actions): IAppState {
                 ...state,
                 originalGraph: action.graph,
                 graph: action.graph,
+                schedule: [],
+                separateNodes: action.graph.nodes.map(node => ({
+                    nodeId: node.id,
+                    count: 1,
+                })),
             };
 
         case SetGraphAction.type:
             return {
                 ...state,
                 graph: action.payload,
-                groups: [],
+                schedule: [],
             };
 
         case SetScheduleAction.type:
             return {
                 ...state,
-                groups: action.payload,
+                schedule: action.payload,
             };
 
-        case ResetScheduleAction.type:
-            return {
-                ...initialState,
-            };
-
-        case SetNodesListAction.type:
-            return {
-                ...state,
-                separateNodes: action.payload.map(node => ({
-                    nodeId: node.id,
-                    count: 1,
-                })),
-            };
-
-        case UpdateNodeAction.type:
+        case UpdatePartitionItemAction.type:
             return {
                 ...state,
                 separateNodes: state.separateNodes.map(separateInfo =>
