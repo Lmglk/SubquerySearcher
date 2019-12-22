@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectNodes } from '../selectors/selectNodes';
+import { getNodes } from '../selectors/getNodes';
 import { GraphNode } from '../../app/interfaces/GraphNode';
 import { IRootState } from '../../app/interfaces/IRootState';
 
@@ -25,6 +25,6 @@ export class NodeListContainerComponent {
     public nodes$: Observable<GraphNode[]>;
 
     constructor(private store: Store<IRootState>) {
-        this.nodes$ = this.store.pipe(select(selectNodes));
+        this.nodes$ = this.store.pipe(select(getNodes));
     }
 }

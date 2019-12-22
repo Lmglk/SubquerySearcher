@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { selectCountNodes } from '../../selectors/selectCountNodes';
+import { getCountNodes } from '../../selectors/getCountNodes';
 import { GraphNode } from '../../../app/interfaces/GraphNode';
-import { UpdateNodeAction } from '../../../app/actions/UpdateNodeAction';
+import { UpdatePartitionItemAction } from '../../../app/actions/UpdatePartitionItemAction';
 import { CalculateGraphAction } from '../../../app/actions/CalculateGraphAction';
 import { IRootState } from '../../../app/interfaces/IRootState';
 
@@ -21,7 +21,7 @@ export class NodeListItemComponent implements OnInit {
 
     public ngOnInit(): void {
         this.nodeCount$ = this.store.pipe(
-            select(selectCountNodes, { id: this.node.id })
+            select(getCountNodes, { id: this.node.id })
         );
     }
 
@@ -29,7 +29,7 @@ export class NodeListItemComponent implements OnInit {
         const value = (event.target as HTMLInputElement).valueAsNumber;
 
         this.store.dispatch(
-            new UpdateNodeAction({
+            new UpdatePartitionItemAction({
                 nodeId: nodeId,
                 count: value,
             })

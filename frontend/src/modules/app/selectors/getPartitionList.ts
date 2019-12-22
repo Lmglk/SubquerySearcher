@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { getAppState } from './getAppState';
 
-export const selectOriginalGraph = createSelector(
+export const getPartitionList = createSelector(
     getAppState,
-    state => state.originalGraph
+    state => state.separateNodes
 );

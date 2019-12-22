@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { getAppState } from './getAppState';
 
-export const selectGroups = createSelector(
+export const getOriginalGraph = createSelector(
     getAppState,
-    state => state.groups
+    state => state.originalGraph
 );

@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { getAppState } from './getAppState';
 
-export const selectSeparateNodes = createSelector(
+export const getSchedule = createSelector(
     getAppState,
-    state => state.separateNodes
+    state => state.schedule
 );

@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
-import { selectGroups } from '../../app/selectors/selectGroups';
+import { getSchedule } from '../../app/selectors/getSchedule';
 
 export const getMetricHeight = createSelector(
-    selectGroups,
+    getSchedule,
     groups => groups.length
 );

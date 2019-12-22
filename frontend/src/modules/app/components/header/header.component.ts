@@ -7,8 +7,8 @@ import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
 import { UploadGraphAction } from '../../actions/UploadGraphAction';
 import { getOptimizationMode } from '../../selectors/getOptimizationMode';
-import { SetActiveTabAction } from '../../actions/SetActiveTabAction';
 import { IRootState } from '../../interfaces/IRootState';
+import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeAction';
 
 @Component({
     selector: 'ssw-header',
@@ -92,7 +92,7 @@ export class HeaderComponent {
     }
 
     public handleSelectTab(tab: OptimizationMode): void {
-        this.store.dispatch(new SetActiveTabAction(tab));
+        this.store.dispatch(new SetOptimizationModeAction(tab));
     }
 
     public changeFile(): void {
