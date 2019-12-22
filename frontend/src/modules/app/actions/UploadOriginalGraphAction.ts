@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 
-export class UploadGraphAction implements Action {
+export class UploadOriginalGraphAction implements Action {
     public static readonly type = '[Graph] Upload graph';
 
-    readonly type = UploadGraphAction.type;
+    readonly type = UploadOriginalGraphAction.type;
 
     constructor(readonly payload: File) {}
 }

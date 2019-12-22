@@ -10,80 +10,73 @@ import {
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ApiGraphService } from '../services/api-graph.service';
-import { UploadGraphAction } from '../actions/UploadGraphAction';
+import { UploadOriginalGraphAction } from '../actions/UploadOriginalGraphAction';
 import { SetGraphAction } from '../actions/SetGraphAction';
-import { CalculateGraphAction } from '../actions/CalculateGraphAction';
 import { getOriginalGraph } from '../selectors/getOriginalGraph';
 import { getPartitionList } from '../selectors/getPartitionList';
 import { LoadScheduleAction } from '../actions/LoadScheduleAction';
 import { FileService } from '../services/file.service';
-import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
+import { SetOriginalGraphAction } from '../actions/SetOriginalGraphAction';
 import { ErrorNotificationAction } from '../actions/ErrorNotificationAction';
 import { getOptimizationMode } from '../selectors/getOptimizationMode';
 import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { NodePartitionService } from '../services/node-partition.service';
 import { IRootState } from '../interfaces/IRootState';
+import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction';
 
 @Injectable()
 export class GraphEffects {
     @Effect()
     public uploadGraph$ = this.actions$.pipe(
-        ofType<UploadGraphAction>(UploadGraphAction.type),
-        switchMap(action => {
-            return this.fileService.parseFileToGraph(action.payload).pipe(
-                mergeMap(graph => [
-                    new SuccessfulGraphUploadAction(graph),
-                    new LoadScheduleAction(graph),
-                ]),
+        ofType<UploadOriginalGraphAction>(UploadOriginalGraphAction.type),
+        switchMap(action =>
+            this.fileService.parseFileToGraph(action.payload).pipe(
+                map(graph => new SetOriginalGraphAction(graph)),
                 catchError(error =>
                     of(new ErrorNotificationAction(error.message))
                 )
-            );
-        })
-    );
-
-    @Effect()
-    public calculateGraph$ = this.actions$.pipe(
-        ofType<CalculateGraphAction | SetOptimizationModeAction>(
-            CalculateGraphAction.type,
-            SetOptimizationModeAction.type
-        ),
-        withLatestFrom(this.store.select(getOriginalGraph)),
-        map(([action, originalGraph]) => {
-            return new LoadScheduleAction(originalGraph);
-        })
+            )
+        )
     );
 
     @Effect()
     public loadSchedule$ = this.actions$.pipe(
-        ofType<LoadScheduleAction>(LoadScheduleAction.type),
+        ofType(
+            LoadScheduleAction.type,
+            SetOriginalGraphAction.type,
+            SetOptimizationModeAction.type,
+            UpdatePartitionItemAction.type
+        ),
         withLatestFrom(
+            this.store.select(getOriginalGraph),
             this.store.select(getOptimizationMode),
             this.store.select(getPartitionList)
         ),
-        switchMap(([action, optimizationMode, partitionList]) => {
-            const graph = this.nodePartitionService.nodePartition(
-                action.graph,
-                partitionList
-            );
+        switchMap(
+            ([action, originalGraph, optimizationMode, partitionList]) => {
+                const graph = this.nodePartitionService.nodePartition(
+                    originalGraph,
+                    partitionList
+                );
 
-            return this.apiGraphService
-                .getSchedule(graph, optimizationMode)
-                .pipe(
-                    mergeMap(schedule => [
-                        new SetGraphAction(graph),
-                        new SetScheduleAction(schedule),
-                    ]),
-                    catchError(() =>
-                        of(
-                            new ErrorNotificationAction(
-                                'Optimize schedule is failed'
+                return this.apiGraphService
+                    .getSchedule(graph, optimizationMode)
+                    .pipe(
+                        mergeMap(schedule => [
+                            new SetGraphAction(graph),
+                            new SetScheduleAction(schedule),
+                        ]),
+                        catchError(() =>
+                            of(
+                                new ErrorNotificationAction(
+                                    'Optimize schedule is failed'
+                                )
                             )
                         )
-                    )
-                );
-        })
+                    );
+            }
+        )
     );
 
     constructor(
