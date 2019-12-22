@@ -29,13 +29,13 @@ import { SetActiveTabAction } from '../../actions/SetActiveTabAction';
                     [active]="(activeTab$ | async) === optimizationMode.TIME"
                     (onSelect)="handleSelectTab(optimizationMode.TIME)"
                 >
-                    Time Optimization
+                    Width Optimization
                 </ssw-tab>
                 <ssw-tab
                     [active]="(activeTab$ | async) === optimizationMode.WIDTH"
                     (onSelect)="handleSelectTab(optimizationMode.WIDTH)"
                 >
-                    Width Optimization
+                    Time Optimization
                 </ssw-tab>
             </div>
             <div class="content">
@@ -97,6 +97,8 @@ export class HeaderComponent {
     }
 
     public handleSelectTab(tab: OptimizationMode): void {
+        this.store.dispatch(new ResetModifiedGraphAction());
+        this.store.dispatch(new ResetGroupsAction());
         this.store.dispatch(new SetActiveTabAction(tab));
     }
 

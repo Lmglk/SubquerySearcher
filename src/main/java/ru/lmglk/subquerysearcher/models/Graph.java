@@ -38,38 +38,6 @@ public class Graph {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public Node addNode(String nodeName, int time) {
-        Node node = findNode(nodeName);
-
-        if (node == null) {
-            node = new Node(nodeName, time);
-            nodes.add(node);
-        } else {
-            node.setTime(time);
-        }
-
-        return node;
-    }
-
-    public void addNode(Node node) {
-        nodes.add(node);
-    }
-
-    public void addEdge(Edge edge) {
-        boolean isExist = edges.stream().anyMatch(item -> edge.getId().equals(item.getId()));
-
-        if (!isExist) {
-            edges.add(edge);
-        }
-    }
-
-    public void removeEdge(Edge edge) {
-        this.edges = this.edges
-                .stream()
-                .filter(item -> !item.getId().equals(edge.getId()))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
     public void removeNode(Node node) {
         this.edges = this.edges
                 .stream()
@@ -143,14 +111,6 @@ public class Graph {
     }
 
     @JsonIgnore
-    public ArrayList<Node> getSourceNodesForNode(Node node) {
-        return getTargetEdgesForNode(node)
-                .stream()
-                .map(edge -> getNodeById(edge.getSourceId()))
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    @JsonIgnore
     public ArrayList<Edge> getSourceEdgesForNode(Node node) {
         return this.edges
                 .stream()
@@ -164,14 +124,6 @@ public class Graph {
                 .stream()
                 .filter(edge -> edge.getTargetId().equals(node.getId()))
                 .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    private Node findNode(String nodeName) {
-        return nodes
-                .stream()
-                .filter(node -> nodeName.equals(node.getName()))
-                .findFirst()
-                .orElse(null);
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {

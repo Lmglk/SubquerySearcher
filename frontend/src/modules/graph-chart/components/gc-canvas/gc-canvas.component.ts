@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { GraphChartNode } from '../../interfaces/GraphChartNode';
 import { GraphChartEdge } from '../../interfaces/GraphChartEdge';
 

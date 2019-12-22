@@ -28,10 +28,6 @@ public class Sequence extends Entity {
         time = sequence.time;
     }
 
-    public Sequence() {
-        nodes = new ArrayList<>();
-    }
-
     public void addNode(Node node) {
         if (nodes.contains(node.getId())) return;
 

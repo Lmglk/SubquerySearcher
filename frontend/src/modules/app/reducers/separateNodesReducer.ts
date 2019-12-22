@@ -31,12 +31,15 @@ export function separateNodesReducer(
             };
 
         case UpdateNodeAction.type:
-            const separateNodesArray = state.separateNodes.filter(
-                infoSeparate => infoSeparate.nodeId !== action.payload.nodeId
-            );
-
             return {
-                separateNodes: [...separateNodesArray, action.payload],
+                separateNodes: state.separateNodes.map(separateInfo =>
+                    separateInfo.nodeId === action.payload.nodeId
+                        ? {
+                              ...separateInfo,
+                              count: action.payload.count,
+                          }
+                        : separateInfo
+                ),
             };
 
         default:

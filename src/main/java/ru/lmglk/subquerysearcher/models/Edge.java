@@ -13,11 +13,6 @@ public class Edge extends Entity {
 
     private String targetId;
 
-    public Edge(String sourceId, String targetId) {
-        this.sourceId = sourceId;
-        this.targetId = targetId;
-    }
-
     public Edge(Edge edge) {
         this.sourceId = edge.getSourceId();
         this.targetId = edge.getTargetId();

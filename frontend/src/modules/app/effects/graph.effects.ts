@@ -26,23 +26,20 @@ import { getOptimizationMode } from '../selectors/getOptimizationMode';
 import { SetActiveTabAction } from '../actions/SetActiveTabAction';
 import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
+import { NodePartitionService } from '../services/node-partition.service';
 
 @Injectable()
 export class GraphEffects {
     @Effect()
     public uploadGraph$ = this.actions$.pipe(
         ofType<UploadGraphAction>(UploadGraphAction.type),
-        withLatestFrom(this.store.select(getOptimizationMode)),
-        switchMap(([action, optimizationMode]) => {
+        switchMap(action => {
             return this.fileService.parseFileToGraph(action.payload).pipe(
                 mergeMap(graph => [
                     new ResetScheduleAction(),
                     new SuccessfulGraphUploadAction(graph),
                     new SetNodesListAction(graph.nodes),
-                    new LoadScheduleAction({
-                        graph: graph,
-                        option: optimizationMode,
-                    }),
+                    new LoadScheduleAction(graph),
                 ]),
                 catchError(error =>
                     of(new ErrorNotificationAction(error.message))
@@ -56,25 +53,16 @@ export class GraphEffects {
         ofType<CalculateGraphAction>(CalculateGraphAction.type),
         withLatestFrom(
             this.store.select(selectOriginalGraph),
-            this.store.select(selectSeparateNodes),
-            this.store.select(getOptimizationMode)
+            this.store.select(selectSeparateNodes)
         ),
-        switchMap(([action, originalGraph, separateNodes, optimizationMode]) =>
-            this.apiGraphService
-                .separateNodes(originalGraph, separateNodes)
-                .pipe(
-                    mergeMap(graph => [
-                        new LoadScheduleAction({
-                            graph: graph,
-                            option: optimizationMode,
-                        }),
-                        new SetGraphAction(graph),
-                    ]),
-                    catchError(() =>
-                        of(new ErrorNotificationAction('Node splitting failed'))
-                    )
-                )
-        )
+        mergeMap(([action, originalGraph, partitionList]) => {
+            const graph = this.nodePartitionService.nodePartition(
+                originalGraph,
+                partitionList
+            );
+
+            return [new LoadScheduleAction(graph), new SetGraphAction(graph)];
+        })
     );
 
     @Effect()
@@ -89,9 +77,10 @@ export class GraphEffects {
     @Effect()
     public loadSchedule$ = this.actions$.pipe(
         ofType<LoadScheduleAction>(LoadScheduleAction.type),
-        switchMap(action =>
+        withLatestFrom(this.store.select(getOptimizationMode)),
+        switchMap(([action, optimizationMode]) =>
             this.apiGraphService
-                .getSchedule(action.payload.graph, action.payload.option)
+                .getSchedule(action.graph, optimizationMode)
                 .pipe(
                     map(schedule => new SetScheduleAction(schedule)),
                     catchError(() =>
@@ -108,7 +97,8 @@ export class GraphEffects {
     constructor(
         private readonly actions$: Actions,
         private readonly store: Store<AppState>,
+        private readonly fileService: FileService,
         private readonly apiGraphService: ApiGraphService,
-        private readonly fileService: FileService
+        private readonly nodePartitionService: NodePartitionService
     ) {}
 }
