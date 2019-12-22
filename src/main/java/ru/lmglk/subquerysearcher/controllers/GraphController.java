@@ -26,12 +26,6 @@ public class GraphController {
     private WidthOptimizationAlgorithm widthOptimizationAlgorithm;
 
     @ResponseBody
-    @RequestMapping(value = "/separateNodes", method = RequestMethod.POST)
-    public Graph separateNodes(@RequestBody SeparateNodesRequest req) {
-        return this.graphService.separateNodes(req.getGraph(), req.getInfo());
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
     public ResponseEntity getSchedule(@RequestBody Graph graph, @RequestParam int mode) {
         Graph newGraph = new Graph(graph);

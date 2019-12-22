@@ -62,20 +62,6 @@ export class GraphEffects {
             );
 
             return [new LoadScheduleAction(graph), new SetGraphAction(graph)];
-
-            // return this.apiGraphService
-            //     .separateNodes(graph, separateNodes)
-            //     .pipe(
-            //         mergeMap(graph => {
-            //             return [
-            //                 new LoadScheduleAction(graph),
-            //                 new SetGraphAction(graph),
-            //             ];
-            //         }),
-            //         catchError(() =>
-            //             of(new ErrorNotificationAction('Node splitting failed'))
-            //         )
-            //     );
         })
     );
 
