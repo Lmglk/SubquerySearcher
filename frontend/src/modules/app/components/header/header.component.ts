@@ -5,7 +5,7 @@ import { OptimizationMode } from '../../enums/OptimizationOptions';
 import { Observable } from 'rxjs';
 import * as FileSaver from 'file-saver';
 import { GraphChartService } from '../../../graph-chart/services/graph-chart.service';
-import { UploadGraphAction } from '../../actions/UploadGraphAction';
+import { UploadOriginalGraphAction } from '../../actions/UploadOriginalGraphAction';
 import { getOptimizationMode } from '../../selectors/getOptimizationMode';
 import { IRootState } from '../../interfaces/IRootState';
 import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeAction';
@@ -102,7 +102,7 @@ export class HeaderComponent {
 
     public uploadFile(): void {
         if (this.file) {
-            this.store.dispatch(new UploadGraphAction(this.file));
+            this.store.dispatch(new UploadOriginalGraphAction(this.file));
         } else {
             this.toastr.info('Please select a file');
         }

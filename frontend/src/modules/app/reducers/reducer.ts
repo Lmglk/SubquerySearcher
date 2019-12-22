@@ -1,6 +1,6 @@
 import { OptimizationMode } from '../enums/OptimizationOptions';
 import { SetOptimizationModeAction } from '../actions/SetOptimizationModeAction';
-import { SuccessfulGraphUploadAction } from '../actions/SuccessfulGraphUploadAction';
+import { SetOriginalGraphAction } from '../actions/SetOriginalGraphAction';
 import { SetGraphAction } from '../actions/SetGraphAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction';
@@ -22,7 +22,7 @@ const initialState: IAppState = {
 
 type Actions =
     | SetOptimizationModeAction
-    | SuccessfulGraphUploadAction
+    | SetOriginalGraphAction
     | SetGraphAction
     | SetScheduleAction
     | UpdatePartitionItemAction;
@@ -40,7 +40,7 @@ export function reducer(state = initialState, action: Actions): IAppState {
                 schedule: [],
             };
 
-        case SuccessfulGraphUploadAction.type:
+        case SetOriginalGraphAction.type:
             return {
                 ...state,
                 originalGraph: action.graph,

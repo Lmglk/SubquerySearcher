@@ -4,7 +4,6 @@ import { select, Store } from '@ngrx/store';
 import { getCountNodes } from '../../selectors/getCountNodes';
 import { GraphNode } from '../../../app/interfaces/GraphNode';
 import { UpdatePartitionItemAction } from '../../../app/actions/UpdatePartitionItemAction';
-import { CalculateGraphAction } from '../../../app/actions/CalculateGraphAction';
 import { IRootState } from '../../../app/interfaces/IRootState';
 
 @Component({
@@ -34,6 +33,5 @@ export class NodeListItemComponent implements OnInit {
                 count: value,
             })
         );
-        this.store.dispatch(new CalculateGraphAction());
     }
 }
