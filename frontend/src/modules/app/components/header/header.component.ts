@@ -74,7 +74,7 @@ import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeActi
 export class HeaderComponent {
     public readonly optimizationMode = OptimizationMode;
 
-    @ViewChild('fileUpload', { static: false }) public inputFile: ElementRef;
+    @ViewChild('fileUpload') public inputFile: ElementRef;
 
     public activeTab$: Observable<OptimizationMode>;
 

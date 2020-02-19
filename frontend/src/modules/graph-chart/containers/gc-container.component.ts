@@ -53,7 +53,7 @@ import { IRootState } from '../../app/interfaces/IRootState';
 export class GcContainerComponent implements AfterContentInit, OnDestroy {
     public readonly nodeRadius = 15;
 
-    @ViewChild('content', { static: false }) element: ElementRef;
+    @ViewChild('content') element: ElementRef;
 
     public height: number;
     public width: number;
