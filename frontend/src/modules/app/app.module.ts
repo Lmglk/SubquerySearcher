@@ -17,9 +17,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { GraphEffects } from './effects/graph.effects';
 import { GraphChartModule } from '../graph-chart/graph-chart.module';
 import { reducer } from './reducers/reducer';
-import { ControlsModule } from '@ssw/controls';
 import { NotificationEffects } from './effects/notification.effects';
 import { TabComponent } from './components/tab/tab.component';
+import { ControlsModule } from '@ssw/controls';
 
 @NgModule({
     declarations: [AppComponent, HeaderComponent, TabComponent],

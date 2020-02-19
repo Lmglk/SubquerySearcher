@@ -18,7 +18,7 @@
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "tsconfig.app.json",
-                        "aot": false,
+                        "aot": true,
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": [
                             "node_modules/ngx-toastr/toastr.css",
@@ -39,7 +39,6 @@
                             "sourceMap": false,
                             "extractCss": true,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
@@ -124,6 +123,11 @@
                     "options": {
                         "tsConfig": "projects/ssw/controls/tsconfig.lib.json",
                         "project": "projects/ssw/controls/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/ssw/controls/tsconfig.lib.prod.json"
+                        }
                     }
                 },
                 "test": {
