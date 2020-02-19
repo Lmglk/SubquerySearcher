@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
     catchError,
     map,
@@ -27,55 +27,57 @@ import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction'
 
 @Injectable()
 export class GraphEffects {
-    @Effect()
-    public uploadGraph$ = this.actions$.pipe(
-        ofType<UploadOriginalGraphAction>(UploadOriginalGraphAction.type),
-        switchMap(action =>
-            this.fileService.parseFileToGraph(action.payload).pipe(
-                map(graph => new SetOriginalGraphAction(graph)),
-                catchError(error =>
-                    of(new ErrorNotificationAction(error.message))
+    public uploadGraph$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType<UploadOriginalGraphAction>(UploadOriginalGraphAction.type),
+            switchMap(action =>
+                this.fileService.parseFileToGraph(action.payload).pipe(
+                    map(graph => new SetOriginalGraphAction(graph)),
+                    catchError(error =>
+                        of(new ErrorNotificationAction(error.message))
+                    )
                 )
             )
         )
     );
 
-    @Effect()
-    public loadSchedule$ = this.actions$.pipe(
-        ofType(
-            LoadScheduleAction.type,
-            SetOriginalGraphAction.type,
-            SetOptimizationModeAction.type,
-            UpdatePartitionItemAction.type
-        ),
-        withLatestFrom(
-            this.store.select(getOriginalGraph),
-            this.store.select(getOptimizationMode),
-            this.store.select(getPartitionList)
-        ),
-        switchMap(
-            ([action, originalGraph, optimizationMode, partitionList]) => {
-                const graph = this.nodePartitionService.nodePartition(
-                    originalGraph,
-                    partitionList
-                );
+    public loadSchedule$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(
+                LoadScheduleAction.type,
+                SetOriginalGraphAction.type,
+                SetOptimizationModeAction.type,
+                UpdatePartitionItemAction.type
+            ),
+            withLatestFrom(
+                this.store.select(getOriginalGraph),
+                this.store.select(getOptimizationMode),
+                this.store.select(getPartitionList)
+            ),
+            switchMap(
+                ([action, originalGraph, optimizationMode, partitionList]) => {
+                    const graph = this.nodePartitionService.nodePartition(
+                        originalGraph,
+                        partitionList
+                    );
 
-                return this.apiGraphService
-                    .getSchedule(graph, optimizationMode)
-                    .pipe(
-                        mergeMap(schedule => [
-                            new SetGraphAction(graph),
-                            new SetScheduleAction(schedule),
-                        ]),
-                        catchError(() =>
-                            of(
-                                new ErrorNotificationAction(
-                                    'Optimize schedule is failed'
+                    return this.apiGraphService
+                        .getSchedule(graph, optimizationMode)
+                        .pipe(
+                            mergeMap(schedule => [
+                                new SetGraphAction(graph),
+                                new SetScheduleAction(schedule),
+                            ]),
+                            catchError(() =>
+                                of(
+                                    new ErrorNotificationAction(
+                                        'Optimize schedule is failed'
+                                    )
                                 )
                             )
-                        )
-                    );
-            }
+                        );
+                }
+            )
         )
     );
 
