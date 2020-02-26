@@ -7,7 +7,7 @@ import {
     switchMap,
     withLatestFrom,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { ApiGraphService } from '../services/api-graph.service';
 import { UploadOriginalGraphAction } from '../actions/UploadOriginalGraphAction';
@@ -28,6 +28,7 @@ import { UploadReplicationTableAction } from '../actions/UploadReplicationTableA
 import { SetReplicationTableAction } from '../actions/SetReplicationTableAction';
 import { getOriginalGraphNodes } from '../selectors/getOriginalGraphNodes';
 import { Graph } from '../interfaces/Graph';
+import { GraphNode } from '../interfaces/GraphNode';
 
 @Injectable()
 export class GraphEffects {
@@ -51,40 +52,33 @@ export class GraphEffects {
                 UploadReplicationTableAction.type
             ),
             withLatestFrom(this.store.pipe(select(getOriginalGraphNodes))),
-            switchMap(([action, nodes]) =>
-                this.fileService
-                    .parseFile(
-                        action.file,
-                        this.fileService.parseReplicationTable
-                    )
-                    .pipe(
-                        map((data: Array<[string, number]>) => {
-                            const replicationItem = data.map(touple => {
-                                const node = nodes.find(
-                                    item => item.name === touple[0]
-                                );
+            switchMap(([action, nodes]) => {
+                const replicationTable$ = this.fileService.parseFile(
+                    action.file,
+                    this.fileService.parseReplicationTable
+                );
 
-                                if (node === undefined) {
-                                    throw new Error(
-                                        'A node from the replication table does not exist'
-                                    );
-                                }
+                return combineLatest(replicationTable$, of(nodes));
+            }),
+            map(([data, nodes]: [Array<[string, number]>, GraphNode[]]) => {
+                const replicationItem = data.map(touple => {
+                    const node = nodes.find(item => item.name === touple[0]);
 
-                                return {
-                                    nodeId: node.id,
-                                    location: touple[1],
-                                };
-                            });
+                    if (node === undefined) {
+                        throw new Error(
+                            'A node from the replication table does not exist'
+                        );
+                    }
 
-                            return new SetReplicationTableAction(
-                                replicationItem
-                            );
-                        }),
-                        catchError(error =>
-                            of(new ErrorNotificationAction(error.message))
-                        )
-                    )
-            )
+                    return {
+                        nodeId: node.id,
+                        location: touple[1],
+                    };
+                });
+
+                return new SetReplicationTableAction(replicationItem);
+            }),
+            catchError(error => of(new ErrorNotificationAction(error.message)))
         )
     );
 
@@ -108,22 +102,20 @@ export class GraphEffects {
                         partitionList
                     );
 
-                    return this.apiGraphService
-                        .getSchedule(graph, optimizationMode)
-                        .pipe(
-                            mergeMap(schedule => [
-                                new SetGraphAction(graph),
-                                new SetScheduleAction(schedule),
-                            ]),
-                            catchError(() =>
-                                of(
-                                    new ErrorNotificationAction(
-                                        'Optimize schedule is failed'
-                                    )
-                                )
-                            )
-                        );
+                    const schedule$ = this.apiGraphService.getSchedule(
+                        graph,
+                        optimizationMode
+                    );
+
+                    return combineLatest(schedule$, of(graph));
                 }
+            ),
+            mergeMap(([schedule, graph]) => [
+                new SetGraphAction(graph),
+                new SetScheduleAction(schedule),
+            ]),
+            catchError(() =>
+                of(new ErrorNotificationAction('Optimize schedule is failed'))
             )
         )
     );
