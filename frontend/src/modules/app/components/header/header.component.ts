@@ -9,6 +9,7 @@ import { UploadOriginalGraphAction } from '../../actions/UploadOriginalGraphActi
 import { getOptimizationMode } from '../../selectors/getOptimizationMode';
 import { IRootState } from '../../interfaces/IRootState';
 import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeAction';
+import { UploadReplicationTableAction } from '../../actions/UploadReplicationTableAction';
 
 @Component({
     selector: 'ssw-header',
@@ -35,8 +36,12 @@ import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeActi
                 </ssw-tab>
             </div>
             <div class="content">
-                <input type="file" #fileUpload (change)="changeFile()" />
-                <button (click)="uploadFile()">Upload file</button>
+                <input type="file" #inputGraph (change)="changeGraphFile()" />
+                <input
+                    type="file"
+                    #inputReplicationTable
+                    (change)="changeReplicationTableFile()"
+                />
                 <button (click)="exportToFile()">Export</button>
             </div>
         </div>
@@ -74,13 +79,12 @@ import { SetOptimizationModeAction } from '../../actions/SetOptimizationModeActi
 export class HeaderComponent {
     public readonly optimizationMode = OptimizationMode;
 
-    @ViewChild('fileUpload') public inputFile: ElementRef;
+    @ViewChild('inputGraph') public inputGraph: ElementRef;
+    @ViewChild('inputReplicationTable')
+    public inputReplicationTable: ElementRef;
 
     public activeTab$: Observable<OptimizationMode>;
-
     public selectedOptimizationOption: OptimizationMode;
-
-    private file: File;
 
     constructor(
         private readonly toastr: ToastrService,
@@ -95,14 +99,23 @@ export class HeaderComponent {
         this.store.dispatch(new SetOptimizationModeAction(tab));
     }
 
-    public changeFile(): void {
-        const fileBrowser = this.inputFile.nativeElement;
-        this.file = fileBrowser.files[0];
+    public changeGraphFile(): void {
+        const fileBrowser = this.inputGraph.nativeElement;
+        const file = fileBrowser.files[0];
+
+        if (file) {
+            this.store.dispatch(new UploadOriginalGraphAction(file));
+        } else {
+            this.toastr.info('Please select a file');
+        }
     }
 
-    public uploadFile(): void {
-        if (this.file) {
-            this.store.dispatch(new UploadOriginalGraphAction(this.file));
+    public changeReplicationTableFile(): void {
+        const fileBrowser = this.inputReplicationTable.nativeElement;
+        const file = fileBrowser.files[0];
+
+        if (file) {
+            this.store.dispatch(new UploadReplicationTableAction(file));
         } else {
             this.toastr.info('Please select a file');
         }

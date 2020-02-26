@@ -8,7 +8,7 @@ import {
     withLatestFrom,
 } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { ApiGraphService } from '../services/api-graph.service';
 import { UploadOriginalGraphAction } from '../actions/UploadOriginalGraphAction';
 import { SetGraphAction } from '../actions/SetGraphAction';
@@ -24,6 +24,9 @@ import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { NodePartitionService } from '../services/node-partition.service';
 import { IRootState } from '../interfaces/IRootState';
 import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction';
+import { UploadReplicationTableAction } from '../actions/UploadReplicationTableAction';
+import { SetReplicationTableAction } from '../actions/SetReplicationTableAction';
+import { getOriginalGraphNodes } from '../selectors/getOriginalGraphNodes';
 
 @Injectable()
 export class GraphEffects {
@@ -33,6 +36,36 @@ export class GraphEffects {
             switchMap(action =>
                 this.fileService.parseFileToGraph(action.payload).pipe(
                     map(graph => new SetOriginalGraphAction(graph)),
+                    catchError(error =>
+                        of(new ErrorNotificationAction(error.message))
+                    )
+                )
+            )
+        )
+    );
+
+    public uploadReplicationTable$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType<UploadReplicationTableAction>(
+                UploadReplicationTableAction.type
+            ),
+            withLatestFrom(this.store.pipe(select(getOriginalGraphNodes))),
+            switchMap(([action, nodes]) =>
+                this.fileService.parseFileToReplicationTable(action.file).pipe(
+                    map(data => {
+                        const replicationItem = data.map(touple => {
+                            const node = nodes.find(
+                                item => item.name === touple[0]
+                            );
+
+                            return {
+                                nodeId: node.id,
+                                location: touple[1],
+                            };
+                        });
+
+                        return new SetReplicationTableAction(replicationItem);
+                    }),
                     catchError(error =>
                         of(new ErrorNotificationAction(error.message))
                     )
