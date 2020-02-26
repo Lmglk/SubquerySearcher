@@ -11,26 +11,20 @@ import { IdGeneratorService } from './id-generator.service';
 export class FileService {
     constructor(private readonly idGeneratorService: IdGeneratorService) {}
 
-    public parseFileToGraph(file: File): Observable<Graph> {
+    public parseFile(
+        file: File,
+        handler: (event: ProgressEvent) => Graph | Array<[string, number]>
+    ): Observable<ReturnType<typeof handler>> {
         const fileReader = new FileReader();
         const fileReader$ = fromEvent(fileReader, 'load');
 
         fileReader.readAsText(file);
 
-        return fileReader$.pipe(map(this.parseGraph));
-    }
-
-    public parseFileToReplicationTable(file: File) {
-        const fileReader = new FileReader();
-        const fileReader$ = fromEvent(fileReader, 'load');
-
-        fileReader.readAsText(file);
-
-        return fileReader$.pipe(map(this.parseReplicationTable));
+        return fileReader$.pipe(map(handler));
     }
 
     @autobind
-    private parseGraph(event: ProgressEvent): Graph {
+    public parseGraph(event: ProgressEvent): Graph {
         const reader = event.target as FileReader;
         const result = reader.result
             .toString()
@@ -38,7 +32,7 @@ export class FileService {
             .split(/\r\n|\n/)
             .map(str => str.length && str.split(' '));
 
-        const nodeMap: Map<string, number> = result.reduce((acc, row) => {
+        const nodeMap = result.reduce((acc, row) => {
             if (row[0] === undefined || row[1] === undefined) {
                 throw new Error('Failed to parse file');
             }
@@ -47,7 +41,7 @@ export class FileService {
             acc.set(row[0], time).set(row[1], 1);
 
             return acc;
-        }, new Map());
+        }, new Map<string, number>());
 
         const nodes = Array.from(nodeMap).map(value => ({
             id: this.idGeneratorService.getID(),
@@ -73,7 +67,7 @@ export class FileService {
     }
 
     @autobind
-    private parseReplicationTable(
+    public parseReplicationTable(
         event: ProgressEvent
     ): Array<[string, number]> {
         const reader = event.target as FileReader;

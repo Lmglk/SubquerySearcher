@@ -27,6 +27,7 @@ import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction'
 import { UploadReplicationTableAction } from '../actions/UploadReplicationTableAction';
 import { SetReplicationTableAction } from '../actions/SetReplicationTableAction';
 import { getOriginalGraphNodes } from '../selectors/getOriginalGraphNodes';
+import { Graph } from '../interfaces/Graph';
 
 @Injectable()
 export class GraphEffects {
@@ -34,13 +35,13 @@ export class GraphEffects {
         this.actions$.pipe(
             ofType<UploadOriginalGraphAction>(UploadOriginalGraphAction.type),
             switchMap(action =>
-                this.fileService.parseFileToGraph(action.payload).pipe(
-                    map(graph => new SetOriginalGraphAction(graph)),
-                    catchError(error =>
-                        of(new ErrorNotificationAction(error.message))
-                    )
+                this.fileService.parseFile(
+                    action.payload,
+                    this.fileService.parseGraph
                 )
-            )
+            ),
+            map((graph: Graph) => new SetOriginalGraphAction(graph)),
+            catchError(error => of(new ErrorNotificationAction(error.message)))
         )
     );
 
@@ -51,25 +52,38 @@ export class GraphEffects {
             ),
             withLatestFrom(this.store.pipe(select(getOriginalGraphNodes))),
             switchMap(([action, nodes]) =>
-                this.fileService.parseFileToReplicationTable(action.file).pipe(
-                    map(data => {
-                        const replicationItem = data.map(touple => {
-                            const node = nodes.find(
-                                item => item.name === touple[0]
-                            );
-
-                            return {
-                                nodeId: node.id,
-                                location: touple[1],
-                            };
-                        });
-
-                        return new SetReplicationTableAction(replicationItem);
-                    }),
-                    catchError(error =>
-                        of(new ErrorNotificationAction(error.message))
+                this.fileService
+                    .parseFile(
+                        action.file,
+                        this.fileService.parseReplicationTable
                     )
-                )
+                    .pipe(
+                        map((data: Array<[string, number]>) => {
+                            const replicationItem = data.map(touple => {
+                                const node = nodes.find(
+                                    item => item.name === touple[0]
+                                );
+
+                                if (node === undefined) {
+                                    throw new Error(
+                                        'A node from the replication table does not exist'
+                                    );
+                                }
+
+                                return {
+                                    nodeId: node.id,
+                                    location: touple[1],
+                                };
+                            });
+
+                            return new SetReplicationTableAction(
+                                replicationItem
+                            );
+                        }),
+                        catchError(error =>
+                            of(new ErrorNotificationAction(error.message))
+                        )
+                    )
             )
         )
     );
