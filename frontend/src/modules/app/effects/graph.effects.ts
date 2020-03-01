@@ -7,8 +7,8 @@ import {
     switchMap,
     withLatestFrom,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { combineLatest, of } from 'rxjs';
+import { select, Store } from '@ngrx/store';
 import { ApiGraphService } from '../services/api-graph.service';
 import { UploadOriginalGraphAction } from '../actions/UploadOriginalGraphAction';
 import { SetGraphAction } from '../actions/SetGraphAction';
@@ -24,6 +24,12 @@ import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { NodePartitionService } from '../services/node-partition.service';
 import { IRootState } from '../interfaces/IRootState';
 import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction';
+import { UploadReplicationTableAction } from '../actions/UploadReplicationTableAction';
+import { SetReplicationTableAction } from '../actions/SetReplicationTableAction';
+import { getOriginalGraphNodes } from '../selectors/getOriginalGraphNodes';
+import { Graph } from '../interfaces/Graph';
+import { GraphNode } from '../interfaces/GraphNode';
+import { getReplicationTable } from '../selectors/getReplicationTable';
 
 @Injectable()
 export class GraphEffects {
@@ -31,13 +37,49 @@ export class GraphEffects {
         this.actions$.pipe(
             ofType<UploadOriginalGraphAction>(UploadOriginalGraphAction.type),
             switchMap(action =>
-                this.fileService.parseFileToGraph(action.payload).pipe(
-                    map(graph => new SetOriginalGraphAction(graph)),
-                    catchError(error =>
-                        of(new ErrorNotificationAction(error.message))
-                    )
+                this.fileService.parseFile(
+                    action.payload,
+                    this.fileService.parseGraph
                 )
-            )
+            ),
+            map((graph: Graph) => new SetOriginalGraphAction(graph)),
+            catchError(error => of(new ErrorNotificationAction(error.message)))
+        )
+    );
+
+    public uploadReplicationTable$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType<UploadReplicationTableAction>(
+                UploadReplicationTableAction.type
+            ),
+            withLatestFrom(this.store.pipe(select(getOriginalGraphNodes))),
+            switchMap(([action, nodes]) => {
+                const replicationTable$ = this.fileService.parseFile(
+                    action.file,
+                    this.fileService.parseReplicationTable
+                );
+
+                return combineLatest(replicationTable$, of(nodes));
+            }),
+            map(([data, nodes]: [Array<[string, number]>, GraphNode[]]) => {
+                const replicationItem = data.map(touple => {
+                    const node = nodes.find(item => item.name === touple[0]);
+
+                    if (node === undefined) {
+                        throw new Error(
+                            'A node from the replication table does not exist'
+                        );
+                    }
+
+                    return {
+                        nodeId: node.id,
+                        location: touple[1],
+                    };
+                });
+
+                return new SetReplicationTableAction(replicationItem);
+            }),
+            catchError(error => of(new ErrorNotificationAction(error.message)))
         )
     );
 
@@ -47,36 +89,43 @@ export class GraphEffects {
                 LoadScheduleAction.type,
                 SetOriginalGraphAction.type,
                 SetOptimizationModeAction.type,
-                UpdatePartitionItemAction.type
+                UpdatePartitionItemAction.type,
+                SetReplicationTableAction.type
             ),
             withLatestFrom(
                 this.store.select(getOriginalGraph),
                 this.store.select(getOptimizationMode),
-                this.store.select(getPartitionList)
+                this.store.select(getPartitionList),
+                this.store.select(getReplicationTable)
             ),
             switchMap(
-                ([action, originalGraph, optimizationMode, partitionList]) => {
+                ([
+                    action,
+                    originalGraph,
+                    optimizationMode,
+                    partitionList,
+                    replicationTable,
+                ]) => {
                     const graph = this.nodePartitionService.nodePartition(
                         originalGraph,
                         partitionList
                     );
 
-                    return this.apiGraphService
-                        .getSchedule(graph, optimizationMode)
-                        .pipe(
-                            mergeMap(schedule => [
-                                new SetGraphAction(graph),
-                                new SetScheduleAction(schedule),
-                            ]),
-                            catchError(() =>
-                                of(
-                                    new ErrorNotificationAction(
-                                        'Optimize schedule is failed'
-                                    )
-                                )
-                            )
-                        );
+                    const schedule$ = this.apiGraphService.getSchedule(
+                        graph,
+                        optimizationMode,
+                        replicationTable
+                    );
+
+                    return combineLatest(schedule$, of(graph));
                 }
+            ),
+            mergeMap(([schedule, graph]) => [
+                new SetGraphAction(graph),
+                new SetScheduleAction(schedule),
+            ]),
+            catchError(() =>
+                of(new ErrorNotificationAction('Optimize schedule is failed'))
             )
         )
     );

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Graph } from '../interfaces/Graph';
 import { PartitionItem } from '../interfaces/PartitionItem';
 import { Group } from '../interfaces/Group';
+import { IReplicationItem } from '../interfaces/IReplicationItem';
 
 @Injectable({
     providedIn: 'root',
@@ -21,9 +22,20 @@ export class ApiGraphService {
         });
     }
 
-    public getSchedule(graph: Graph, mode: number): Observable<Group[]> {
-        return this.http.post<Group[]>('api/graph/getSchedule', graph, {
-            params: new HttpParams().set('mode', mode.toString()),
-        });
+    public getSchedule(
+        graph: Graph,
+        mode: number,
+        replicationTable: IReplicationItem[]
+    ): Observable<Group[]> {
+        return this.http.post<Group[]>(
+            'api/graph/getSchedule',
+            {
+                graph: graph,
+                replicationTable: replicationTable,
+            },
+            {
+                params: new HttpParams().set('mode', mode.toString()),
+            }
+        );
     }
 }

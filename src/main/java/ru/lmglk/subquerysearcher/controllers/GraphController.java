@@ -27,9 +27,12 @@ public class GraphController {
 
     @ResponseBody
     @RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
-    public ResponseEntity getSchedule(@RequestBody Graph graph, @RequestParam int mode) {
+    public ResponseEntity getSchedule(@RequestBody GetScheduleRequest request, @RequestParam int mode) {
+        Graph graph = request.getGraph();
+        ArrayList<ReplicationItem> replicationTable = request.getReplicationTable();
+
         Graph newGraph = new Graph(graph);
-        ArrayList<Group> schedule = this.graphService.generateSchedule(graph);
+        ArrayList<Group> schedule = this.graphService.generateSchedule(graph, replicationTable);
 
         if (schedule == null) {
             return ResponseEntity.badRequest().body("Calculation error. The graph may contain loops.");

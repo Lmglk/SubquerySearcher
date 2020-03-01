@@ -5,6 +5,7 @@ import { SetGraphAction } from '../actions/SetGraphAction';
 import { SetScheduleAction } from '../actions/SetScheduleAction';
 import { UpdatePartitionItemAction } from '../actions/UpdatePartitionItemAction';
 import { IAppState } from '../interfaces/IAppState';
+import { SetReplicationTableAction } from '../actions/SetReplicationTableAction';
 
 const initialState: IAppState = {
     optimizationMode: OptimizationMode.DEFAULT,
@@ -16,6 +17,7 @@ const initialState: IAppState = {
         nodes: [],
         edges: [],
     },
+    replicationTable: [],
     schedule: [],
     separateNodes: [],
 };
@@ -24,6 +26,7 @@ type Actions =
     | SetOptimizationModeAction
     | SetOriginalGraphAction
     | SetGraphAction
+    | SetReplicationTableAction
     | SetScheduleAction
     | UpdatePartitionItemAction;
 
@@ -63,6 +66,12 @@ export function reducer(state = initialState, action: Actions): IAppState {
             return {
                 ...state,
                 schedule: action.payload,
+            };
+
+        case SetReplicationTableAction.type:
+            return {
+                ...state,
+                replicationTable: action.replicationTable,
             };
 
         case UpdatePartitionItemAction.type:
