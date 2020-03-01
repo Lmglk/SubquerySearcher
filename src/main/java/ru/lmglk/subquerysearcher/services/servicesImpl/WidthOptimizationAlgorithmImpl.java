@@ -2,37 +2,37 @@ package ru.lmglk.subquerysearcher.services.servicesImpl;
 
 import org.springframework.stereotype.Service;
 import ru.lmglk.subquerysearcher.enums.Direction;
-import ru.lmglk.subquerysearcher.models.*;
+import ru.lmglk.subquerysearcher.models.Graph;
+import ru.lmglk.subquerysearcher.models.Group;
+import ru.lmglk.subquerysearcher.models.ReplicationItem;
+import ru.lmglk.subquerysearcher.models.Sequence;
 import ru.lmglk.subquerysearcher.services.WidthOptimizationAlgorithm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorithm {
 
     @Override
-    public ArrayList<Group> scheduleOptimizationByWidth(Graph graph, ArrayList<Group> schedule) {
-        int numberOfNodes = schedule.stream()
-                .mapToInt(group -> (int) group.getSequences()
-                        .stream()
-                        .mapToInt(sequence -> sequence.getNodes().size())
-                        .count()
-                ).sum();
-
+    public ArrayList<Group> scheduleOptimizationByWidth(Graph graph, ArrayList<Group> schedule, ArrayList<ReplicationItem> replicationTable) {
+        int numberOfNodes = graph.getNumberOfNodes();
         int graphHeight = schedule.size();
-        int graphWidth = schedule.stream().mapToInt(Group::size).max().orElse(0);
+        int graphWidth = calcMaxGroupSize(schedule);
         int theoryGroupSize = calcTheoryGroupSize(numberOfNodes, graphHeight);
 
         if (graphWidth == theoryGroupSize) return schedule;
 
         for (int i = graphHeight - 1; i > 0; i--) {
             if (theoryGroupSize - schedule.get(i).size() == 0) continue;
-            schedule = moveIndependentSequences(i, i - 1, theoryGroupSize, schedule, graph, Direction.RIGHT);
+            schedule = moveIndependentSequences(i, theoryGroupSize, schedule, replicationTable, graph, Direction.RIGHT);
         }
 
         for (int i = 0; i < graphHeight - 1; i++) {
             if (theoryGroupSize - schedule.get(i).size() == 0) continue;
-            schedule = moveIndependentSequences(i, i + 1, theoryGroupSize, schedule, graph, Direction.LEFT);
+            schedule = moveIndependentSequences(i, theoryGroupSize, schedule, replicationTable, graph, Direction.LEFT);
         }
 
         return schedule;
@@ -42,16 +42,24 @@ public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorith
         return (int) Math.ceil((double) countNodes / maxGroupSize);
     }
 
-    private ArrayList<Group> moveIndependentSequences(int groupIndex, int secondGroupIndex, int theoryGroupSize, ArrayList<Group> s, Graph graph, Direction optimizationDirection) {
+    private ArrayList<Group> moveIndependentSequences(
+            int groupIndex,
+            int theoryGroupSize,
+            ArrayList<Group> s,
+            ArrayList<ReplicationItem> replicationTable,
+            Graph graph, Direction optimizationDirection
+    ) {
         ArrayList<Group> schedule = new ArrayList<>(s);
+        int prevGroupIndex = optimizationDirection == Direction.RIGHT ? groupIndex - 1 : groupIndex + 1;
         Group group = schedule.get(groupIndex);
-        Group secondGroup = schedule.get(secondGroupIndex);
+        Group prevGroup = schedule.get(prevGroupIndex);
 
         int sequenceIndex = 0;
-        while (sequenceIndex < secondGroup.size() && group.size() < theoryGroupSize) {
-            Sequence sequence = secondGroup.getSequence(sequenceIndex);
-            if (canMoveSequence(sequence, group, graph, optimizationDirection)) {
-                secondGroup.removeSequence(sequence);
+        while (sequenceIndex < prevGroup.size() && group.size() < theoryGroupSize) {
+            Sequence sequence = prevGroup.getSequence(sequenceIndex);
+            String nodeId = sequence.getLastNode();
+            if (canMoveNode(nodeId, group, replicationTable, graph, optimizationDirection)) {
+                prevGroup.removeSequence(sequence);
                 group.addSequence(sequence);
             } else {
                 sequenceIndex++;
@@ -61,18 +69,52 @@ public class WidthOptimizationAlgorithmImpl implements WidthOptimizationAlgorith
         return schedule;
     }
 
-    private boolean canMoveSequence(Sequence sequence, Group group, Graph graph, Direction sequencePlace) {
-        return sequence.getNodes()
+    private boolean canMoveNode(String nodeId, Group group, ArrayList<ReplicationItem> replicationTable, Graph graph, Direction sequencePlace) {
+        boolean isExistEdge = group.getNodes()
                 .stream()
-                .allMatch(sourceNode -> isExistEdge(sourceNode, group, graph, sequencePlace));
+                .anyMatch(targetNode -> sequencePlace == Direction.RIGHT
+                        ? graph.isExistEdge(nodeId, targetNode)
+                        : graph.isExistEdge(targetNode, nodeId));
+
+        if (isExistEdge) {
+            return false;
+        }
+
+        ReplicationItem currentReplicationItem = getReplicationItemByNodeId(replicationTable, nodeId);
+
+        if (currentReplicationItem == null) {
+            return true;
+        }
+
+        Set<Integer> visits = getMaskVisits(group.getNodes(), replicationTable);
+        int currentLocation = currentReplicationItem.getLocation();
+
+        return !visits.contains(currentLocation);
     }
 
-    private boolean isExistEdge(String node, Group group, Graph graph, Direction sequencePlace) {
-        return group.getNodes()
-                .stream()
-                .noneMatch(targetNode -> sequencePlace == Direction.RIGHT
-                        ? graph.isExistEdge(node, targetNode)
-                        : graph.isExistEdge(targetNode, node));
+    private int calcMaxGroupSize(ArrayList<Group> schedule) {
+        return schedule.stream().mapToInt(Group::size).max().orElse(0);
     }
 
+    // TODO: remove code duplication
+    private ReplicationItem getReplicationItemByNodeId(ArrayList<ReplicationItem> replicationTable, String nodeId) {
+        return replicationTable
+                .stream()
+                .filter(item -> item.getNodeId().equals(nodeId))
+                .findFirst().orElse(null);
+    }
+
+    private Set<Integer> getMaskVisits(ArrayList<String> nodeIds, ArrayList<ReplicationItem> replicationTable) {
+        Set<Integer> visited = new HashSet<>();
+        nodeIds
+                .stream()
+                .map(itemId -> getReplicationItemByNodeId(replicationTable, itemId))
+                .filter(Objects::nonNull)
+                .forEach(item -> {
+                    int currentLocation = item.getLocation();
+                    visited.add(currentLocation);
+                });
+
+        return visited;
+    }
 }

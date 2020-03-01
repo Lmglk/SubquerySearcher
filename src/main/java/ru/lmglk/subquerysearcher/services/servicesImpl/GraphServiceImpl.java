@@ -58,10 +58,7 @@ public class GraphServiceImpl implements GraphService {
         return nodes
                 .stream()
                 .filter(node -> {
-                    ReplicationItem currentReplicationItem = replicationTable
-                            .stream()
-                            .filter(item -> item.getNodeId().equals(node.getId()))
-                            .findFirst().orElse(null);
+                    ReplicationItem currentReplicationItem = getReplicationItemByNodeId(replicationTable, node.getId());
 
                     if (currentReplicationItem == null) {
                         return true;
@@ -77,5 +74,13 @@ public class GraphServiceImpl implements GraphService {
                     return true;
                 })
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    // TODO: remove code duplication
+    private ReplicationItem getReplicationItemByNodeId(ArrayList<ReplicationItem> replicationTable, String nodeId) {
+        return replicationTable
+                .stream()
+                .filter(item -> item.getNodeId().equals(nodeId))
+                .findFirst().orElse(null);
     }
 }
