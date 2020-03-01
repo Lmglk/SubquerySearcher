@@ -42,7 +42,7 @@ public class GraphController {
             case 0:
                 return ResponseEntity.ok(schedule);
             case 1:
-                return ResponseEntity.ok(this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(newGraph, schedule));
+                return ResponseEntity.ok(this.widthOptimizationAlgorithm.scheduleOptimizationByWidth(newGraph, schedule, replicationTable));
             case 2:
                 return ResponseEntity.ok(this.timeOptimizationAlgorithm.scheduleOptimizationByTime(newGraph, schedule));
 
