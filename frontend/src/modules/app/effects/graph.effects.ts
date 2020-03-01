@@ -29,6 +29,7 @@ import { SetReplicationTableAction } from '../actions/SetReplicationTableAction'
 import { getOriginalGraphNodes } from '../selectors/getOriginalGraphNodes';
 import { Graph } from '../interfaces/Graph';
 import { GraphNode } from '../interfaces/GraphNode';
+import { getReplicationTable } from '../selectors/getReplicationTable';
 
 @Injectable()
 export class GraphEffects {
@@ -88,15 +89,23 @@ export class GraphEffects {
                 LoadScheduleAction.type,
                 SetOriginalGraphAction.type,
                 SetOptimizationModeAction.type,
-                UpdatePartitionItemAction.type
+                UpdatePartitionItemAction.type,
+                SetReplicationTableAction.type
             ),
             withLatestFrom(
                 this.store.select(getOriginalGraph),
                 this.store.select(getOptimizationMode),
-                this.store.select(getPartitionList)
+                this.store.select(getPartitionList),
+                this.store.select(getReplicationTable)
             ),
             switchMap(
-                ([action, originalGraph, optimizationMode, partitionList]) => {
+                ([
+                    action,
+                    originalGraph,
+                    optimizationMode,
+                    partitionList,
+                    replicationTable,
+                ]) => {
                     const graph = this.nodePartitionService.nodePartition(
                         originalGraph,
                         partitionList
@@ -104,7 +113,8 @@ export class GraphEffects {
 
                     const schedule$ = this.apiGraphService.getSchedule(
                         graph,
-                        optimizationMode
+                        optimizationMode,
+                        replicationTable
                     );
 
                     return combineLatest(schedule$, of(graph));
