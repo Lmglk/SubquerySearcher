@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public interface GraphService {
 
-    ArrayList<Group> generateSchedule(Graph graph);
+    ArrayList<Group> generateSchedule(Graph graph, ArrayList<ReplicationItem> replicationTable);
 }
